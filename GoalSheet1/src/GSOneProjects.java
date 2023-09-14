@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Projects
+public class GSOneProjects
 {
     public static void main(String[] args)
     {
