@@ -16,7 +16,7 @@ public class GSOneProjects
         christmasSong();
     }
 
-    public static void helloWorld()
+    public static void helloWorld() // Hello World
     {
         System.out.println("Hello World");
         System.out.println("Life if roblox");
@@ -25,7 +25,7 @@ public class GSOneProjects
         System.out.println("Empty line");
 
     }
-    public static void victory()
+    public static void victory() // BJP Ch 1 Ex 7
     {
         System.out.println("///////////////////////");
         for (int i = 0; i < 5; ++i)
@@ -38,7 +38,7 @@ public class GSOneProjects
         System.out.println("|| Victory is mine! ||");
         System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
     }
-    public static void shapes()
+    public static void shapes() // BJP Ch 1 Ex 9
     {
         topShape();
         bottomShape();
@@ -71,7 +71,7 @@ public class GSOneProjects
         System.out.println("  ______  ");
     }
 
-    public static void song()
+    public static void song() // BJP Ch 1 Proj 3
     {
         intro("fly");
         refrain();
@@ -131,7 +131,7 @@ public class GSOneProjects
 
     }
 
-    public static void christmasSong()
+    public static void christmasSong() // BJP Ch 1 Proj 4
     {
         ArrayList<String> lyrics = new ArrayList<String>();
         lyrics.add("a partridge in a pear tree.");

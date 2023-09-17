@@ -15,7 +15,7 @@ public class GSTwoProjects
         }
     }
 
-    public static void fibonacci()
+    public static void fibonacci() // BJP Ch 2 Ex 2
     {
         int lastNum = 1;
         int secondNum = 1;
@@ -40,7 +40,7 @@ public class GSTwoProjects
         }
     }
 
-    public static void staircase()
+    public static void staircase() // BJP Ch 2 Ex 3
     {
         int NUM_STAIRS = 20;
         for (int i = 0; i < NUM_STAIRS; ++i)
@@ -88,7 +88,7 @@ public class GSTwoProjects
         System.out.println("*");
     }
 
-    public static void quadratic()
+    public static void quadratic() // BJP Ch 3 Ex 8
     {
         Scanner console = new Scanner(System.in);
 
@@ -123,7 +123,7 @@ public class GSTwoProjects
         System.out.println("The solutions are: " + (int)answerOne + " and " + (int)answerTwo);
     }
 
-    public static void triangle()
+    public static void triangle() // BJP Ch 3 Proj 4
     {
         Scanner console = new Scanner(System.in);
 
