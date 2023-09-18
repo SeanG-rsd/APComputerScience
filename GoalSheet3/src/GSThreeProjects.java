@@ -1,10 +1,11 @@
 import java.lang.reflect.Array;
 import java.util.*;
+import java.io.*;
 public class GSThreeProjects
 {
     public static void main(String[] args)
     {
-        randomLines();
+        romanNumerals();
     }
 
     public static String repl(String string, int count) // BJP Ch 4 Ex 2
@@ -127,8 +128,13 @@ public class GSThreeProjects
         }
     }
 
-    public static void charCounter() // BJP Ch 6 Proj 1
+    public static void charCounter() throws FileNotFoundException // BJP Ch 6 Proj 1
     {
+        Scanner inputFile = new Scanner(new File("/User/gutmannse/Desktop/input.txt"));
 
+        while (inputFile.hasNextLine())
+        {
+            String line = inputFile.nextLine();
+        }
     }
 }
