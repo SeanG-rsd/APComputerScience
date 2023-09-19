@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3b905cfe-4b53-428b-82eb-5a96bf02321c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../GoalSheet4/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GoalSheet4/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GoalSheet4/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GoalSheet4/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GoalSheet4/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GoalSheet4/GoalSheet4.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GoalSheet4/src/GSFourProjects.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../APComputerScience.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../APComputerScience.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GoalSheet3/src/GSThreeProjects.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GoalSheet3/src/GSThreeProjects.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="2VcWzqGhGw2JVg8P4dSPBgizFfX" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3b905cfe-4b53-428b-82eb-5a96bf02321c" name="Changes" comment="" />
+      <created>1695136115851</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1695136115851</updated>
+    </task>
+    <servers />
+  </component>
+</project>

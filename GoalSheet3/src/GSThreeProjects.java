@@ -129,30 +129,28 @@ public class GSThreeProjects
 
     public static void charCounter() throws FileNotFoundException // BJP Ch 6 Proj 1
     {
-        Scanner inputFile = new Scanner(new File("C:/Users/sean/Desktop/input.txt"));
+        Scanner inputFile = new Scanner(new File("/Users/gutmannse/Desktop/input.txt"));
         // /User/gutmannse/Desktop/input.txt
-        //
+        // C:/Users/sean/Desktop/input.txt
 
         int charCount = 0;
-        int whiteSpaceCount = 0;
+        int wordCount = 0;
         int lineCount = 0;
 
         while (inputFile.hasNextLine())
         {
-            String line = inputFile.nextLine();
-            System.out.println(line);
-            for (int i = 0; i < line.length(); ++i)
-            {
-                String character = "" + line.indexOf(i);
+            Scanner line = new Scanner(inputFile.nextLine());
 
-                if (character.matches(" "))
-                {
-                    whiteSpaceCount++;
-                }
-                else
+            while (line.hasNext())
+            {
+                String word = line.next();
+
+                for (int i = 0; i < word.length(); ++i)
                 {
                     charCount++;
                 }
+
+                wordCount++;
             }
 
             lineCount++;
@@ -160,6 +158,6 @@ public class GSThreeProjects
 
         }
 
-        System.out.println("This text has " + lineCount + " lines, " + whiteSpaceCount + " whiteSpaces, and " + charCount + " characters.");
+        System.out.println("This text has " + lineCount + " lines, " + wordCount + " words, and " + charCount + " characters.");
     }
 }
