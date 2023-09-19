@@ -3,9 +3,8 @@ import java.util.*;
 import java.io.*;
 public class GSThreeProjects
 {
-    public static void main(String[] args)
-    {
-        romanNumerals();
+    public static void main(String[] args) throws FileNotFoundException {
+        charCounter();
     }
 
     public static String repl(String string, int count) // BJP Ch 4 Ex 2
@@ -130,11 +129,37 @@ public class GSThreeProjects
 
     public static void charCounter() throws FileNotFoundException // BJP Ch 6 Proj 1
     {
-        Scanner inputFile = new Scanner(new File("/User/gutmannse/Desktop/input.txt"));
+        Scanner inputFile = new Scanner(new File("C:/Users/sean/Desktop/input.txt"));
+        // /User/gutmannse/Desktop/input.txt
+        //
+
+        int charCount = 0;
+        int whiteSpaceCount = 0;
+        int lineCount = 0;
 
         while (inputFile.hasNextLine())
         {
             String line = inputFile.nextLine();
+            System.out.println(line);
+            for (int i = 0; i < line.length(); ++i)
+            {
+                String character = "" + line.indexOf(i);
+
+                if (character.matches(" "))
+                {
+                    whiteSpaceCount++;
+                }
+                else
+                {
+                    charCount++;
+                }
+            }
+
+            lineCount++;
+
+
         }
+
+        System.out.println("This text has " + lineCount + " lines, " + whiteSpaceCount + " whiteSpaces, and " + charCount + " characters.");
     }
 }
