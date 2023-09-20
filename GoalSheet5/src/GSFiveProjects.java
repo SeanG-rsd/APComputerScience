@@ -32,22 +32,32 @@ public class GSFiveProjects
         char[] guessable = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
         char[] guessed = new char[26];
 
+        String ANSWER = "jinx";
+
         Scanner console = new Scanner(System.in);
 
-        char input = getInput(console, guessed, guessable);
 
-        System.out.println(input);
+
+        System.out.println(Arrays.toString(guessed));
+
+        printHangman(ANSWER, ANSWER, 0);
+
+        guessed = getInput(console, guessed, guessable);
     }
 
-    public static char getInput(Scanner console, char[] guessed, char[] base)
+    public static char[] getInput(Scanner console, char[] guessed, char[] base)
     {
         System.out.println();
         System.out.print("Guessed : ");
 
         for (char c : guessed)
         {
-            System.out.print(c + ", ");
+            if (c != '\u0000')
+            {
+                System.out.print(c + ", ");
+            }
         }
+
         System.out.println();
 
         System.out.print("Enter a guess : ");
@@ -59,39 +69,48 @@ public class GSFiveProjects
         {
             for (char g : guessable)
             {
-                if (g == c)
+                if (c == g) // if it is guessable
                 {
-                    return c;
+                    for (int i = 0; i < guessed.length; ++i)
+                    {
+                        if (guessed[i] == '\u0000')
+                        {
+                            guessed[i] = c;
+                            return guessed;
+                        }
+                    }
                 }
             }
         }
 
 
-        return '0';
+        return guessed;
     }
 
     public static char[] calculateGuessable(char[] base, char[] guessed)
     {
         char[] guessable = new char[26];
 
-        for (char c : base)
+        for (int i = 0; i < base.length; ++i)
         {
-            boolean has = false;
-            for (char g : guessed)
+            boolean hasGuessed = false;
+
+            for (char c : guessed)
             {
-                if (g == c)
+                if (c == base[i])
                 {
-                    has = true;
+                    hasGuessed = true;
+                    break;
                 }
             }
 
-            if (!has)
+            if (!hasGuessed)
             {
-                for (char g : guessable)
+                for (int j = 0; j < guessable.length; ++j)
                 {
-                    if (g == '0')
+                    if (guessable[j] == '\u0000')
                     {
-                        g = c;
+                        guessable[j] = base[i];
                         break;
                     }
                 }
@@ -100,4 +119,39 @@ public class GSFiveProjects
 
         return guessable;
     }
+
+    public static void printHangman(String answer, String found, int wrongGuesses)
+    {
+        System.out.println("    _________ ");
+        System.out.println("    |       | ");
+        System.out.println("    |       o ");
+        System.out.println("    |      /|\\");
+        System.out.println("    |      / \\");
+        System.out.println("    |         ");
+
+        printBoxEdge(answer.length());
+        printBoxWord(answer.length(), found);
+        printBoxEdge(answer.length());
+    }
+
+    public static void printBoxEdge(int length)
+    {
+        for (int i = 0; i < ((length + 1) * 3 + 1); ++i)
+        {
+            System.out.print("-");
+        }
+        System.out.println();
+    }
+
+    public static void printBoxWord(int length, String found)
+    {
+        System.out.print("|  ");
+        found = found.toUpperCase();
+        for (int i = 0; i < length; ++i)
+        {
+            System.out.print(found.charAt(i) + "  ");
+        }
+        System.out.println("|");
+    }
+
 }
