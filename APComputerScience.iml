@@ -12,6 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/GoalSheet3/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/GoalSheet4/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/GoalSheet5/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MasterMind/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
