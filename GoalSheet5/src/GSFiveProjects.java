@@ -3,10 +3,10 @@ public class GSFiveProjects
 {
     public static void main(String[] args)
     {
-        hangman();
+        hangman("bread");
     }
 
-    public static void outputSqaures() // BJP Ch 7 Proj 5
+    public static void outputSquares() // BJP Ch 7 Proj 5
     {
         char[][] board = new char[3][];
         board[0] = new char[] {'x', 'o', '*'};
@@ -27,22 +27,58 @@ public class GSFiveProjects
         }
     }
 
-    public static void hangman()
+    public static void hangman(String answer)
     {
         char[] guessable = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
         char[] guessed = new char[26];
 
-        String ANSWER = "jinx";
+        int numWrong = 0;
+        int MAX_WRONG = 6;
+
+        String ANSWER = answer;
+        String found = "";
+        found = calculateFound(ANSWER, guessed);
 
         Scanner console = new Scanner(System.in);
+        while (!hasWonOrLost(ANSWER, found, numWrong, MAX_WRONG))
+        {
+            printHangman(ANSWER, found, numWrong);
+
+            guessed = getInput(console, guessed, guessable);
+
+            found = calculateFound(ANSWER, guessed);
+
+            numWrong = getWrong(ANSWER, guessed);
+        }
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
 
 
+        if (numWrong >= MAX_WRONG)
+        {
+            System.out.println("YOU LOST.");
+        }
 
-        System.out.println(Arrays.toString(guessed));
+        if (ANSWER.equals(found))
+        {
+            System.out.println("YOU WON!!");
 
-        printHangman(ANSWER, ANSWER, 0);
+        }
+    }
 
-        guessed = getInput(console, guessed, guessable);
+    public static boolean hasWonOrLost(String ANSWER, String found, int wrongGuesses, int maxWrong)
+    {
+        if (wrongGuesses >= maxWrong || ANSWER.equals(found))
+        {
+
+            return true;
+        }
+
+        return false;
     }
 
     public static char[] getInput(Scanner console, char[] guessed, char[] base)
@@ -75,6 +111,7 @@ public class GSFiveProjects
                     {
                         if (guessed[i] == '\u0000')
                         {
+
                             guessed[i] = c;
                             return guessed;
                         }
@@ -122,16 +159,78 @@ public class GSFiveProjects
 
     public static void printHangman(String answer, String found, int wrongGuesses)
     {
-        System.out.println("    _________ ");
-        System.out.println("    |       | ");
-        System.out.println("    |       o ");
-        System.out.println("    |      /|\\");
-        System.out.println("    |      / \\");
-        System.out.println("    |         ");
+        printMan(wrongGuesses);
 
         printBoxEdge(answer.length());
         printBoxWord(answer.length(), found);
         printBoxEdge(answer.length());
+    }
+
+    public static void printMan(int wrongGuesses)
+    {
+        if (wrongGuesses == 6)
+        {
+            System.out.println("    _________ ");
+            System.out.println("    |       | ");
+            System.out.println("    |       o ");
+            System.out.println("    |      /|\\");
+            System.out.println("    |      / \\");
+            System.out.println("    |         ");
+        }
+        else if (wrongGuesses == 5)
+        {
+            System.out.println("    _________ ");
+            System.out.println("    |       | ");
+            System.out.println("    |       o ");
+            System.out.println("    |      /|\\");
+            System.out.println("    |      /  ");
+            System.out.println("    |         ");
+        }
+        else if (wrongGuesses == 4)
+        {
+            System.out.println("    _________ ");
+            System.out.println("    |       | ");
+            System.out.println("    |       o ");
+            System.out.println("    |      /|\\");
+            System.out.println("    |         ");
+            System.out.println("    |         ");
+        }
+        else if (wrongGuesses == 3)
+        {
+            System.out.println("    _________ ");
+            System.out.println("    |       | ");
+            System.out.println("    |       o ");
+            System.out.println("    |      /| ");
+            System.out.println("    |         ");
+            System.out.println("    |         ");
+        }
+        else if (wrongGuesses == 2)
+        {
+            System.out.println("    _________ ");
+            System.out.println("    |       | ");
+            System.out.println("    |       o ");
+            System.out.println("    |       | ");
+            System.out.println("    |         ");
+            System.out.println("    |         ");
+        }
+        else if (wrongGuesses == 1)
+        {
+            System.out.println("    _________ ");
+            System.out.println("    |       | ");
+            System.out.println("    |       o ");
+            System.out.println("    |         ");
+            System.out.println("    |         ");
+            System.out.println("    |         ");
+        }
+        else if (wrongGuesses == 0)
+        {
+            System.out.println("    _________ ");
+            System.out.println("    |       | ");
+            System.out.println("    |         ");
+            System.out.println("    |         ");
+            System.out.println("    |         ");
+            System.out.println("    |         ");
+        }
     }
 
     public static void printBoxEdge(int length)
@@ -152,6 +251,58 @@ public class GSFiveProjects
             System.out.print(found.charAt(i) + "  ");
         }
         System.out.println("|");
+    }
+
+    public static String calculateFound(String ANSWER, char[] guessed)
+    {
+        String found = "";
+
+        for (int i = 0; i < ANSWER.length(); ++i)
+        {
+            char add = '_';
+
+            for (char c : guessed)
+            {
+                if (c == ANSWER.charAt(i))
+                {
+                    add = c;
+                }
+            }
+
+            found += add;
+        }
+
+        return found;
+    }
+
+    public static int getWrong(String ANSWER, char[] guessed)
+    {
+        int wrong = 0;
+
+        for (char c : guessed)
+        {
+            if (c != '\u0000')
+            {
+                boolean isInAnswer = false;
+
+                for (int i = 0; i < ANSWER.length(); ++i)
+                {
+                    if (c == ANSWER.charAt(i))
+                    {
+                        isInAnswer = true;
+                    }
+
+
+                }
+
+                if (!isInAnswer) {
+                    wrong++;
+                }
+            }
+
+        }
+
+        return wrong;
     }
 
 }
