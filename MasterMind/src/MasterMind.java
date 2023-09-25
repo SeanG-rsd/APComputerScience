@@ -11,7 +11,8 @@ public class MasterMind
 
     public static void testAlgorithm() throws FileNotFoundException
     {
-        File answers = new File("C:/Users/sean/Desktop/input.txt");
+        File answers = new File("/Users/gutmannse/Desktop/input.txt");
+        // C:/Users/sean/Desktop/input.txt
 
         Scanner scanner = new Scanner(answers);
 
