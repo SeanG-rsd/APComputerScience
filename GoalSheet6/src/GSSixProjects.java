@@ -4,13 +4,15 @@ public class GSSixProjects
 {
     public static void main(String[] args)
     {
-        Employee edna = new Employee();
+        StudentAdvanceTicket ticket = new StudentAdvanceTicket(29);
+        if (ticket.canBuy())
+        {
+            System.out.println(ticket.toString());
+        }
 
-        System.out.println(edna.getVacationDays());
+        Hexagon hex = new Hexagon(5);
 
-        Secretary john = new Secretary();
-
-        System.out.println(john.getVacationDays());
+        System.out.println(hex.getArea());
     }
 
 
