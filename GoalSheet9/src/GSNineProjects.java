@@ -45,7 +45,7 @@ public class GSNineProjects
         {
             String s = i.next();
 
-            if (s.length() > 0)
+            if (!s.isEmpty())
             {
                 output = s.length();
             }
