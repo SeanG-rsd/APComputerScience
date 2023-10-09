@@ -3,7 +3,7 @@ public class GSTenProjects
 {
     public static void main(String[] args)
     {
-        System.out.println(writeSqaures(8));
+        System.out.println(writeSquares(7));
     }
 
     public static List<Integer> fibbonacci(int n)
@@ -31,7 +31,7 @@ public class GSTenProjects
         return output;
     }
 
-    public static List<Integer> writeSqaures(int n)
+    public static List<Integer> writeSquares(int n)
     {
         List<Integer> output = new LinkedList<>();
         if (n < 2)
@@ -42,16 +42,14 @@ public class GSTenProjects
         else if (n % 2 == 1)
         {
             output.add(n * n);
-            output.addAll(writeSqaures(n - 1));
+            output.addAll(writeSquares(n - 1));
             return output;
         }
-        else if (n % 2 == 0)
+        else
         {
+            output.addAll(writeSquares(n - 1));
             output.add(n * n);
-            output.addAll(writeSqaures(n - 1));
             return output;
         }
-
-        return output;
     }
 }
