@@ -1,9 +1,26 @@
 import java.util.*;
+import java.io.*;
 public class GSFiveProjects
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws FileNotFoundException
     {
-        hangman("bread");
+        hangman(pickRandomAnswer());
+    }
+
+    public static String pickRandomAnswer() throws FileNotFoundException
+    {
+        Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/GoalSheet5/src/hangmanInput"));
+
+        List<String> words = new LinkedList<>();
+        while (file.hasNext())
+        {
+            words.add(file.nextLine());
+        }
+
+        Random r = new Random();
+        int index = r.nextInt(words.size());
+
+        return words.get(index);
     }
 
     public static void outputSquares() // BJP Ch 7 Proj 5
@@ -65,6 +82,7 @@ public class GSFiveProjects
 
         if (ANSWER.equals(found))
         {
+            printHangman(ANSWER, ANSWER, numWrong);
             System.out.println("YOU WON!!");
 
         }
