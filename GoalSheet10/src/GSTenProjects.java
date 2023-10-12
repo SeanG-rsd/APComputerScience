@@ -93,7 +93,7 @@ public class GSTenProjects
         }
     }
 
-    public static void merge(String[] output, String[] left, String[] right)
+    public static void merge(String[] output, String[] left, String[] right) // lists have to be sorted
     {
         int l1 = 0;
         int l2 = 0;
