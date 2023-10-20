@@ -1,3 +1,4 @@
+import java.math.*;
 public class Point implements Comparable<Point>
 {
     private int x;
@@ -15,11 +16,7 @@ public class Point implements Comparable<Point>
     }
     public int compareTo(Point o)
     {
-        if (o.getY() != getY())
-        {
-            return getY() - o.getY();
-        }
-        return getX() - o.getX();
+        return Double.compare(getDistance(), o.getDistance());
     }
 
     public int getX()
@@ -35,5 +32,10 @@ public class Point implements Comparable<Point>
     public String toString()
     {
         return "(" + x + ", " + y + ")";
+    }
+
+    public double getDistance()
+    {
+        return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
     }
 }

@@ -5,7 +5,9 @@ public class GSTwelveProjects
 {
     public static void main(String[] args) throws FileNotFoundException
     {
-        binarySearch();
+        //binarySearch();
+
+        pointComparator();
     }
 
     public static void binarySearch() throws FileNotFoundException
@@ -44,5 +46,11 @@ public class GSTwelveProjects
         {
             return search(dictionary, target, mid + 1, max);
         }
+    }
+
+    public static void pointComparator()
+    {
+        PointComparator pointComparator = new PointComparator();
+        System.out.println(pointComparator.compare(new Point(1, 1), new Point(2, 2)));
     }
 }
