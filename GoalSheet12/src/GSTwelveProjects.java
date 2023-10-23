@@ -52,5 +52,9 @@ public class GSTwelveProjects
     {
         PointComparator pointComparator = new PointComparator();
         System.out.println(pointComparator.compare(new Point(1, 1), new Point(2, 2)));
+
+        List<Point> points = new LinkedList<>();
+        points.add(new Point(3, 3));
+        points.add(new Point(2, 2));
     }
 }
