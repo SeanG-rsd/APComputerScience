@@ -9,8 +9,10 @@ public class GSTwelveProjects
 
         //pointComparator();
         int[] array = new int[]{6,3,0,1,4,2,5,7,10,3,45,7};
-        selectionSort(array);
-        System.out.println(Arrays.toString(array));
+        //selectionSort(array);
+        //System.out.println(Arrays.toString(array));
+
+        dataProcessing();
     }
 
     public static void binarySearch() throws FileNotFoundException
@@ -98,8 +100,25 @@ public class GSTwelveProjects
 
     }
 
+    public enum SortType {FirstName, LastName, ID, Percentage, Grade};
     public static void dataProcessing()
     {
+        Student[] students = new Student[]
+                {
+                        new Student("Johnson", "Gus", "210498", "72.4", "C"),
+                        new Student("Reges", "Stu", "098736", "88.2", "B"),
+                        new Student("Reges", "Abe", "298575", "78.3", "C"),
+                        new Student("Smith", "Kelly", "438975", "98.6", "A"),
+                        new Student("Smith", "Marty", "346282", "84.1", "B")
+                };
 
+        List<Student> studentList = new LinkedList<>(Arrays.asList(students));
+
+        Collections.sort(studentList, new StudentComparator(SortType.LastName));
+        //Collections.reverse(studentList);
+
+        for (Student student : studentList) {
+            System.out.println(student.toString());
+        }
     }
 }
