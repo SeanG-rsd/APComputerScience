@@ -32,6 +32,13 @@ public class MastermindGame
         System.out.println("---------------------------");
     }
 
+    public String solver(String guess)
+    {
+        MastermindSolver solver = new MastermindSolver();
+        int[] pegs = pinCalc.calculatePegs(code, guess);
+        return solver.getNextGuess(pegs[0], pegs[1], guess);
+    }
+
     public static void printLine(String guess)
     {
         char[] guessChars = guess.toCharArray();

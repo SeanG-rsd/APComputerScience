@@ -18,12 +18,22 @@ public class PlayMastermind
 
         while (guessesUsed < maxGuesses && !game.hasWon())
         {
-            game.printBoard();
-            game.makeGuess(getGuess(console));
-            guessesUsed++;
+            //game.printBoard();
+            //game.makeGuess(getGuess(console));
+            //guessesUsed++;
+            guessesUsed = maxGuesses;
         }
 
         System.out.println();
+        String guess = game.solver("1234");
+        System.out.println(guess);
+        guess = game.solver(guess);
+        System.out.println(guess);
+        guess = game.solver(guess);
+        System.out.println(guess);
+        guess = game.solver(guess);
+        System.out.println(guess);
+
 
         if (game.hasWon())
         {
@@ -71,7 +81,7 @@ public class PlayMastermind
 
         for (int i = 0; i < length; ++i)
         {
-            code += r.nextInt(7);
+            code += r.nextInt(6) + 1;
         }
 
         return code;
