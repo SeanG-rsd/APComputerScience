@@ -8,8 +8,15 @@ public class MastermindGame
 
     private static MastermindPins pinCalc;
 
+    private static List<String> allCodes;
+    private static List<String> availableCodes;
+
     public MastermindGame(String code)
     {
+        allCodes = new LinkedList<>();
+        GetAllCodes();
+        availableCodes = new LinkedList<>(allCodes);
+
         guesses = new LinkedList<>();
         pinCalc = new MastermindPins();
 
@@ -36,7 +43,50 @@ public class MastermindGame
     {
         MastermindSolver solver = new MastermindSolver();
         int[] pegs = pinCalc.calculatePegs(code, guess);
-        return solver.getNextGuess(pegs[0], pegs[1], guess);
+        return solver.getNextGuess(pegs[0], pegs[1], guess, availableCodes);
+    }
+
+    public void solveAll()
+    {
+        MastermindSolver solver = new MastermindSolver();
+        int correct = 0;
+        int tested = 0;
+
+        float guessesUsed = 0;
+        List<Integer> guessesPer = new LinkedList<>();
+
+        for (String code : allCodes)
+        {
+            availableCodes = new LinkedList<>(allCodes);
+            String guess = "1122";
+            int guesses = 0;
+
+            while (guesses < 20)
+            {
+                int[] pegs = pinCalc.calculatePegs(code, guess);
+                guesses++;
+                guessesUsed++;
+                if (pegs[0] == 4)
+                {
+                    break;
+                }
+                guess = solver.getNextGuess(pegs[0], pegs[1], guess, availableCodes);
+            }
+
+            if (guesses <= 10)
+            {
+                correct++;
+            }
+
+            guessesPer.add(guesses);
+
+            tested++;
+        }
+
+        Collections.sort(guessesPer);
+        System.out.println(correct + "/" + tested);
+        System.out.println(guessesUsed / tested);
+        System.out.println(guessesPer.get(guessesPer.size() - 1));
     }
 
     public static void printLine(String guess)
@@ -93,5 +143,27 @@ public class MastermindGame
         return false;
     }
 
+    private static void GetAllCodes()
+    {
+        allCodes.clear();
 
+        for (int first = 1; first <= 6; ++first)
+        {
+            for (int second = 1; second <= 6; ++second)
+            {
+                for (int third = 1; third <= 6; ++third)
+                {
+                    for (int fourth = 1; fourth <= 6; ++fourth)
+                    {
+                        String add = String.valueOf(first);
+                        add += second;
+                        add += third;
+                        add += fourth;
+
+                        allCodes.add(add);
+                    }
+                }
+            }
+        }
+    }
 }

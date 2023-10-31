@@ -9,8 +9,10 @@ public class PlayMastermind
 
     private static String code;
 
+
     public static void main(String[] args)
     {
+
         code = getRandomCode(4);
 
         Scanner console = new Scanner(System.in);
@@ -24,15 +26,7 @@ public class PlayMastermind
             guessesUsed = maxGuesses;
         }
 
-        System.out.println();
-        String guess = game.solver("1234");
-        System.out.println(guess);
-        guess = game.solver(guess);
-        System.out.println(guess);
-        guess = game.solver(guess);
-        System.out.println(guess);
-        guess = game.solver(guess);
-        System.out.println(guess);
+        game.solveAll();
 
 
         if (game.hasWon())
@@ -86,4 +80,5 @@ public class PlayMastermind
 
         return code;
     }
+
 }
