@@ -42,7 +42,7 @@ public class MastermindGame
     public String solver(String guess)
     {
         MastermindSolver solver = new MastermindSolver();
-        int[] pegs = pinCalc.calculatePegs(code, guess);
+        int[] pegs = pinCalc.calculatePegs("3632", guess);
         return solver.getNextGuess(pegs[0], pegs[1], guess, availableCodes);
     }
 
