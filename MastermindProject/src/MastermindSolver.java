@@ -3,13 +3,18 @@ import java.util.*;
 public class MastermindSolver
 {
 
-    private MastermindPins pinCalc;
+    private final MastermindPins pinCalc;
 
-    private int[][] possiblePins = new int[][] { new int[] {4, 0}, new int[] {3, 0}, new int[] {2, 0}, new int[] {1, 0}, new int[] {0, 0}, new int[] {3, 1}, new int[] {2, 1}, new int[] {1, 1}, new int[] {0, 1}, new int[] {2, 2}, new int[] {1, 2}, new int[] {0, 2}, new int[] {1, 3}, new int[] {0, 3}, new int[] {0, 4}};
-
+    private final int[][] possiblePins = new int[][] { new int[] {4, 0}, new int[] {3, 0}, new int[] {2, 0}, new int[] {1, 0}, new int[] {0, 0}, new int[] {3, 1}, new int[] {2, 1}, new int[] {1, 1}, new int[] {0, 1}, new int[] {2, 2}, new int[] {1, 2}, new int[] {0, 2}, new int[] {0, 3}, new int[] {0, 4}};
+    private Map<int[], Integer> magicMap = new HashMap<>();
     public MastermindSolver()
     {
         pinCalc = new MastermindPins();
+
+        for (int[] pegs : possiblePins)
+        {
+            magicMap.put(pegs, 0);
+        }
     }
 
     public void ResetSolver()
@@ -17,24 +22,62 @@ public class MastermindSolver
 
     }
 
-    public String getNextGuess(int white, int black, String guess, List<String> availableCodes)
+    public boolean IsUnique(List<int[]> list)
+    {
+        for (int i = 0; i < list.size(); ++i)
+        {
+            for (int j = 0; j < list.size(); ++j)
+            {
+                if (list.get(i)[0] == list.get(j)[0] && list.get(i)[1] == list.get(j)[1] && i != j)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public String getNextGuess(int white, int black, String guess, List<String> availableCodes, List<String> allCodes, int guessNum)
     {
         availableCodes.removeIf(possibleAnswer -> !possibleAnswer(possibleAnswer, guess, white, black));
-        Map<String, Integer> smallest = new HashMap<>();
+
+        if (availableCodes.size() <= possiblePins.length && guessNum == 4)
+        {
+            for (String magic : allCodes)
+            {
+                List<int[]> magicPegs = new ArrayList<>();
+
+                for (String possible : availableCodes)
+                {
+                    int[] pegs = pinCalc.calculatePegs(possible, magic);
+                    magicPegs.add(pegs);
+                }
+
+                if (IsUnique(magicPegs))
+                {
+                    return magic;
+                }
+            }
+        }
+
+        Map<String, Integer> smallest = new TreeMap<>();
+        List<String> copy = new LinkedList<>();
 
         for (String code : availableCodes)
         {
-            List<String> copy = new LinkedList<>();
-
             for (int[] pins : possiblePins)
             {
                 copy = new LinkedList<>(availableCodes);
 
-                copy.removeIf(possibleAnswer -> !possibleAnswer(code, possibleAnswer, pins[0], pins[1]));
+                copy.removeIf(possibleAnswer -> !possibleAnswer(possibleAnswer, code, pins[0], pins[1]));
 
                 if (smallest.containsKey(code))
                 {
-                    smallest.put(code, copy.size() + smallest.get(code));
+                    if (copy.size() > smallest.get(code))
+                    {
+                        smallest.put(code, copy.size());
+                    }
                 }
                 else
                 {
@@ -46,7 +89,6 @@ public class MastermindSolver
         String output = "";
         for (String key : smallest.keySet())
         {
-            System.out.println(smallest.get(key));
             if (!smallest.containsKey(output))
             {
                 output = key;
@@ -56,16 +98,8 @@ public class MastermindSolver
                 output = key;
             }
         }
-        System.out.println(availableCodes.size());
 
-        return output;
-
-
-// 4.4761 max 5
-
-        //Random r = new Random();
-        //return availableCodes.get(0);
-        //return availableCodes.get(r.nextInt())
+        return output; // 4.471 max 5
     }
 
     private boolean possibleAnswer(String check, String guess, int white, int black)

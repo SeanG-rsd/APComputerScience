@@ -43,7 +43,7 @@ public class MastermindGame
     {
         MastermindSolver solver = new MastermindSolver();
         int[] pegs = pinCalc.calculatePegs("3632", guess);
-        return solver.getNextGuess(pegs[0], pegs[1], guess, availableCodes);
+        return solver.getNextGuess(pegs[0], pegs[1], guess, availableCodes, allCodes, 0);
     }
 
     public void solveAll()
@@ -57,6 +57,7 @@ public class MastermindGame
 
         for (String code : allCodes)
         {
+            System.out.println(code);
             availableCodes = new LinkedList<>(allCodes);
             String guess = "1122";
             int guesses = 0;
@@ -70,7 +71,7 @@ public class MastermindGame
                 {
                     break;
                 }
-                guess = solver.getNextGuess(pegs[0], pegs[1], guess, availableCodes);
+                guess = solver.getNextGuess(pegs[0], pegs[1], guess, availableCodes, allCodes, guesses + 1);
             }
 
             if (guesses <= 10)

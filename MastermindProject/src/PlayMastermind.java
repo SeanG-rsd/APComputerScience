@@ -26,12 +26,14 @@ public class PlayMastermind
             guessesUsed = maxGuesses;
         }
 
-        //game.solveAll();
-        String guess = game.solver("1122");
-        System.out.println(guess);
+        game.solveAll();
+        //System.out.println("1122");
+        //String guess = game.solver("1122");
+        //System.out.println(guess);
         //guess = game.solver(guess);
         //System.out.println(guess);
         //guess = game.solver(guess);
+        //System.out.println(guess);
 
 
         if (game.hasWon())
