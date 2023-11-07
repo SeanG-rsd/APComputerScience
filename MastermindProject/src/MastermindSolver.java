@@ -6,15 +6,9 @@ public class MastermindSolver
     private final MastermindPins pinCalc;
 
     private final int[][] possiblePins = new int[][] { new int[] {4, 0}, new int[] {3, 0}, new int[] {2, 0}, new int[] {1, 0}, new int[] {0, 0}, new int[] {3, 1}, new int[] {2, 1}, new int[] {1, 1}, new int[] {0, 1}, new int[] {2, 2}, new int[] {1, 2}, new int[] {0, 2}, new int[] {0, 3}, new int[] {0, 4}};
-    private Map<int[], Integer> magicMap = new HashMap<>();
     public MastermindSolver()
     {
         pinCalc = new MastermindPins();
-
-        for (int[] pegs : possiblePins)
-        {
-            magicMap.put(pegs, 0);
-        }
     }
 
     public void ResetSolver()
@@ -46,7 +40,7 @@ public class MastermindSolver
         {
             for (String magic : allCodes)
             {
-                List<int[]> magicPegs = new ArrayList<>();
+                List<int[]> magicPegs = new LinkedList<>();
 
                 for (String possible : availableCodes)
                 {
@@ -99,7 +93,7 @@ public class MastermindSolver
             }
         }
 
-        return output; // 4.471 max 5
+        return output; // 4.4761 max 5
     }
 
     private boolean possibleAnswer(String check, String guess, int white, int black)

@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+/*
+Name : Sean Gutmann
+
+ */
+
 public class HangmanProject
 {
     public static void main(String[] args) throws FileNotFoundException
