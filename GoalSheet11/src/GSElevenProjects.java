@@ -15,7 +15,7 @@ public class GSElevenProjects
 
         //System.out.println(sumTo(4));
         List<Integer> sequence = new LinkedList<>();
-        fibonnaci(10, sequence);
+        fibonnacci(10, sequence);
         System.out.println(sequence);
     }
 
@@ -92,7 +92,7 @@ public class GSElevenProjects
         }
     }
 
-    public static void fibonnaci(int n, List<Integer> sequence)
+    public static void fibonnacci(int n, List<Integer> sequence)
     {
         if (n < 1)
         {
@@ -109,7 +109,7 @@ public class GSElevenProjects
         }
         else
         {
-            fibonnaci(n - 1, sequence);
+            fibonnacci(n - 1, sequence);
             sequence.add(sequence.get(sequence.size() - 1) + sequence.get(sequence.size() - 2));
         }
     }

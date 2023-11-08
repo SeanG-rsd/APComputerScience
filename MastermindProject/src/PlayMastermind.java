@@ -1,6 +1,11 @@
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.io.File;
+
+/*
+Name : Sean Gutmann
+Project : Mastermind Game
+ */
 public class PlayMastermind
 {
 
@@ -10,44 +15,69 @@ public class PlayMastermind
     private static String code;
 
 
+    public static boolean wantsToPlay() // checks if the user wants to keep playing
+    {
+        String input = "";
+        Scanner console = new Scanner(System.in);
+
+        while (true)
+        {
+            System.out.print("\nWould you like to play mastermind?\nEnter your answer (y or n) : ");
+            input = console.nextLine();
+            char[] chars = input.toUpperCase().toCharArray();
+
+            if (chars[0] == 'Y')
+            {
+                return true;
+            }
+            else if (chars[0] == 'N')
+            {
+                return false;
+            }
+        }
+    }
     public static void main(String[] args)
     {
-
-        code = getRandomCode(4);
-
         Scanner console = new Scanner(System.in);
-        MastermindGame game = new MastermindGame(code);
 
-        while (guessesUsed < maxGuesses && !game.hasWon())
+        while (wantsToPlay())
         {
-            //game.printBoard();
-            //game.makeGuess(getGuess(console));
-            //guessesUsed++;
-            guessesUsed = maxGuesses;
-        }
+            guessesUsed = 0;
+            code = getRandomCode(4);
+            MastermindGame game = new MastermindGame("3632");
 
-        game.solveAll();
-        //System.out.println("1122");
-        //String guess = game.solver("1122");
-        //System.out.println(guess);
-        //guess = game.solver(guess);
-        //System.out.println(guess);
-        //guess = game.solver(guess);
-        //System.out.println(guess);
+            while (guessesUsed < maxGuesses && !game.hasWon()) // main game loop
+            {
+                game.printBoard();
+                game.makeGuess(getGuess(console));
+                guessesUsed++;
+                //guessesUsed = maxGuesses;
+            }
+
+            //game.solveAll(); // for knuth algorithm
+            //System.out.println("1122");
+            //String guess = game.solver("1122");
+            //System.out.println(guess);
+            //guess = game.solver(guess);
+            //System.out.println(guess);
+            //guess = game.solver(guess);
+            //System.out.println(guess);
 
 
-        if (game.hasWon())
-        {
-            System.out.println("YOU WIN");
-        }
-        else
-        {
-            System.out.println("YOU LOSE");
+            if (game.hasWon())
+            {
+                System.out.println("YOU WIN");
+            }
+            else
+            {
+                System.out.println("YOU LOSE");
+                System.out.println("Answer was : " + code);
+            }
         }
 
     }
 
-    public static String getGuess(Scanner console)
+    public static String getGuess(Scanner console) // gets a guess from a player and loops until they enter a valid guess
     {
         System.out.print("Make a guess : ");
         String guess = console.nextLine();
@@ -75,7 +105,7 @@ public class PlayMastermind
         }
     }
 
-    public static String getRandomCode(int length)
+    public static String getRandomCode(int length) // gets a random code to play with
     {
         Random r = new Random();
         String code = "";

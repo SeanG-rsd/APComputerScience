@@ -27,7 +27,7 @@ public class MastermindGame
             guesses.add(noGuess);
         }
     }
-    public void printBoard()
+    public void printBoard() // prints the board
     {
         printAnswerBox();
 
@@ -39,14 +39,14 @@ public class MastermindGame
         System.out.println("---------------------------");
     }
 
-    public String solver(String guess)
+    public String solver(String guess) // knuth test
     {
         MastermindSolver solver = new MastermindSolver();
         int[] pegs = pinCalc.calculatePegs("3632", guess);
         return solver.getNextGuess(pegs[0], pegs[1], guess, availableCodes, allCodes, 0);
     }
 
-    public void solveAll()
+    public void solveAll() // knuth algorithm
     {
         MastermindSolver solver = new MastermindSolver();
         int correct = 0;
@@ -90,7 +90,7 @@ public class MastermindGame
         System.out.println(guessesPer.get(guessesPer.size() - 1));
     }
 
-    public static void printLine(String guess)
+    public static void printLine(String guess) // prints part of the board
     {
         char[] guessChars = guess.toCharArray();
 
@@ -111,7 +111,7 @@ public class MastermindGame
         System.out.println("|              |          |");
     }
 
-    public static void printAnswerBox()
+    public static void printAnswerBox() // prints the answer box at the top
     {
         System.out.println("---------------------------");
         System.out.println("|    ?????     |**********|");
@@ -119,7 +119,7 @@ public class MastermindGame
         System.out.println("|    ?????     |**********|");
     }
 
-    public void makeGuess(String guess)
+    public void makeGuess(String guess) // makes a guess from the player input
     {
         for (int i = guesses.size() - 1; i >= 0; i--)
         {
@@ -131,7 +131,7 @@ public class MastermindGame
         }
     }
 
-    public boolean hasWon()
+    public boolean hasWon() // checks if the player has won
     {
         for (int i = guesses.size() - 1; i >= 0; --i)
         {
@@ -144,7 +144,7 @@ public class MastermindGame
         return false;
     }
 
-    private static void GetAllCodes()
+    private static void GetAllCodes() // gets all the codes for the start of the game
     {
         allCodes.clear();
 

@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 /*
 Name : Sean Gutmann
-
+Project : Hangman
  */
 
 public class HangmanProject
@@ -17,7 +17,7 @@ public class HangmanProject
         hangman(pickRandomAnswer());
     }
 
-    public static String pickRandomAnswer() throws FileNotFoundException
+    public static String pickRandomAnswer() throws FileNotFoundException // picks a random answer from a file
     {
         Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Semester1Proj1/src/hangmanInput"));
 
@@ -34,52 +34,80 @@ public class HangmanProject
         return words.get(index);
     }
 
-    public static void hangman(String answer)
+    public static boolean wantsToPlay() // checks if the user wants to keep playing
     {
-        char[] guessable = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-        char[] guessed = new char[26];
-
-        int numWrong = 0;
-        int MAX_WRONG = 6;
-
-        String ANSWER = answer;
-        String found = "";
-        found = calculateFound(ANSWER, guessed);
-
+        String input = "";
         Scanner console = new Scanner(System.in);
 
-        while (!hasWonOrLost(ANSWER, found, numWrong, MAX_WRONG))
+        while (true)
         {
-            printHangman(ANSWER, found, numWrong);
+            System.out.print("\nWould you like to play hangman?\nEnter your answer (y or n) : ");
+            input = console.nextLine();
+            char[] chars = input.toUpperCase().toCharArray();
 
-            guessed = getInput(console, guessed, guessable);
-
-            found = calculateFound(ANSWER, guessed);
-
-            numWrong = getWrong(ANSWER, guessed);
-        }
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-
-
-        if (numWrong >= MAX_WRONG)
-        {
-            System.out.println("YOU LOST.");
-        }
-
-        if (ANSWER.equals(found))
-        {
-            printHangman(ANSWER, ANSWER, numWrong);
-            System.out.println("YOU WON!!");
-
+            if (chars[0] == 'Y')
+            {
+                return true;
+            }
+            else if (chars[0] == 'N')
+            {
+                return false;
+            }
         }
     }
 
-    public static boolean hasWonOrLost(String ANSWER, String found, int wrongGuesses, int maxWrong)
+    public static void hangman(String answer) // the main loop
+    {
+        while (wantsToPlay())
+        {
+            char[] guessable = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+            char[] guessed = new char[26];
+
+            int numWrong = 0;
+            int MAX_WRONG = 6;
+
+            String ANSWER = answer;
+            String found = "";
+            found = calculateFound(ANSWER, guessed);
+
+            Scanner console = new Scanner(System.in);
+
+            while (!hasWonOrLost(ANSWER, found, numWrong, MAX_WRONG)) // game loop until win or lose
+            {
+                printHangman(ANSWER, found, numWrong);
+
+                guessed = getInput(console, guessed, guessable);
+
+                found = calculateFound(ANSWER, guessed);
+
+                numWrong = getWrong(ANSWER, guessed);
+            }
+
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+
+
+            if (numWrong >= MAX_WRONG)
+            {
+                printHangman(ANSWER, ANSWER, numWrong);
+                System.out.println("YOU LOST.");
+            }
+
+            if (ANSWER.equals(found))
+            {
+                printHangman(ANSWER, ANSWER, numWrong);
+                System.out.println("YOU WON!!");
+
+            }
+        }
+
+        System.out.println("\n\n\n\nThanks for playing!!");
+    }
+
+    public static boolean hasWonOrLost(String ANSWER, String found, int wrongGuesses, int maxWrong) // checks if the player has won or lost
     {
         if (wrongGuesses >= maxWrong || ANSWER.equals(found))
         {
@@ -89,7 +117,7 @@ public class HangmanProject
         return false;
     }
 
-    public static char[] getInput(Scanner console, char[] guessed, char[] base)
+    public static char[] getInput(Scanner console, char[] guessed, char[] base) // gets input from the player
     {
         System.out.println();
         System.out.print("Guessed : ");
@@ -132,7 +160,7 @@ public class HangmanProject
         return guessed;
     }
 
-    public static char[] calculateGuessable(char[] base, char[] guessed)
+    public static char[] calculateGuessable(char[] base, char[] guessed) // calculate what has been guessed and what letters are possible for the answer
     {
         char[] guessable = new char[26];
 
@@ -165,7 +193,7 @@ public class HangmanProject
         return guessable;
     }
 
-    public static void printHangman(String answer, String found, int wrongGuesses)
+    public static void printHangman(String answer, String found, int wrongGuesses) // prints out the board
     {
         printMan(wrongGuesses);
 
@@ -174,7 +202,7 @@ public class HangmanProject
         printBoxEdge(answer.length());
     }
 
-    public static void printMan(int wrongGuesses)
+    public static void printMan(int wrongGuesses) // prints out the possible man
     {
         if (wrongGuesses == 6)
         {
@@ -241,7 +269,7 @@ public class HangmanProject
         }
     }
 
-    public static void printBoxEdge(int length)
+    public static void printBoxEdge(int length) // prints the box
     {
         for (int i = 0; i < ((length + 1) * 3 + 1); ++i)
         {
@@ -250,7 +278,7 @@ public class HangmanProject
         System.out.println();
     }
 
-    public static void printBoxWord(int length, String found)
+    public static void printBoxWord(int length, String found) // prints the word for the board
     {
         System.out.print("|  ");
         found = found.toUpperCase();
@@ -261,7 +289,7 @@ public class HangmanProject
         System.out.println("|");
     }
 
-    public static String calculateFound(String ANSWER, char[] guessed)
+    public static String calculateFound(String ANSWER, char[] guessed) // calculate the shown word for the box
     {
         String found = "";
 
@@ -283,7 +311,7 @@ public class HangmanProject
         return found;
     }
 
-    public static int getWrong(String ANSWER, char[] guessed)
+    public static int getWrong(String ANSWER, char[] guessed) // check how many the player has wrong
     {
         int wrong = 0;
 

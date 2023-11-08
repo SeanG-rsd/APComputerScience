@@ -5,7 +5,7 @@ public class MastermindPins
     {
 
     }
-    public int[] calculatePegs(String code, String guess)
+    public int[] calculatePegs(String code, String guess) // gets the score for a certain guess relating to the code
     {
         char[] codeChars = code.toCharArray();
 
