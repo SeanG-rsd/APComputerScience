@@ -40,21 +40,32 @@ public class PlayMastermind
     {
         Scanner console = new Scanner(System.in);
 
-        while (wantsToPlay())
+        MastermindGame g = new MastermindGame(code);
+
+        g.solveAll(); // for knuth algorithm
+        //System.out.println("1122");
+        //String guess = g.solver("1122");
+        //System.out.println(guess);
+        //guess = g.solver(guess);
+        //System.out.println(guess);
+        //guess = g.solver(guess);
+        //System.out.println(guess);
+
+        while (wantsToPlay() && false)
         {
             guessesUsed = 0;
             code = getRandomCode(4);
-            MastermindGame game = new MastermindGame("3632");
+            MastermindGame game = new MastermindGame(code);
 
             while (guessesUsed < maxGuesses && !game.hasWon()) // main game loop
             {
-                game.printBoard();
-                game.makeGuess(getGuess(console));
-                guessesUsed++;
-                //guessesUsed = maxGuesses;
+                //game.printBoard();
+                //game.makeGuess(getGuess(console));
+                //guessesUsed++;
+                guessesUsed = maxGuesses;
             }
 
-            //game.solveAll(); // for knuth algorithm
+            game.solveAll(); // for knuth algorithm
             //System.out.println("1122");
             //String guess = game.solver("1122");
             //System.out.println(guess);

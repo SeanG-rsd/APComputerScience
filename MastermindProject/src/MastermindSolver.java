@@ -36,7 +36,7 @@ public class MastermindSolver
     {
         availableCodes.removeIf(possibleAnswer -> !possibleAnswer(possibleAnswer, guess, white, black));
 
-        if (availableCodes.size() <= possiblePins.length && guessNum == 4)
+        /*if (availableCodes.size() <= possiblePins.length && guessNum == 4)
         {
             for (String magic : allCodes)
             {
@@ -53,10 +53,10 @@ public class MastermindSolver
                     return magic;
                 }
             }
-        }
+        }*/
 
         Map<String, Integer> smallest = new TreeMap<>();
-        List<String> copy = new LinkedList<>();
+        /*List<String> copy = new LinkedList<>();
 
         for (String code : availableCodes)
         {
@@ -78,22 +78,55 @@ public class MastermindSolver
                     smallest.put(code, copy.size());
                 }
             }
+        }*/
+
+        for (String code1 : allCodes)
+        {
+            int scores[] = new int[41];
+            for (String code2 : availableCodes)
+            {
+                int[] pegs = pinCalc.calculatePegs(code1, code2);
+                int s = pegs[1] * 10 + pegs[0];
+                scores[s]++;
+            }
+
+            int max = 0;
+            for (int score : scores)
+            {
+                if (score > max)
+                {
+                    smallest.put(code1, score);
+                    max = score;
+                }
+            }
         }
 
         String output = "";
+        List<String> possibleGuesses = new LinkedList<>();
+        int min = 1296;
         for (String key : smallest.keySet())
         {
-            if (!smallest.containsKey(output))
+            if (smallest.get(key) < min)
             {
-                output = key;
+                min = smallest.get(key);
+                possibleGuesses = new LinkedList<>();
+                possibleGuesses.add(key);
             }
-            else if (smallest.get(key) < smallest.get(output))
+            else if (smallest.get(key) == min)
             {
-                output = key;
+                possibleGuesses.add(key);
+            }
+        }
+        //System.out.println(possibleGuesses);
+        for (String s : possibleGuesses)
+        {
+            if (availableCodes.contains(s))
+            {
+                return s;
             }
         }
 
-        return output; // 4.4761 max 5
+        return possibleGuesses.get(0); // 4.4761 max 5
     }
 
     private boolean possibleAnswer(String check, String guess, int white, int black)
