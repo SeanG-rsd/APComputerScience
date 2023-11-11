@@ -5,14 +5,14 @@ public class GSTwelveProjects
 {
     public static void main(String[] args) throws FileNotFoundException
     {
-        //binarySearch();
+        binarySearch();
 
         //pointComparator();
-        int[] array = new int[]{6,3,0,1,4,2,5,7,10,3,45,7};
+        //int[] array = new int[]{6,3,0,1,4,2,5,7,10,3,45,7};
         //selectionSort(array);
         //System.out.println(Arrays.toString(array));
 
-        dataProcessing();
+        //dataProcessing();
     }
 
     public static void binarySearch() throws FileNotFoundException
