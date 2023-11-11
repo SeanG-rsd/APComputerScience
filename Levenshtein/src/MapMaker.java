@@ -4,7 +4,7 @@ import java.util.*;
 public class MapMaker
 {
     private static List<String> dictionary = new LinkedList<>();
-    private static Map<String, List<String>> wordMap = new HashMap<>();
+    private static Map<String, Set<String>> wordMap = new HashMap<>();
 
     public MapMaker(String filename) throws FileNotFoundException
     {
@@ -27,17 +27,30 @@ public class MapMaker
     {
         WordMaker wordMaker = new WordMaker();
         Collections.sort(dictionary);
-        //List<String> possibleWords = new LinkedList<>(wordMaker.MakeWords("dog"));
-        System.out.println(dictionary);
-        System.out.println(wordExists("dil", 0, dictionary.size()));
-        //System.out.println(possibleWords);
+        //System.out.println(dictionary);
+        int c = 0;
+        for (String word : dictionary)
+        {
+            System.out.println(c);
+            c++;
+            Set<String> possibleWords = new HashSet<>();
+            wordMaker.MakeWords(word, possibleWords);
+            possibleWords.removeIf(check -> wordExists(check, 0, dictionary.size() - 1) == -1 || Objects.equals(check, word));
+
+            wordMap.put(word, possibleWords);
+        }
+
+        for (String s : wordMap.keySet())
+        {
+            //System.out.println(s + " : " + wordMap.get(s));
+        }
     }
 
     public static int wordExists(String target, int min, int max)
     {
-        int mid = (max - min) / 2;
+        int mid = (max + min) / 2;
 
-        if (min < max)
+        if (min > max)
         {
             return -1;
         }

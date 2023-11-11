@@ -7,29 +7,29 @@ public class WordMaker
 
     }
 
-    public List<String> MakeWords(String original)
+    public void MakeWords(String original, Set<String> set)
     {
-        List<String> output = new LinkedList<>();
-
-        for (int i = 0; i < original.length(); ++i)
+        for (int i = 0; i <= original.length(); ++i)
         {
             for (char c : chars)
             {
-                // change a letter already there
-                output.add(ChangeLetter(original, i, c));
-                // remove a letter
-                output.add(RemoveLetter(original, i));
+                if (i < original.length())
+                {
+                    // change a letter already there
+                    set.add(ChangeLetter(original, i, c));
+                    // remove a letter
+                    set.add(RemoveLetter(original, i));
+                }
                 // add a letter
-                output.add(AddLetter(original, i, c));
+                //output.add(AddLetter(original, i, c));
             }
         }
-
-        return output;
     }
 
     public static String AddLetter(String original, int index, char c)
     {
-        return c + original;
+        String s = original.substring(0, index) + c + original.substring(index);
+        return s;
     }
 
     public static String ChangeLetter(String original, int index, char c)

@@ -27,7 +27,7 @@ public class GSTwelveProjects
         }
 
         Collections.sort(dictionary);
-        int index = search(dictionary, "found", 0, dictionary.size() - 1);
+        int index = search(dictionary, "wqrewrewr", 0, dictionary.size() - 1);
         System.out.println(index);
     }
 
