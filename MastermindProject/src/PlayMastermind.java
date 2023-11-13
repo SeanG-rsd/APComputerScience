@@ -51,7 +51,7 @@ public class PlayMastermind
         //guess = g.solver(guess);
         //System.out.println(guess);
 
-        while (wantsToPlay() && false)
+        while (wantsToPlay())
         {
             guessesUsed = 0;
             code = getRandomCode(4);
@@ -65,7 +65,7 @@ public class PlayMastermind
                 guessesUsed = maxGuesses;
             }
 
-            game.solveAll(); // for knuth algorithm
+            //game.solveAll(); // for knuth algorithm
             //System.out.println("1122");
             //String guess = game.solver("1122");
             //System.out.println(guess);

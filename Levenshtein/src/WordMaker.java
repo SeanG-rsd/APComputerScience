@@ -9,9 +9,9 @@ public class WordMaker
 
     public void MakeWords(String original, Set<String> set)
     {
-        for (int i = 0; i <= original.length(); ++i)
+        for (char c : chars)
         {
-            for (char c : chars)
+            for (int i = 0; i <= original.length(); ++i)
             {
                 if (i < original.length())
                 {
