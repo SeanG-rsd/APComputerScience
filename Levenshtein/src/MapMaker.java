@@ -21,6 +21,7 @@ public class MapMaker
         }
 
         CreateMap();
+        SaveMap();
     }
 
     private static void CreateMap()
@@ -46,11 +47,26 @@ public class MapMaker
             System.out.println(c);
             c++;
         }
+
+        for (String word : wordMap.keySet())
+        {
+            //System.out.println(word + " : " + wordMap.get(word));
+        }
     }
 
-    private static void SaveMap()
+    private static void SaveMap() throws FileNotFoundException
     {
+        PrintStream printStream = new PrintStream("D:\\Documents\\GitHub\\APComputerScience\\WORD_MAP.txt");
+        for (String key : wordMap.keySet())
+        {
+            printStream.println(key + " : " + wordMap.get(key));
+        }
+        printStream.close();
+    }
 
+    private static void ReadMap() throws FileNotFoundException
+    {
+        
     }
 
     public static boolean AreNeighbors(String word1, String word2)

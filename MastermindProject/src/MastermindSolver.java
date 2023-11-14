@@ -36,29 +36,10 @@ public class MastermindSolver
     {
         availableCodes.removeIf(possibleAnswer -> !possibleAnswer(possibleAnswer, guess, white, black));
 
-        /*if (availableCodes.size() <= possiblePins.length && guessNum == 4)
-        {
-            for (String magic : allCodes)
-            {
-                List<int[]> magicPegs = new LinkedList<>();
-
-                for (String possible : availableCodes)
-                {
-                    int[] pegs = pinCalc.calculatePegs(possible, magic);
-                    magicPegs.add(pegs);
-                }
-
-                if (IsUnique(magicPegs))
-                {
-                    return magic;
-                }
-            }
-        }*/
-
         Map<String, Integer> smallest = new TreeMap<>();
-        /*List<String> copy = new LinkedList<>();
+        List<String> copy = new LinkedList<>();
 
-        for (String code : availableCodes)
+        /*for (String code : allCodes)
         {
             for (int[] pins : possiblePins)
             {
