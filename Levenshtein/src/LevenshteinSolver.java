@@ -6,7 +6,7 @@ public class LevenshteinSolver
     private static MapMaker mapMaker;
     public static void main(String[] args) throws FileNotFoundException
     {
-        mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionaryCatDog");
+        mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionaryCatDog");
 
         FindShortestPath(new LinkedList<>(List.of("cat")), "cat", "dog", 1);
     }
