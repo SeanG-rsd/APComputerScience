@@ -6,14 +6,14 @@ public class LevenshteinSolver
     private static MapMaker mapMaker;
     public static void main(String[] args) throws FileNotFoundException
     {
-        mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
+        mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
 
         String start = "dog";
-        String end = "smart";
+        String end = "cat";
 
         List<List<String>> possiblePaths = new LinkedList<>();
         Threading(start, end, possiblePaths);
-        //FindShortestPath(new LinkedList<>(List.of("dog")), "dog", "smart", 0, possiblePaths);
+        //FindShortestPath(new LinkedList<>(List.of(start)), start, end, 0, possiblePaths);
 
         int min = 999999;
         List<List<String>> shortestPaths = new LinkedList<>();
@@ -31,7 +31,7 @@ public class LevenshteinSolver
             }
         }
 
-        for (List<String> s : shortestPaths)
+        for (List<String> s : possiblePaths)
         {
             System.out.println(s);
         }
@@ -49,7 +49,7 @@ public class LevenshteinSolver
         for (String s : firstNeighbors)
         {
             System.out.println(s);
-            LevThread thread = new LevThread(new LinkedList<>(List.of(start, s)), s, end, mapMaker, 0);
+            LevThread thread = new LevThread(new LinkedList<>(List.of(start, s)), s, end, mapMaker, 1);
             thread.start();
 
             threads.add(thread);
@@ -67,14 +67,29 @@ public class LevenshteinSolver
         }
     }
 
+    public static int GetCurrentShortest(List<List<String>> possiblePaths)
+    {
+        int min = 6;
+        for (List<String> s : possiblePaths)
+        {
+            if (s.size() < min)
+            {
+                //System.out.println(s.size());
+                min = s.size();
+            }
+        }
+
+        return min;
+    }
+
     public static void FindShortestPath(List<String> visited, String start, String end, int index, List<List<String>> possiblePaths)
     {
         //System.out.print((index + 1) + " : ");
         //for (int i = 0; i < index; ++i) { System.out.print("  "); }
-        //System.out.println(start + " : " + index);
+        System.out.println(start + " : " + index);
         List<String> neighbors = mapMaker.Get(start);
         //System.out.println(start);
-        if (index > 5)
+        if (index > GetCurrentShortest(possiblePaths))
         {
             return;
         }
@@ -127,7 +142,7 @@ class LevThread extends Thread
         List<String> neighbors = mapMaker.Get(start);
         //System.out.println(start);
 
-        if (index > 5)
+        if (index > LevenshteinSolver.GetCurrentShortest(possiblePaths) - 1)
         {
             return;
         }
@@ -142,7 +157,9 @@ class LevThread extends Thread
                 if (Objects.equals(s, end))
                 {
                     possiblePaths.add(newVisited);
-                    System.out.println("path found");
+                    System.out.println("path found : " + newVisited.get(1) + ", current shortest : " + LevenshteinSolver.GetCurrentShortest(possiblePaths));
+                    //System.out.println(newVisited);
+                    //System.out.println(index);
                 }
 
                 int i = index + 1;

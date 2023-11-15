@@ -66,7 +66,8 @@ public class MapMaker
 
     private static void SaveMap() throws FileNotFoundException
     {
-        PrintWriter printStream = new PrintWriter("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP");
+        //PrintWriter printStream = new PrintWriter("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP");
+        PrintWriter printStream = new PrintWriter("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP");
         for (String key : wordMap.keySet())
         {
             printStream.println(key + " : " + wordMap.get(key));
@@ -76,7 +77,8 @@ public class MapMaker
 
     private static void ReadMap() throws FileNotFoundException
     {
-        Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
+        Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP"));
+        //Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
 
         while (file.hasNextLine())
         {
