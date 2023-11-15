@@ -4,7 +4,7 @@ import java.util.*;
 public class MapMaker
 {
     private static List<String> dictionary = new LinkedList<>();
-    private static Map<String, List<String>> wordMap = new HashMap<>();
+    public static Map<String, List<String>> wordMap = new TreeMap<>();
 
     public MapMaker(String filename) throws FileNotFoundException
     {
@@ -20,8 +20,18 @@ public class MapMaker
             dictionary.add(file.nextLine());
         }
 
-        CreateMap();
-        SaveMap();
+        //CreateMap();
+        //SaveMap();
+        ReadMap();
+        //PrintMap();
+    }
+
+    private static void PrintMap()
+    {
+        for (String word : wordMap.keySet())
+        {
+            System.out.println(word + " : " + wordMap.get(word));
+        }
     }
 
     private static void CreateMap()
@@ -56,7 +66,7 @@ public class MapMaker
 
     private static void SaveMap() throws FileNotFoundException
     {
-        PrintStream printStream = new PrintStream("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP");
+        PrintWriter printStream = new PrintWriter("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP");
         for (String key : wordMap.keySet())
         {
             printStream.println(key + " : " + wordMap.get(key));
@@ -66,7 +76,41 @@ public class MapMaker
 
     private static void ReadMap() throws FileNotFoundException
     {
-        
+        Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
+
+        while (file.hasNextLine())
+        {
+            String line = file.nextLine();
+
+            String key = "";
+            List<String> keyNeighbors = new LinkedList<>();
+
+            int first = 0;
+
+            for (int i = 0; i < line.length(); ++i)
+            {
+                if (line.charAt(i) == ':')
+                {
+                    key = line.substring(0, i - 1);
+                }
+                if (line.charAt(i) == '[')
+                {
+                    first = i + 1;
+                }
+                if (line.charAt(i) == ',')
+                {
+                    keyNeighbors.add(line.substring(first, i));
+                    first = i + 2;
+                }
+                if (line.charAt(i) == ']')
+                {
+                    keyNeighbors.add(line.substring(first, i));
+                    first = i + 2;
+                }
+            }
+
+            wordMap.put(key, keyNeighbors);
+        }
     }
 
     public static boolean AreNeighbors(String word1, String word2)
