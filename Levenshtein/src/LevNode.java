@@ -38,4 +38,32 @@ public class LevNode
     {
         isDead = d;
     }
+
+    public int[] NeighborEV(String end)
+    {
+        int[] ev = new int[neighbors.size()];
+        for (int i = 0; i < ev.length; ++i)
+        {
+            String s = neighbors.get(i);
+            if (s.length() < key.length())
+            {
+                ev[i]++;
+            }
+            else if (s.length() == key.length())
+            {
+                char changed = '0';
+                for (int k = 0; k < key.length(); ++k)
+                {
+                    if (key.charAt(k) != s.charAt(k))
+                    {
+                        changed = key.charAt(k);
+                    }
+                }
+
+                
+            }
+        }
+
+        return ev;
+    }
 }

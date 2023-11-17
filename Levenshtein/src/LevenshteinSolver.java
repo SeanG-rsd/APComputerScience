@@ -8,8 +8,8 @@ public class LevenshteinSolver
 
     public static void main(String[] args) throws FileNotFoundException
     {
-        //mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
-        mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
+        mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
+        //mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
 
         String start = "cat"; // puppy
         String end = "dog"; // dog
@@ -97,10 +97,21 @@ public class LevenshteinSolver
         List<String> neighbors = node.GetNeighbors();
         //System.out.println(start);
 
+        if (neighbors.contains(end))
+        {
+            List<LevNode> newVisited = new LinkedList<>(visited);
+            newVisited.add(new LevNode(mapMaker.Get(end)));
+
+            possiblePaths.add(Path(newVisited));
+            System.out.println("end : " + Path(newVisited));
+            return;
+        }
+
         if (index > GetCurrentShortest(possiblePaths, minIndex) - 1)
         {
             return;
         }
+
         for (String s : neighbors)
         {
             LevNode n = mapMaker.Get(s);
@@ -111,24 +122,15 @@ public class LevenshteinSolver
                 List<LevNode> newVisited = new LinkedList<>(visited);
                 newVisited.add(new LevNode(n));
 
-                if (Objects.equals(s, end))
-                {
-                    possiblePaths.add(Path(newVisited));
-                    System.out.println("end : " + Path(newVisited));
-                    //return;
-                }
-                else
-                {
-                    int i = index + 1;
-                    FindShortestPath(newVisited, s, end, i, possiblePaths);
-                }
+                int i = index + 1;
+                FindShortestPath(newVisited, s, end, i, possiblePaths);
             }
         }
 
         if (neighbors.isEmpty() || NeighborsAreDead(node))
         {
-            System.out.println("Set " + start + " to dead");
-            node.changeDead(true);
+            //System.out.println("Set " + start + " to dead");
+            //node.changeDead(true);
         }
     }
 
