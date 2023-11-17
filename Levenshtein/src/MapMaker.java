@@ -5,6 +5,7 @@ public class MapMaker
 {
     private static List<String> dictionary = new LinkedList<>();
     public static Map<String, List<String>> wordMap = new TreeMap<>();
+    public static Map<String, LevNode> nodeMap = new TreeMap<>();
 
     public MapMaker(String filename) throws FileNotFoundException
     {
@@ -77,8 +78,8 @@ public class MapMaker
 
     private static void ReadMap() throws FileNotFoundException
     {
-        Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP"));
-        //Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
+        //Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP"));
+        Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
 
         while (file.hasNextLine())
         {
@@ -112,6 +113,7 @@ public class MapMaker
             }
 
             wordMap.put(key, keyNeighbors);
+            nodeMap.put(key, new LevNode(key, keyNeighbors, false));
         }
     }
 
@@ -162,8 +164,8 @@ public class MapMaker
         return false;
     }
 
-    public List<String> Get(String word)
+    public LevNode Get(String word)
     {
-        return wordMap.get(word);
+        return nodeMap.get(word);
     }
 }
