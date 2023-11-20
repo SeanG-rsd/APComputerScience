@@ -88,7 +88,7 @@ public class LevenshteinSolver
         return min;
     }
 
-    public static void FindShortestPath(List<LevNode> visited, String start, String end, int index, List<List<String>> possiblePaths)
+    public static void FindShortestPath(List<LevNode> visited, String start, String end, int index, List<List<String>> possiblePaths) // depth first attempt
     {
         //System.out.print((index + 1) + " : ");
         //for (int i = 0; i < index; ++i) { System.out.print("  "); }
