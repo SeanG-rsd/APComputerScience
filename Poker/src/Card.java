@@ -1,4 +1,5 @@
 public class Card implements Comparable<Card>
+
 {
     private final static String[] Suits  = new String[] {"Hearts", "Diamonds", "Clubs", "Spades"};
     private final static Character[] SuitChars = new Character[] {'♥', '♦', '♣', '♠'};
