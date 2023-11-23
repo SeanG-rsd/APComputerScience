@@ -101,17 +101,49 @@ public class PokerTable
                 }
                 else
                 {
-                    EvaluateHands();
-                    //pot = 0;
+                    List<Gambler> winners = EvaluateHands(currentGamblers);
+                    int winnings = pot / winners.size();
+                    int leftOver = pot % winners.size();
+                    for (Gambler g : winners)
+                    {
+                        g.WinHand(winnings);
+                    }
+                    Random r = new Random();
+                    int i = r.nextInt(winners.size());
+                    winners.get(i).WinHand(leftOver);
+                    pot = 0;
                 }
             }
 
         }
     }
 
-    private static Gambler EvaluateHands()
+    private static List<Gambler> EvaluateHands(List<Gambler> currentGamblers)
     {
-        return gamblers.get(0);
+        HandComparator handComparator = new HandComparator(table);
+        Map<Gambler, HandInfo> bestHands = new HashMap<>();
+        for (Gambler g : currentGamblers)
+        {
+            bestHands.put(g, handComparator.GetBestPlayerHand(g.GetHand()));
+        }
+        List<Gambler> currentBests = new ArrayList<>();
+        for (Gambler g : bestHands.keySet())
+        {
+            if (currentBests.isEmpty())
+            {
+                currentBests.add(g);
+            }
+            if (bestHands.get(g).compareTo(bestHands.get(currentBests.get(0))) > 0)
+            {
+                currentBests.clear();
+                currentBests.add(g);
+            }
+            else if (bestHands.get(g).compareTo(bestHands.get(currentBests.get(0))) == 0)
+            {
+                currentBests.add(g);
+            }
+        }
+        return currentBests;
     }
 
     private static void PrintTable(int pot)

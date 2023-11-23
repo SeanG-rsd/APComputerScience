@@ -2,7 +2,7 @@ import java.util.Comparator;
 import java.util.*;
 import java.util.jar.JarEntry;
 
-public class HandComparator //implements Comparator<List<Card>>
+public class HandComparator
 {
     static List<Card> table = new ArrayList<>();
     private enum HandTypes {RoyalFlush, StraightFlush, FourOfAKind, FullHouse, Flush, Straight, ThreeOfAKind, TwoPair, Pair, HighCard};
@@ -10,78 +10,60 @@ public class HandComparator //implements Comparator<List<Card>>
     {
         table = t;
     }
+    private static final HandInfo NULL = new HandInfo(0, 0);
 
-    private static HandInfo NULL = new HandInfo(0, 0);
-
-    public static void main(String[] args)
+    public HandInfo GetBestPlayerHand(List<Card> hand)
     {
-        table = new LinkedList<>(List.of(new Card(2, 2, 2), new Card(1, 1, 1), new Card(2, 2, 1), new Card(1, 1, 1), new Card(3, 3, 1)));
-        List<Card> hand = new LinkedList<>(List.of(new Card(3 , 3, 2), new Card(5, 5, 4)));
-        //System.out.println(compare(hand));
-        //System.out.println(GetHandType(table));
-    }
+        List<HandInfo> info = new ArrayList<>();
 
-    public Hand GetBestPlayerHand(List<Card> hand)
-    {
-        List<Hand> player1Hands = new LinkedList<>();
-
-        for (int i = 0; i <= hand.size(); ++i)
+        Hand hand1 = new Hand();
+        for (Card c : table)
         {
-            if (i == 0)
+            hand1.AddCardToHand(c);
+        }
+        hand1.Value();
+        info.add(hand1.GetHandInfo());
+
+        for (Card f : hand)
+        {
+            for (Card c : table)
             {
-                Hand fiveCards = new Hand(table);
-                player1Hands.add(fiveCards);
-            }
-            else if (i == 1)
-            {
-                for (Card f : hand)
+                Hand newHand = new Hand();
+                for (Card t : table)
                 {
-                    for (Card c : table)
+                    if (t.compareTo(c) != 0)
                     {
-                        Hand newHand = new Hand();
-                        for (Card t : table)
-                        {
-                            if (t.compareTo(c) != 0)
-                            {
-                                newHand.AddCardToHand(t);
-                            }
-                        }
-                        newHand.AddCardToHand(f);
-                        newHand.Value();
-                        player1Hands.add(newHand);
+                        newHand.AddCardToHand(t);
                     }
                 }
-            }
-            else if (i == 2)
-            {
-                for (int j = 0; j < table.size(); ++j)
-                {
-                    for (int h = j + 1; h < table.size(); ++h)
-                    {
-                        Hand fiveCards = new Hand();
-                        fiveCards.AddCardToHand(hand.get(0));
-                        fiveCards.AddCardToHand(hand.get(1));
-
-                        for (Card c : table)
-                        {
-                            if (c.compareTo(table.get(j)) != 0 && c.compareTo(table.get(h)) != 0)
-                            {
-                                fiveCards.AddCardToHand(c);
-                            }
-                        }
-                        fiveCards.Value();
-                        player1Hands.add(fiveCards);
-
-                    }
-                }
+                newHand.AddCardToHand(f);
+                newHand.Value();
+                info.add(newHand.GetHandInfo());
             }
         }
 
-        Collections.sort(player1Hands);
-    }
+        for (int j = 0; j < table.size(); ++j)
+        {
+            for (int h = j + 1; h < table.size(); ++h)
+            {
+                Hand fiveCards = new Hand();
+                fiveCards.AddCardToHand(new Card(hand.get(0)));
+                fiveCards.AddCardToHand(new Card(hand.get(1)));
 
-    public static int compare(List<Hand> player1Hands)
-    {
-        return 0;
+                for (Card c : table)
+                {
+                    if (c.compareTo(table.get(j)) != 0 && c.compareTo(table.get(h)) != 0)
+                    {
+                        fiveCards.AddCardToHand(new Card(c));
+                    }
+                }
+                fiveCards.Value();
+                info.add(fiveCards.GetHandInfo());
+            }
+        }
+
+        Collections.sort(info);
+
+        return info.get(0);
     }
 }

@@ -15,6 +15,13 @@ public class Card implements Comparable<Card>
         face = f;
         suit = s;
     }
+
+    public Card(Card c)
+    {
+        value = c.GetValue();
+        face = c.GetFace();
+        suit = c.GetSuit();
+    }
     public int GetValue()
     {
         return value;

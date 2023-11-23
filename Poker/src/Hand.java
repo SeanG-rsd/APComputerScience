@@ -1,21 +1,32 @@
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Hand implements Comparator<Hand>
+public class Hand implements Comparable<Hand>
 {
-    private HandInfo handInfo;
-    private List<Card> hand;
-    private static HandInfo NULL = new HandInfo(0, 0);
-    public Hand(List<Card> hand)
+    private static HandInfo handInfo;
+    private static List<Card> hand;
+    private static final HandInfo NULL = new HandInfo(0, 0);
+    public Hand(List<Card> h)
     {
-        this.hand = new LinkedList<>(hand);
-        handInfo = GetHandType(hand);
+        hand = new LinkedList<>(h);
+        handInfo = NULL;
     }
 
     public Hand()
     {
+        hand = new LinkedList<>();
+        handInfo = NULL;
+    }
 
+    public Hand(Hand h)
+    {
+        List<Card> temp = new LinkedList<>(h.GetHand());
+        hand = new LinkedList<>();
+        for (Card c : temp)
+        {
+            hand.add(new Card(c));
+        }
+        handInfo = NULL;
     }
 
     public void Value()
@@ -28,8 +39,14 @@ public class Hand implements Comparator<Hand>
         hand.add(c);
     }
 
+    public List<Card> GetHand()
+    {
+        return hand;
+    }
+
     public HandInfo GetHandInfo()
     {
+        handInfo = GetHandType(hand);
         return handInfo;
     }
 
@@ -360,35 +377,59 @@ public class Hand implements Comparator<Hand>
     private static HandInfo IsPair(List<Card> hand)
     {
         int[] values = new int[5];
+        int[] valCount = new int[5];
 
         for (Card c : hand)
         {
-            for (int b = 0; b < values.length; ++b)
+            for (int i = 0; i < values.length; ++i)
             {
-                if (values[b] == 0)
+                if (values[i] == 0)
                 {
-                    values[b] = c.GetFace();
+                    values[i] = c.GetFace();
+                    valCount[i]++;
+                    break;
                 }
-                if (values[b] == c.GetFace())
+                else if (values[i] == c.GetFace())
                 {
-                    return new HandInfo(2, c.GetFace());
+                    valCount[i]++;
+                    break;
                 }
+            }
+        }
+
+        for (int i = 0; i < valCount.length; ++i)
+        {
+            if (valCount[i] == 2)
+            {
+                return new HandInfo(2, values[i]);
             }
         }
 
         return NULL;
     }
 
-    public int compare(Hand o1, Hand o2)
+    public int compareTo(Hand o)
     {
-        if (o1.GetHandInfo().GetValue() == o2.GetHandInfo().GetValue())
+        if (o.GetHandInfo().GetValue() == GetHandInfo().GetValue())
         {
-            if (o1.GetHandInfo().GetHighestFace() == o2.GetHandInfo().GetHighestFace())
+            if (GetHandInfo().GetHighestFace() == o.GetHandInfo().GetHighestFace())
             {
                 return 0;
             }
-            return o1.GetHandInfo().GetHighestFace() - o2.GetHandInfo().GetHighestFace();
+            return GetHandInfo().GetHighestFace() - o.GetHandInfo().GetHighestFace();
         }
-        return o1.GetHandInfo().GetValue() - o2.GetHandInfo().GetValue();
+        return GetHandInfo().GetValue() - o.GetHandInfo().GetValue();
+    }
+
+    public String ToString()
+    {
+        String h = "";
+
+        for (Card c : hand)
+        {
+            h += c.ToString() + ", ";
+        }
+
+        return h;
     }
 }

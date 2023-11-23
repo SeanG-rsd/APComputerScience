@@ -85,6 +85,11 @@ public class Gambler
         }
     }
 
+    public List<Card> GetHand()
+    {
+        return hand;
+    }
+
     private char GetChoice(List<Character> choices)
     {
         System.out.print(">> ");

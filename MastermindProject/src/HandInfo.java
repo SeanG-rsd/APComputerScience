@@ -1,4 +1,4 @@
-public class HandInfo
+public class HandInfo implements Comparable<HandInfo>
 {
     private final int value;
     private final int highestFace;
@@ -22,5 +22,23 @@ public class HandInfo
     public boolean IsEqualTo(HandInfo i)
     {
         return value == i.GetValue() && highestFace == i.GetHighestFace();
+    }
+
+    public String ToString()
+    {
+        return value + " : " + highestFace;
+    }
+
+    public int compareTo(HandInfo o)
+    {
+        if (o.value == value)
+        {
+            if (o.highestFace == highestFace)
+            {
+                return 0;
+            }
+            return o.highestFace - highestFace;
+        }
+        return o.value - value;
     }
 }
