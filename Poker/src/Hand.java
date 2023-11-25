@@ -6,6 +6,23 @@ public class Hand implements Comparable<Hand>
     private static HandInfo handInfo;
     private static List<Card> hand;
     private static final HandInfo NULL = new HandInfo(0, 0);
+
+    private static final String top = "---------";
+    private static final String middle = "|       |";
+
+    public static void main(String[] args)
+    {
+        char suit = 'H';
+        char face = '9';
+        System.out.println("---------");
+        System.out.println("| " + suit + "     |");
+        System.out.println("|       |");
+        System.out.println("|   " + face + "   |");
+        System.out.println("|       |");
+        System.out.println("|     " + suit + " |");
+        System.out.println("---------");
+
+    }
     public Hand(List<Card> h)
     {
         hand = new LinkedList<>(h);
@@ -29,6 +46,49 @@ public class Hand implements Comparable<Hand>
         handInfo = NULL;
     }
 
+    public void Visualize()
+    {
+        System.out.println(Top(hand.size()));
+        for (Card c : hand)
+        {
+            System.out.print("| " + c.GetSuitChar() + "     |" + "  ");
+        }
+        System.out.println();
+        System.out.println(Middle(hand.size()));
+        for (Card c : hand)
+        {
+            System.out.print("|   " + c.GetFaceString() + "   |" + "  ");
+        }
+        System.out.println();
+        System.out.println(Middle(hand.size()));
+        for (Card c : hand)
+        {
+            System.out.print("|     " + c.GetSuitChar() + " |" + "  ");
+        }
+        System.out.println();
+        System.out.println(Top(hand.size()));
+    }
+
+    public static String Top(int amount)
+    {
+        String output = "";
+        for (int i = 0; i < amount; ++i)
+        {
+            output += top + "  ";
+        }
+        return output;
+    }
+
+    public static String Middle(int amount)
+    {
+        String output = "";
+        for (int i = 0; i < amount; ++i)
+        {
+            output += middle + "  ";
+        }
+        return output;
+    }
+
     public void Value()
     {
         handInfo = GetHandType(hand);
@@ -47,6 +107,10 @@ public class Hand implements Comparable<Hand>
     public HandInfo GetHandInfo()
     {
         handInfo = GetHandType(hand);
+        if (handInfo.GetHighestFace() == 1)
+        {
+            handInfo = new HandInfo(handInfo.GetValue(), 14);
+        }
         return handInfo;
     }
 
@@ -421,7 +485,7 @@ public class Hand implements Comparable<Hand>
         return GetHandInfo().GetValue() - o.GetHandInfo().GetValue();
     }
 
-    public String ToString()
+    public String  ToString()
     {
         String h = "";
 

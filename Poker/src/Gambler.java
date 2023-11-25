@@ -33,6 +33,7 @@ public class Gambler
     {
         hand.clear();
         ResetDebt();
+        SetOut(false);
         System.out.println("\n" + name);
         System.out.println("Current Balance : $" + money);
         System.out.println("Would you like to play for : $" + annie);
@@ -58,7 +59,7 @@ public class Gambler
         {
             return 'Y';
         }
-        else if (answer.charAt(1) == 'N')
+        else if (answer.charAt(0) == 'N')
         {
             return 'N';
         }
@@ -79,10 +80,8 @@ public class Gambler
     public void PrintHand()
     {
         System.out.println("\n" + name + "'s Cards");
-        for (Card c : hand)
-        {
-            System.out.println(c.ToString());
-        }
+        Hand h = new Hand(hand);
+        h.Visualize();
     }
 
     public List<Card> GetHand()
@@ -140,7 +139,7 @@ public class Gambler
     public void IncreaseDebt(int inc)
     {
         increasingDebt += inc;
-        System.out.println("Debt for " + name + " is " + increasingDebt);
+        //System.out.println("Debt for " + name + " is " + increasingDebt);
     }
 
     public int GetDebt()
@@ -179,7 +178,7 @@ public class Gambler
                     return m;
                 }
                 money -= bet;
-                System.out.println("call");
+                //System.out.println("call");
                 return bet;
             }
             else if (answer == 'R' && bet < money)
@@ -191,7 +190,7 @@ public class Gambler
             }
             else
             {
-                System.out.println(name + "Folded.");
+                System.out.println(name + " Folded.");
                 SetOut(true);
                 return 0;
             }
@@ -209,13 +208,13 @@ public class Gambler
             {
                 System.out.println("What would you like to bet?");
                 int newBet = Bet();
-                System.out.println(newBet);
+                //System.out.println(newBet);
                 money -= newBet;
                 return newBet;
             }
             else
             {
-                System.out.println(name + "Folded.");
+                System.out.println(name + " Folded.");
                 SetOut(true);
                 return 0;
             }

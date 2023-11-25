@@ -61,8 +61,8 @@ public class HandComparator
                 info.add(fiveCards.GetHandInfo());
             }
         }
-
         Collections.sort(info);
+        Collections.reverse(info);
 
         return info.get(0);
     }

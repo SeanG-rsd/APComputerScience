@@ -4,7 +4,7 @@ public class Card implements Comparable<Card>
     private final static String[] Suits  = new String[] {"Hearts", "Diamonds", "Clubs", "Spades"};
     private final static Character[] SuitChars = new Character[] {'♥', '♦', '♣', '♠'};
     private final static String[] Faces = new String[] {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
-    private final static String[] FaceChars = new String[] {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+    private final static Character[] FaceChars = new Character[] {'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'};
     private int value;
     private int face;
     private int suit;
@@ -37,7 +37,7 @@ public class Card implements Comparable<Card>
         return suit;
     }
 
-    public String GetFaceString()
+    public char GetFaceString()
     {
         return FaceChars[face];
     }

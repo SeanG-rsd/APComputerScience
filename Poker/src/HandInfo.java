@@ -37,8 +37,8 @@ public class HandInfo implements Comparable<HandInfo>
             {
                 return 0;
             }
-            return o.highestFace - highestFace;
+            return highestFace - o.highestFace;
         }
-        return o.value - value;
+        return value - o.value;
     }
 }
