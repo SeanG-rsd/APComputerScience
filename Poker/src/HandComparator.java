@@ -10,7 +10,13 @@ public class HandComparator
     {
         table = t;
     }
-    private static final HandInfo NULL = new HandInfo(0, 0);
+    private static final HandInfo NULL = new HandInfo(0, 0, new int[] {0,0,0,0,0});
+
+    /*public static void main(String[] args)
+    {
+        table = new ArrayList<>(List.of(new Card(13, 13, 3), new Card(13, 13, 3), new Card(3, 3, 4), new Card(5, 5, 3), new Card(2, 2, 1)));
+        System.out.println(GetBestPlayerHand(new ArrayList<>(List.of(new Card(11, 11, 3), new Card(12, 12, 2)))).ToString());
+    }*/
 
     public HandInfo GetBestPlayerHand(List<Card> hand)
     {

@@ -39,17 +39,17 @@ public class Card implements Comparable<Card>
 
     public char GetFaceString()
     {
-        return FaceChars[face];
+        return FaceChars[face - 1];
     }
 
     public char GetSuitChar()
     {
-        return SuitChars[suit];
+        return SuitChars[suit - 1];
     }
 
     public String ToString()
     {
-        return Faces[face] + " of " + Suits[suit];
+        return Faces[face - 1] + " of " + Suits[suit - 1];
     }
 
     public int compareTo(Card o)

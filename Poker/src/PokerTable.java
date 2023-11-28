@@ -52,25 +52,28 @@ public class PokerTable
                 int maxDebt = 0;
 
                 int size = currentGamblers.size();
-                for (int i = 0; i < size; ++i)
+                if (size > 1)
                 {
-                    //System.out.println(size);
-                    //System.out.println(i % currentGamblers.size());
-                    Gambler g = currentGamblers.get(i % currentGamblers.size());
-                    if (!g.IsOut())
+                    for (int i = 0; i < size; ++i)
                     {
-                        PrintNext(currentGamblers.get(i % currentGamblers.size()).name);
-                        PrintTable(pot);
-                        int gBet = g.Choose(bet > 0, maxDebt - g.GetDebt());
-                        g.IncreaseDebt(gBet);
-                        if (g.GetDebt() > maxDebt)
+                        //System.out.println(size);
+                        //System.out.println(i % currentGamblers.size());
+                        Gambler g = currentGamblers.get(i % currentGamblers.size());
+                        if (!g.IsOut())
                         {
-                            bet = gBet;
-                            size += i;
-                            //System.out.println(size);
-                            maxDebt = g.GetDebt();
+                            PrintNext(currentGamblers.get(i % currentGamblers.size()).name);
+                            PrintTable(pot);
+                            int gBet = g.Choose(bet > 0, maxDebt - g.GetDebt());
+                            g.IncreaseDebt(gBet);
+                            if (g.GetDebt() > maxDebt)
+                            {
+                                bet = gBet;
+                                size += i;
+                                //System.out.println(size);
+                                maxDebt = g.GetDebt();
+                            }
+                            pot += gBet;
                         }
-                        pot += gBet;
                     }
                 }
 
@@ -124,36 +127,31 @@ public class PokerTable
             if (!g.IsOut())
             {
                 bestHands.put(g, handComparator.GetBestPlayerHand(g.GetHand()));
-                System.out.println(bestHands.get(g).ToString());
+                //System.out.println(bestHands.get(g).ToString());
             }
         }
         List<Gambler> currentBests = new ArrayList<>();
-        Gambler currentBest = bestHands.keySet().iterator().next();
         for (Gambler g : bestHands.keySet())
         {
-            /*if (currentBests.isEmpty())
+            if (currentBests.isEmpty())
             {
                 currentBests.add(g);
+                //System.out.println(g.name);
             }
-            if (bestHands.get(g).compareTo(bestHands.get(currentBests.get(0))) > 0)
+            else if (bestHands.get(g).compareTo(bestHands.get(currentBests.get(0))) > 0)
             {
                 currentBests.clear();
                 currentBests.add(g);
+                //System.out.println("--------");
+                //System.out.println(g.name);
             }
             else if (bestHands.get(g).compareTo(bestHands.get(currentBests.get(0))) == 0)
             {
                 currentBests.add(g);
-            }*/
-            if (currentBest == null)
-            {
-                currentBest = g;
-            }
-            else if (bestHands.get(g).compareTo(bestHands.get(currentBest)) > 0)
-            {
-                currentBest = g;
+                //System.out.println(g.name);
             }
         }
-        return new ArrayList<>(List.of(currentBest));
+        return currentBests;
     }
 
     private static void PrintLines(int amount)
@@ -211,9 +209,9 @@ public class PokerTable
 
     public static void MakeDeck(GameType type)
     {
-        for (int s = 0; s < 4; ++s)
+        for (int s = 1; s <= 4; ++s)
         {
-            for (int v = 0; v < 13; ++v)
+            for (int v = 1; v <= 13; ++v)
             {
                 int value = v;
                 if (v > 10 && type == GameType.BLACKJACK)

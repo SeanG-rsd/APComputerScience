@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -5,7 +7,7 @@ public class Hand implements Comparable<Hand>
 {
     private static HandInfo handInfo;
     private static List<Card> hand;
-    private static final HandInfo NULL = new HandInfo(0, 0);
+    private static final HandInfo NULL = new HandInfo(0, 0, new int[] {0,0,0,0,0});
 
     private static final String top = "---------";
     private static final String middle = "|       |";
@@ -107,52 +109,33 @@ public class Hand implements Comparable<Hand>
     public HandInfo GetHandInfo()
     {
         handInfo = GetHandType(hand);
-        if (handInfo.GetHighestFace() == 1)
-        {
-            handInfo = new HandInfo(handInfo.GetValue(), 14);
-        }
         return handInfo;
     }
 
     private static HandInfo GetHandType(List<Card> hand)
     {
-        if (!IsRoyalFlush(hand).IsEqualTo(NULL))
+        if (IsRoyalFlush(hand).IsEqualTo(NULL)) // royal flush
         {
             return IsRoyalFlush(hand);
         }
-        else if (!IsStraight(hand, true).IsEqualTo(NULL))
+        else if (IsStraight(hand, true).IsEqualTo(NULL)) // straight flush
         {
             return IsStraight(hand, true);
         }
-        else if (!IsFourOfAKind(hand).IsEqualTo(NULL))
+        else if (CheckPairs(hand).IsEqualTo(NULL))
         {
-            return IsFourOfAKind(hand);
+            return CheckPairs(hand);
         }
-        else if (!IsFullHouse(hand).IsEqualTo(NULL))
+
+        List<Integer> ints = new ArrayList<>();
+        for (Card c : hand)
         {
-            return IsFullHouse(hand);
+            ints.add(c.GetFace());
         }
-        else if (!IsFlush(hand).IsEqualTo(NULL))
-        {
-            return IsFlush(hand);
-        }
-        else if (!IsStraight(hand, false).IsEqualTo(NULL))
-        {
-            return IsStraight(hand, false);
-        }
-        else if (!IsThreeOfAKind(hand).IsEqualTo(NULL))
-        {
-            return IsThreeOfAKind(hand);
-        }
-        else if (!IsTwoPair(hand).IsEqualTo(NULL))
-        {
-            return IsTwoPair(hand);
-        }
-        else if (!IsPair(hand).IsEqualTo(NULL))
-        {
-            return IsPair(hand);
-        }
-        return new HandInfo(1, GetMax(hand));
+        Collections.sort(ints);
+        Collections.reverse(ints);
+
+        return new HandInfo(1, GetMax(hand), ints.stream().mapToInt(Integer::intValue).toArray()); // high card
     }
 
     private static int GetMin(List<Card> hand)
@@ -187,7 +170,7 @@ public class Hand implements Comparable<Hand>
     {
         int[] royalFlush = new int[] {10, 11, 12, 13, 1};
 
-        if (!IsFlush(hand).IsEqualTo(NULL)) { return NULL; }
+        if (IsFlush(hand).IsEqualTo(NULL)) { return NULL; }
 
         boolean[] correct = new boolean[hand.size()];
         for (int i = 0; i < correct.length; ++i)
@@ -210,15 +193,17 @@ public class Hand implements Comparable<Hand>
             }
         }
 
-        return new HandInfo(10, 14);
+        return new HandInfo(10, 14, new int[] {14,13,12,11,10});
     }
-
     private static HandInfo IsStraight(List<Card> hand, boolean hasToBeFlush)
     {
         int min = GetMin(hand);
-        int[] straightFlush = new int[] {min, min + 1, min + 2, min + 3, min + 4};
+        int[] straightFlush = new int[] {min + 4, min + 3, min + 2, min + 1, min};
         boolean[] correct = new boolean[5];
-        if (!IsFlush(hand).IsEqualTo(NULL) && hasToBeFlush) { return NULL; }
+        if (!IsFlush(hand).IsEqualTo(NULL) && hasToBeFlush)
+        {
+            return NULL;
+        }
 
         for (Card c : hand)
         {
@@ -239,206 +224,10 @@ public class Hand implements Comparable<Hand>
             }
         }
 
-        return new HandInfo(hasToBeFlush ? 9 : 5, GetMax(hand));
+        return new HandInfo(hasToBeFlush ? 9 : 5, GetMax(hand), straightFlush.clone());
     }
 
-    private static HandInfo IsFourOfAKind(List<Card> hand)
-    {
-        int val1 = 0;
-        int val2 = 0;
-
-        int valOneCount = 0;
-        int valTwoCount = 0;
-
-        for (Card c : hand)
-        {
-            if (val1 == 0 && c.GetFace() != val2)
-            {
-                val1 = c.GetFace();
-                valOneCount++;
-            }
-            else if (val2 == 0 && c.GetFace() != val1)
-            {
-                val2 = c.GetFace();
-                valTwoCount++;
-            }
-            else if (c.GetFace() == val1)
-            {
-                valOneCount++;
-            }
-            else if (c.GetFace() == val2)
-            {
-                valTwoCount++;
-            }
-        }
-
-        if (valOneCount == 4)
-        {
-            return new HandInfo(8, val1);
-        }
-        else if (valTwoCount == 4)
-        {
-            return new HandInfo(8, val2);
-        }
-        else
-        {
-            return NULL;
-        }
-    }
-
-    private static HandInfo IsFullHouse(List<Card> hand)
-    {
-        int val1 = 0;
-        int val2 = 0;
-
-        int valOneCount = 0;
-        int valTwoCount = 0;
-
-        for (Card c : hand)
-        {
-            if (val1 == 0 && c.GetFace() != val2)
-            {
-                val1 = c.GetFace();
-                valOneCount++;
-            }
-            else if (val2 == 0 && c.GetFace() != val1)
-            {
-                val2 = c.GetFace();
-                valTwoCount++;
-            }
-            else if (c.GetFace() == val1)
-            {
-                valOneCount++;
-            }
-            else if (c.GetFace() == val2)
-            {
-                valTwoCount++;
-            }
-        }
-
-        if (valOneCount == 2 && valTwoCount == 3)
-        {
-            return new HandInfo(7, val2);
-        }
-        else if (valOneCount == 3 && valTwoCount == 2)
-        {
-            return new HandInfo(7, val1);
-        }
-        return NULL;
-    }
-
-    private static HandInfo IsFlush(List<Card> hand)
-    {
-        int suit = hand.get(0).GetSuit();
-        for (Card c : hand)
-        {
-            if (c.GetSuit() != suit)
-            {
-                return NULL;
-            }
-        }
-
-        return new HandInfo(6, GetMax(hand));
-    }
-
-    private static HandInfo IsThreeOfAKind(List<Card> hand)
-    {
-        int val1 = 0;
-        int val2 = 0;
-
-        int valOneCount = 0;
-        int valTwoCount = 0;
-
-        for (Card c : hand)
-        {
-            if (val1 == 0 && c.GetFace() != val2)
-            {
-                val1 = c.GetFace();
-                valOneCount++;
-            }
-            else if (val2 == 0 && c.GetFace() != val1)
-            {
-                val2 = c.GetFace();
-                valTwoCount++;
-            }
-            else if (c.GetFace() == val1)
-            {
-                valOneCount++;
-            }
-            else if (c.GetFace() == val2)
-            {
-                valTwoCount++;
-            }
-        }
-
-        if (valOneCount == 3)
-        {
-            return new HandInfo(4, val1);
-        }
-        else if (valTwoCount == 3)
-        {
-            return new HandInfo(4, val2);
-        }
-        return NULL;
-    }
-
-    private static HandInfo IsTwoPair(List<Card> hand)
-    {
-        int val1 = 0;
-        int val2 = 0;
-        int val3 = 0;
-
-        int valOneCount = 0;
-        int valTwoCount = 0;
-        int valThreeCount = 0;
-
-        for (Card c : hand)
-        {
-            if (val1 == 0 && c.GetFace() != val2 && c.GetFace() != val3)
-            {
-                val1 = c.GetFace();
-                valOneCount++;
-            }
-            else if (val2 == 0 && c.GetFace() != val1 && c.GetFace() != val3)
-            {
-                val2 = c.GetFace();
-                valTwoCount++;
-            }
-            else if (val3 == 0 && c.GetFace() != val2 && c.GetFace() != val1)
-            {
-                val3 = c.GetFace();
-                valThreeCount++;
-            }
-            else if (c.GetFace() == val1)
-            {
-                valOneCount++;
-            }
-            else if (c.GetFace() == val2)
-            {
-                valTwoCount++;
-            }
-            else if (c.GetFace() == val3)
-            {
-                valThreeCount++;
-            }
-        }
-
-        if (valOneCount == 2 && valTwoCount == 2)
-        {
-            return new HandInfo(3, Math.max(val1, val2));
-        }
-        else if (valThreeCount == 2 && valTwoCount == 2)
-        {
-            return new HandInfo(3, Math.max(val3, val2));
-        }
-        else if (valOneCount == 2 && valThreeCount == 2)
-        {
-            return new HandInfo(3, Math.max(val1, val3));
-        }
-        return NULL;
-    }
-
-    private static HandInfo IsPair(List<Card> hand)
+    private static HandInfo CheckPairs(List<Card> hand)
     {
         int[] values = new int[5];
         int[] valCount = new int[5];
@@ -461,39 +250,131 @@ public class Hand implements Comparable<Hand>
             }
         }
 
-        for (int i = 0; i < valCount.length; ++i)
+        int fourOfAKind = -1;
+        int extra = -1;
+        for (int i = 0; i < valCount.length; ++i) // four of a kind
         {
-            if (valCount[i] == 2)
+            if (valCount[i] == 4)
             {
-                return new HandInfo(2, values[i]);
+                fourOfAKind = i;
             }
+            else if (valCount[i] != 0)
+            {
+                extra = i;
+            }
+        }
+
+        if (fourOfAKind != -1)
+        {
+            int val = values[fourOfAKind];
+            return new HandInfo(8, val, new int[] {val,val,val,val,values[extra]});
+        }
+
+        int threeOfAKind = -1;
+        int pair = -1;
+        extra = -1;
+        int extraTwo = -1;
+        for (int i = 0; i < valCount.length; ++i) // full house
+        {
+            if (valCount[i] == 3)
+            {
+                threeOfAKind = i;
+            }
+            else if (valCount[i] == 2)
+            {
+                pair = i;
+            }
+            else if (valCount[i] != 0 && extra == -1)
+            {
+                extra = i;
+            }
+            else if (valCount[i] != 0 && extra != -1)
+            {
+                extraTwo = i;
+            }
+        }
+
+        if (threeOfAKind != -1 && pair != -1) // full house
+        {
+            return new HandInfo(7, values[threeOfAKind], new int[]{values[threeOfAKind], values[threeOfAKind], values[threeOfAKind], values[pair], values[pair]});
+        }
+        else if (IsFlush(hand).IsEqualTo(NULL)) // flush
+        {
+            return IsFlush(hand);
+        }
+        else if (IsStraight(hand, false).IsEqualTo(NULL)) // straight
+        {
+            return IsStraight(hand, false);
+        }
+        else if (threeOfAKind != -1) // three of a kind
+        {
+            return new HandInfo(4, values[threeOfAKind], new int[] {values[threeOfAKind], values[threeOfAKind], values[threeOfAKind], Math.max(values[extraTwo], values[extra]), Math.min(values[extraTwo], values[extra])});
+        }
+
+        int twoPair = -1;
+        List<Integer> cards = new ArrayList<>();
+
+        for (int i = 0; i < valCount.length; ++i) // is two pair
+        {
+            if (valCount[i] == 2 && i != pair && pair != -1)
+            {
+                twoPair = i;
+            }
+            else if (valCount[i] != 0 && valCount[i] != 2)
+            {
+                cards.add(values[i]);
+            }
+        }
+
+        if (twoPair != -1)
+        {
+            if (values[pair] == 1)
+            {
+                values[pair] = 14;
+            }
+            else if (values[twoPair] == 1)
+            {
+                values[twoPair] = 14;
+            }
+            int max = Math.max(values[twoPair], values[pair]);
+            int min = Math.min(values[twoPair], values[pair]);
+            return new HandInfo(3, max, new int[] {max, max, min, min, cards.get(0)});
+        }
+        else if (pair != -1)
+        {
+            if (values[pair] == 1)
+            {
+                values[pair] = 14;
+            }
+            Collections.sort(cards);
+            Collections.reverse(cards);
+            int[] array = cards.stream().mapToInt(Integer::intValue).toArray();
+            return new HandInfo(2, values[pair], new int[] {values[pair], values[pair], array[0], array[1], array[2]});
         }
 
         return NULL;
     }
 
-    public int compareTo(Hand o)
+    private static HandInfo IsFlush(List<Card> hand)
     {
-        if (o.GetHandInfo().GetValue() == GetHandInfo().GetValue())
-        {
-            if (GetHandInfo().GetHighestFace() == o.GetHandInfo().GetHighestFace())
-            {
-                return 0;
-            }
-            return GetHandInfo().GetHighestFace() - o.GetHandInfo().GetHighestFace();
-        }
-        return GetHandInfo().GetValue() - o.GetHandInfo().GetValue();
-    }
-
-    public String  ToString()
-    {
-        String h = "";
-
+        int suit = hand.get(0).GetSuit();
+        List<Integer> ints = new ArrayList<>();
         for (Card c : hand)
         {
-            h += c.ToString() + ", ";
+            if (c.GetSuit() != suit)
+            {
+                return NULL;
+            }
+            ints.add(c.GetFace());
         }
+        Collections.sort(ints);
+        Collections.reverse(ints);
 
-        return h;
+        return new HandInfo(6, GetMax(hand), ints.stream().mapToInt(Integer::intValue).toArray());
+    }
+
+    public int compareTo(Hand o)
+    {
+        return handInfo.compareTo(o.GetHandInfo());
     }
 }
