@@ -1,19 +1,62 @@
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class ArrayList<E>
+public class ArrayList1<E>
 {
+
+    private class ArrayListIterator implements Iterator<E>
+    {
+        private int position;
+
+        private boolean removeOK;
+
+        public ArrayListIterator()
+        {
+            position = 0;
+            removeOK = false;
+        }
+
+        public boolean hasNext()
+        {
+            return position < size();
+        }
+
+        public E next()
+        {
+            if (!hasNext())
+            {
+                throw new NoSuchElementException();
+            }
+            removeOK = true;
+            E result = get(position);
+            position++;
+            return result;
+        }
+
+        public void remove()
+        {
+            if (!removeOK)
+            {
+                throw new IllegalStateException();
+            }
+            ArrayList1.this.remove(position - 1);
+            position--;
+            removeOK = false;
+        }
+    }
     private E[] elementData;
     private int size;
 
     public static final int DEFAULT_CAPACITY = 100;
 
-    public ArrayList()
+    public ArrayList1()
     {
         this(DEFAULT_CAPACITY);
     }
 
     @SuppressWarnings("unchecked")
-    public ArrayList(int capacity)
+    public ArrayList1(int capacity)
     {
         checkCapacity(capacity);
         elementData = (E[]) new Object[capacity];
@@ -85,6 +128,7 @@ public class ArrayList<E>
         {
             elementData[index] = elementData[index + 1];
         }
+        elementData[index - 1] = null;
         size--;
     }
 
@@ -141,10 +185,14 @@ public class ArrayList<E>
 
     public void clear()
     {
+        for (int i =0 ;i < size; ++i)
+        {
+            elementData[i] = null;
+        }
         size = 0;
     }
 
-    public void addAll(ArrayList<E> other)
+    public void addAll(ArrayList1<E> other)
     {
         checkCapacity(size + other.size);
         for (int i = 0; i < other.size; ++i)
@@ -152,7 +200,7 @@ public class ArrayList<E>
             add(other.get(i));
         }
     }
-
+    @SuppressWarnings("unchecked")
     public void ensureCapacity(int capacity)
     {
         if (capacity > elementData.length)
@@ -162,7 +210,7 @@ public class ArrayList<E>
             {
                 newCapacity = capacity;
             }
-            int[] newList = new int[newCapacity];
+            E[] newList = (E[]) new Object[newCapacity];
             for (int i = 0; i < size; ++i)
             {
                 newList[i] = elementData[i];
@@ -173,6 +221,6 @@ public class ArrayList<E>
 
     public ArrayListIterator iterator()
     {
-        return new ArrayListIterator(this);
+        return new ArrayListIterator();
     }
 }
