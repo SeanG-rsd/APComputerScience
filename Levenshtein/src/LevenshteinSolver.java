@@ -8,11 +8,11 @@ public class LevenshteinSolver
 
     public static void main(String[] args) throws FileNotFoundException
     {
-        //mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
-        mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
+        mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
+        //mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
 
         String start = "dog"; // puppy
-        String end = "quack"; // dog
+        String end = "smart"; // dog
 
         minIndex = start.length() + end.length() - 1;
 
@@ -45,34 +45,6 @@ public class LevenshteinSolver
 
         System.out.println("\n# of Paths : " + shortestPaths.size());
 
-    }
-
-    public static void ThreadingBFS(String start, String end, List<List<String>> possiblePaths)
-    {
-        LevNode node = mapMaker.Get(start);
-        List<String> firstNeighbors = node.GetNeighbors();
-
-        List<LevThread> threads = new LinkedList<>();
-
-        for (String s : firstNeighbors)
-        {
-            System.out.println(s);
-            LevThread thread = new LevThread(end, new ArrayList<>(List.of(start, s)), start, mapMaker);
-            thread.start();
-
-            threads.add(thread);
-        }
-
-        for (LevThread thread : threads)
-        {
-            try
-            {
-                thread.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            possiblePaths.addAll(thread.GetPaths());
-        }
     }
 
     public static void Threading(String start, String end, List<List<String>> possiblePaths)
@@ -120,6 +92,7 @@ public class LevenshteinSolver
 
     public static List<List<String>> FindShortestPath(String start, String end) // BFS
     {
+        // queues and should not ask for length
         List<List<String>> breadthPaths = new ArrayList<>();
         breadthPaths.add(new ArrayList<>(List.of(start)));
         int min = 999999;
@@ -143,7 +116,7 @@ public class LevenshteinSolver
                         list.add(s);
                         min = list.size();
                         output.add(list);
-                        //System.out.println(list);
+                        System.out.println(list);
                     }
                     else if (!list.contains(s) && list.size() < min)
                     {
