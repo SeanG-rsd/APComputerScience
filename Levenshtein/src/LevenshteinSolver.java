@@ -8,17 +8,19 @@ public class LevenshteinSolver
 
     public static void main(String[] args) throws FileNotFoundException
     {
-        mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
-        //mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
+        //mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
+        mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
 
-        String start = "cat"; // puppy
-        String end = "dog"; // dog
+        String start = "dog"; // puppy
+        String end = "quack"; // dog
 
         minIndex = start.length() + end.length() - 1;
 
         List<List<String>> possiblePaths = new LinkedList<>();
         //Threading(start, end, possiblePaths);
-        FindShortestPath(new LinkedList<>(List.of(mapMaker.Get(start))), start, end, 0, possiblePaths);
+        possiblePaths = FindShortestPath(start, end); // BFS
+        //ThreadingBFS(start, end, possiblePaths);
+        //FindShortestPath(new LinkedList<>(List.of(mapMaker.Get(start))), start, end, 0, possiblePaths);
 
         int min = 999999;
         List<List<String>> shortestPaths = new LinkedList<>();
@@ -43,6 +45,34 @@ public class LevenshteinSolver
 
         System.out.println("\n# of Paths : " + shortestPaths.size());
 
+    }
+
+    public static void ThreadingBFS(String start, String end, List<List<String>> possiblePaths)
+    {
+        LevNode node = mapMaker.Get(start);
+        List<String> firstNeighbors = node.GetNeighbors();
+
+        List<LevThread> threads = new LinkedList<>();
+
+        for (String s : firstNeighbors)
+        {
+            System.out.println(s);
+            LevThread thread = new LevThread(end, new ArrayList<>(List.of(start, s)), start, mapMaker);
+            thread.start();
+
+            threads.add(thread);
+        }
+
+        for (LevThread thread : threads)
+        {
+            try
+            {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            possiblePaths.addAll(thread.GetPaths());
+        }
     }
 
     public static void Threading(String start, String end, List<List<String>> possiblePaths)
@@ -86,6 +116,50 @@ public class LevenshteinSolver
         }
 
         return min;
+    }
+
+    public static List<List<String>> FindShortestPath(String start, String end) // BFS
+    {
+        List<List<String>> breadthPaths = new ArrayList<>();
+        breadthPaths.add(new ArrayList<>(List.of(start)));
+        int min = 999999;
+        //System.out.println(breadthPaths.get(0));
+        List<List<String>> output = new ArrayList<>();
+        while (!breadthPaths.isEmpty())
+        {
+            List<List<String>> newBreadthPaths = new ArrayList<>();
+
+            for (List<String> list : breadthPaths)
+            {
+                //System.out.println(list);
+                String last = list.get(list.size() - 1);
+                LevNode node = mapMaker.Get(last);
+                List<String> neighbors = node.GetNeighbors();
+
+                for (String s : neighbors)
+                {
+                    if (Objects.equals(s, end) && list.size() + 1 <= min)
+                    {
+                        list.add(s);
+                        min = list.size();
+                        output.add(list);
+                        //System.out.println(list);
+                    }
+                    else if (!list.contains(s) && list.size() < min)
+                    {
+                        List<String> newList = new ArrayList<>(list);
+                        newList.add(s);
+                        newBreadthPaths.add(newList);
+                        //System.out.println(newList);
+                    }
+                }
+            }
+
+            breadthPaths.clear();
+            breadthPaths.addAll(newBreadthPaths);
+        }
+
+        return output;
     }
 
     public static void FindShortestPath(List<LevNode> visited, String start, String end, int index, List<List<String>> possiblePaths) // depth first attempt
@@ -180,7 +254,9 @@ class LevThread extends Thread
     String end;
 
     static int minIndex;
-    List<List<String>> possiblePaths = new LinkedList<>();
+    static List<List<String>> possiblePaths = new LinkedList<>();
+
+    static List<String> startList = new ArrayList<>();
 
     private static int index;
 
@@ -194,6 +270,14 @@ class LevThread extends Thread
         end = e;
         this.visited = visited;
         minIndex = e.length() + s.length() - 1;
+    }
+
+    public LevThread(String e, List<String> sList, String s, MapMaker map)
+    {
+        start = s;
+        end = e;
+        startList = new ArrayList<>(sList);
+        mapMaker = map;
     }
 
     public static void FindShortestPath(List<String> visited, String start, String end, int index, List<List<String>> possiblePaths)
@@ -248,6 +332,55 @@ class LevThread extends Thread
         mapMaker.Get(start).changeDead(true);
     }
 
+    public static void FindShortestPathBFS(String start, String end)
+    {
+        List<List<String>> breadthPaths = new ArrayList<>();
+        breadthPaths.add(new ArrayList<>(List.of(start)));
+        int min = 999999;
+        System.out.println(breadthPaths.get(0));
+        List<List<String>> output = new ArrayList<>();
+        while (!breadthPaths.isEmpty())
+        {
+            List<List<String>> newBreadthPaths = new ArrayList<>();
+
+            for (List<String> list : breadthPaths)
+            {
+                //System.out.println(list);
+                String last = list.get(list.size() - 1);
+                LevNode node = mapMaker.Get(last);
+                List<String> neighbors = node.GetNeighbors();
+
+                for (String s : neighbors)
+                {
+                    if (Objects.equals(s, end) && list.size() + 1 <= min)
+                    {
+                        list.add(s);
+                        min = list.size();
+                        output.add(list);
+                        System.out.println(list);
+                    }
+                    else if (!list.contains(s) && list.size() < min)
+                    {
+                        List<String> newList = new ArrayList<>(list);
+                        newList.add(s);
+                        newBreadthPaths.add(newList);
+                        System.out.println(newList);
+                    }
+                }
+            }
+
+            breadthPaths.clear();
+            breadthPaths.addAll(newBreadthPaths);
+        }
+
+        for (List<String> l : output)
+        {
+            List<String> c = new ArrayList<>(startList);
+            c.addAll(l);
+            possiblePaths.add(c);
+        }
+    }
+
     public List<List<String>> GetPaths()
     {
         return possiblePaths;
@@ -257,5 +390,6 @@ class LevThread extends Thread
     public void run()
     {
         FindShortestPath(visited, start, end, index, possiblePaths);
+        //FindShortestPathBFS(start, end);
     }
 }
