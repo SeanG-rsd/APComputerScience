@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.Queue;
 
 public class LevenshteinSolver
 {
@@ -8,8 +9,8 @@ public class LevenshteinSolver
 
     public static void main(String[] args) throws FileNotFoundException
     {
-        mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
-        //mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
+        //mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
+        mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
 
         String start = "dog"; // puppy
         String end = "smart"; // dog
@@ -18,7 +19,7 @@ public class LevenshteinSolver
 
         List<List<String>> possiblePaths = new LinkedList<>();
         //Threading(start, end, possiblePaths);
-        possiblePaths = FindShortestPath(start, end); // BFS
+        //possiblePaths = FindShortestPath(start, end); // BFS
         //ThreadingBFS(start, end, possiblePaths);
         //FindShortestPath(new LinkedList<>(List.of(mapMaker.Get(start))), start, end, 0, possiblePaths);
 
@@ -47,7 +48,13 @@ public class LevenshteinSolver
 
     }
 
-    public static void Threading(String start, String end, List<List<String>> possiblePaths)
+    private static void BFS(String start, String end)
+    {
+        int depth = 0;
+        List<LevNode> get;
+    }
+
+    /*public static void Threading(String start, String end, List<List<String>> possiblePaths)
     {
         LevNode node = mapMaker.Get(start);
         List<String> firstNeighbors = node.GetNeighbors();
@@ -93,43 +100,37 @@ public class LevenshteinSolver
     public static List<List<String>> FindShortestPath(String start, String end) // BFS
     {
         // queues and should not ask for length
-        List<List<String>> breadthPaths = new ArrayList<>();
-        breadthPaths.add(new ArrayList<>(List.of(start)));
-        int min = 999999;
+
         //System.out.println(breadthPaths.get(0));
         List<List<String>> output = new ArrayList<>();
+        Queue<List<String>> breadthPaths = new LinkedList<>();
+        breadthPaths.add(new ArrayList<>(List.of(start)));
+
         while (!breadthPaths.isEmpty())
         {
-            List<List<String>> newBreadthPaths = new ArrayList<>();
+            //System.out.println(list);
+            List<String> list = breadthPaths.element();
+            breadthPaths.remove();
+            String last = list.get(list.size() - 1);
+            LevNode node = mapMaker.Get(last);
+            List<String> neighbors = node.GetNeighbors();
 
-            for (List<String> list : breadthPaths)
+            for (String s : neighbors)
             {
-                //System.out.println(list);
-                String last = list.get(list.size() - 1);
-                LevNode node = mapMaker.Get(last);
-                List<String> neighbors = node.GetNeighbors();
-
-                for (String s : neighbors)
+                if (Objects.equals(s, end))
                 {
-                    if (Objects.equals(s, end) && list.size() + 1 <= min)
-                    {
-                        list.add(s);
-                        min = list.size();
-                        output.add(list);
-                        System.out.println(list);
-                    }
-                    else if (!list.contains(s) && list.size() < min)
-                    {
-                        List<String> newList = new ArrayList<>(list);
-                        newList.add(s);
-                        newBreadthPaths.add(newList);
-                        //System.out.println(newList);
-                    }
+                    list.add(s);
+                    output.add(list);
+                    System.out.println(list);
+                }
+                else if (!list.contains(s))
+                {
+                    List<String> newList = new ArrayList<>(list);
+                    newList.add(s);
+                    breadthPaths.add(newList);
+                    //System.out.println(newList);
                 }
             }
-
-            breadthPaths.clear();
-            breadthPaths.addAll(newBreadthPaths);
         }
 
         return output;
@@ -295,7 +296,7 @@ class LevThread extends Thread
                 {
                     int i = index + 1;
                     FindShortestPath(newVisited, s, end, i, possiblePaths);
-                }*/
+                }
 
                 int i = index + 1;
                 FindShortestPath(newVisited, s, end, i, possiblePaths);
@@ -303,9 +304,9 @@ class LevThread extends Thread
         }
 
         mapMaker.Get(start).changeDead(true);
-    }
+    }*/
 
-    public static void FindShortestPathBFS(String start, String end)
+    /*public static void FindShortestPathBFS(String start, String end)
     {
         List<List<String>> breadthPaths = new ArrayList<>();
         breadthPaths.add(new ArrayList<>(List.of(start)));
@@ -364,5 +365,5 @@ class LevThread extends Thread
     {
         FindShortestPath(visited, start, end, index, possiblePaths);
         //FindShortestPathBFS(start, end);
-    }
+    }*/
 }
