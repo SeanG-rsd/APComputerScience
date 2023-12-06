@@ -9,15 +9,17 @@ public class LevenshteinSolver
 
     public static void main(String[] args) throws FileNotFoundException
     {
-        //mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
-        mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
+        mapMaker = new MapMaker("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/dictionarySorted");
+        //mapMaker = new MapMaker("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\dictionarySorted");
 
         String start = "dog"; // puppy
         String end = "smart"; // dog
 
         minIndex = start.length() + end.length() - 1;
-
+        System.out.println("Finish map");
+        BFS(start, end);
         List<List<String>> possiblePaths = new LinkedList<>();
+
         //Threading(start, end, possiblePaths);
         //possiblePaths = FindShortestPath(start, end); // BFS
         //ThreadingBFS(start, end, possiblePaths);
@@ -50,8 +52,43 @@ public class LevenshteinSolver
 
     private static void BFS(String start, String end)
     {
-        int depth = 0;
-        List<LevNode> get;
+        LevNode first = mapMaker.Get(start);
+        Queue<LevNode>  queue = new LinkedList<>();
+        queue.add(first);
+        first.SetDepth(0);
+        int length = 9999;
+        int count = 0;
+
+        while (!queue.isEmpty())
+        {
+            LevNode node = queue.element();
+
+            for (LevNode neighbor : node.GetNeighbors())
+            {
+                if (Objects.equals(neighbor.key, end))
+                {
+                    if (node.GetDepth() + 1 > length)
+                    {
+                        continue;
+                    }
+                    System.out.println("path : " + (node.depth + 1));
+                    length = node.depth + 1;
+                    count++;
+                }
+                else if (neighbor.depth == -1 || node.GetDepth() + 1 <= neighbor.GetDepth())
+                {
+                    queue.add(neighbor);
+                    neighbor.SetDepth(node.GetDepth() + 1);
+                    //System.out.println("setDepth : " + mapMaker.Get(neighbor.key).GetDepth());
+                }
+
+            }
+
+            queue.remove();
+
+        }
+
+        System.out.println("\n# of Paths : " + count);
     }
 
     /*public static void Threading(String start, String end, List<List<String>> possiblePaths)

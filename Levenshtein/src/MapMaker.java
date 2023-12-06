@@ -78,8 +78,8 @@ public class MapMaker
 
     private static void ReadMap() throws FileNotFoundException
     {
-        //Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP"));
-        Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
+        Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP"));
+        //Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
 
         while (file.hasNextLine())
         {
@@ -113,7 +113,42 @@ public class MapMaker
             }
 
             wordMap.put(key, keyNeighbors);
+
             //nodeMap.put(key, new LevNode(key, keyNeighbors));
+        }
+
+        for (String key : wordMap.keySet())
+        {
+            LevNode node;
+            //System.out.println(key);
+            if (nodeMap.containsKey(key))
+            {
+                //System.out.println(" exists");
+                node = nodeMap.get(key);
+            }
+            else
+            {
+                //System.out.println(" doesnt exist");
+                node = new LevNode(key);
+                nodeMap.put(key, node);
+            }
+
+            for (String neighbor : wordMap.get(key))
+            {
+                //System.out.println("\t" + neighbor);
+                if (nodeMap.containsKey(neighbor))
+                {
+                    //System.out.println("\t" + " exists");
+                    node.AddNeighbor(nodeMap.get(neighbor));
+                }
+                else
+                {
+                    //System.out.println("\t" + " doesnt exist");
+                    LevNode newNeighbor = new LevNode(neighbor);
+                    nodeMap.put(neighbor, newNeighbor);
+                    node.AddNeighbor(newNeighbor);
+                }
+            }
         }
     }
 
@@ -167,5 +202,10 @@ public class MapMaker
     public LevNode Get(String word)
     {
         return nodeMap.get(word);
+    }
+
+    public Set<String> GetNodeKeySet()
+    {
+        return nodeMap.keySet();
     }
 }
