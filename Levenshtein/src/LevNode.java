@@ -45,14 +45,8 @@ public class LevNode
             return output;
         }
     }
-
     public List<LevNode> GetNeighbors()
     {
         return neighbors;
-    }
-
-    public String GetKey()
-    {
-        return key;
     }
 }

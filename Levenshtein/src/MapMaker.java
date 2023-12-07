@@ -78,8 +78,8 @@ public class MapMaker
 
     private static void ReadMap() throws FileNotFoundException
     {
-        Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP"));
-        //Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
+        //Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP"));
+        Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
 
         while (file.hasNextLine())
         {
@@ -202,10 +202,5 @@ public class MapMaker
     public LevNode Get(String word)
     {
         return nodeMap.get(word);
-    }
-
-    public Set<String> GetNodeKeySet()
-    {
-        return nodeMap.keySet();
     }
 }
