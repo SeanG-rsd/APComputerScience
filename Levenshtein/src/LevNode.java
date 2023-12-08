@@ -6,7 +6,7 @@ public class LevNode
 
     protected int depth;
 
-    public LevNode(String k)
+    public LevNode(String k) // new node
     {
         key = k;
         depth = -1;
@@ -28,7 +28,7 @@ public class LevNode
         return depth;
     }
 
-    public String toString()
+    public String toString() // output to string
     {
         if (neighbors.isEmpty())
         {
@@ -48,5 +48,5 @@ public class LevNode
     public List<LevNode> GetNeighbors()
     {
         return neighbors;
-    }
+    } // get this nodes neighbors
 }

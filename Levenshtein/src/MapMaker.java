@@ -12,7 +12,7 @@ public class MapMaker
         SetDictionary(filename);
     }
 
-    private static void SetDictionary(String filename) throws FileNotFoundException
+    private static void SetDictionary(String filename) throws FileNotFoundException // initialization of mapMaker
     {
         Scanner file = new Scanner(new File(filename));
 
@@ -27,7 +27,7 @@ public class MapMaker
         //PrintMap();
     }
 
-    private static void PrintMap()
+    private static void PrintMap() // print the map
     {
         for (String word : wordMap.keySet())
         {
@@ -35,7 +35,7 @@ public class MapMaker
         }
     }
 
-    private static void CreateMap()
+    private static void CreateMap() // create the map on the order of n^2
     {
         WordMaker wordMaker = new WordMaker();
         Collections.sort(dictionary);
@@ -65,7 +65,7 @@ public class MapMaker
         }
     }
 
-    private static void SaveMap() throws FileNotFoundException
+    private static void SaveMap() throws FileNotFoundException // save the map
     {
         //PrintWriter printStream = new PrintWriter("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP");
         PrintWriter printStream = new PrintWriter("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP");
@@ -76,7 +76,7 @@ public class MapMaker
         printStream.close();
     }
 
-    private static void ReadMap() throws FileNotFoundException
+    private static void ReadMap() throws FileNotFoundException // read the map from a file
     {
         //Scanner file = new Scanner(new File("/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Levenshtein/WORD_MAP"));
         Scanner file = new Scanner(new File("D:\\Documents\\GitHub\\APComputerScience\\Levenshtein\\WORD_MAP"));
@@ -117,7 +117,7 @@ public class MapMaker
             //nodeMap.put(key, new LevNode(key, keyNeighbors));
         }
 
-        for (String key : wordMap.keySet())
+        for (String key : wordMap.keySet()) // create the node map
         {
             LevNode node;
             //System.out.println(key);
@@ -152,7 +152,7 @@ public class MapMaker
         }
     }
 
-    public static boolean AreNeighbors(String word1, String word2)
+    public static boolean AreNeighbors(String word1, String word2) // checks if two words are neighbors
     {
         boolean foundOne = false;
 
@@ -202,5 +202,5 @@ public class MapMaker
     public LevNode Get(String word)
     {
         return nodeMap.get(word);
-    }
+    } // gets a node from the node map using a specific key
 }
