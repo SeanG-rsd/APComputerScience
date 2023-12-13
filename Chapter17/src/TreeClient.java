@@ -16,8 +16,8 @@ public class TreeClient
         System.out.println();
 
         System.out.println("Tree Structure : ");
-        //numbers.printSideways();
+        numbers.printSideways();
         System.out.println("Sorted List : ");
-        //numbers.print();
+        numbers.print();
     }
 }
