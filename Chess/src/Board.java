@@ -1,3 +1,7 @@
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.nio.Buffer;
+import javax.swing.*;
 public class Board
 {
     static int[][] pieces;
@@ -9,6 +13,19 @@ public class Board
     {
         pieces = new int[8][8];
         print();
+
+        JFrame frame = new JFrame();
+        frame.setBackground(Color.BLUE);
+        frame.setTitle("Chess");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        GamePanel panel = new GamePanel();
+        panel.addRect();
+
+        frame.add(panel);
+
+        frame.pack();
+        frame.setVisible(true);
     }
     public Board()
     {
@@ -27,5 +44,10 @@ public class Board
             }
             System.out.println("\n---------------------------------");
         }
+    }
+
+    public static void initialize()
+    {
+
     }
 }
