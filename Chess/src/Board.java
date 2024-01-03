@@ -12,7 +12,6 @@ public class Board
     public static void main(String[] args)
     {
         pieces = new int[8][8];
-        print();
 
         JFrame frame = new JFrame();
         frame.setBackground(Color.BLUE);
@@ -20,7 +19,6 @@ public class Board
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         GamePanel panel = new GamePanel();
-        panel.addRect();
 
         frame.add(panel);
 
@@ -30,20 +28,6 @@ public class Board
     public Board()
     {
         pieces = new int[8][8];
-    }
-
-    public static void print()
-    {
-        System.out.println("---------------------------------");
-        for (int i = 0; i < pieces.length; ++i)
-        {
-            System.out.print("|");
-            for (int j = 0; j < pieces[i].length; ++j)
-            {
-                System.out.print(" " + pieces[i][j] + " |");
-            }
-            System.out.println("\n---------------------------------");
-        }
     }
 
     public static void initialize()
