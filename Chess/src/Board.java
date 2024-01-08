@@ -1,13 +1,14 @@
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.nio.Buffer;
 import javax.swing.*;
-public class Board
+import javax.swing.event.MouseInputAdapter;
+
+public class Board extends MouseInputAdapter
 {
     static int[][] pieces;
-
-    enum White {p, n, b, r, q , k};
-    enum Black {P, N, B, R, Q, K};
+    private static GamePanel panel;
 
     public static void main(String[] args)
     {
@@ -18,7 +19,11 @@ public class Board
         frame.setTitle("Chess");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        GamePanel panel = new GamePanel();
+        panel = new GamePanel();
+        MousePointGUI gui = new MousePointGUI(panel);
+
+        panel.addMouseListener(gui);
+        panel.addMouseMotionListener(gui);
 
         frame.add(panel);
 
@@ -33,5 +38,11 @@ public class Board
     public static void initialize()
     {
 
+    }
+
+    public void mouseMoved(MouseEvent event)
+    {
+        System.out.println(event.getPoint());
+        JOptionPane.showMessageDialog(null, "Mouse pressed at position {" + event.getX() + ", " + event.getY() + "}");
     }
 }
