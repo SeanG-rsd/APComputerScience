@@ -3,7 +3,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.*;
 import java.io.*;
-import java.nio.Buffer;
+import java.util.*;
+import java.util.List;
 
 public class GamePanel extends JPanel
 {
@@ -13,6 +14,16 @@ public class GamePanel extends JPanel
     private static Piece[][] board;
     private static Piece[] blackPieces;
     private static Piece[] whitePieces;
+
+    long bit;
+
+    private static final Point[] PAWN_MOVES = new Point[]
+            {
+                    new Point(0, 1),
+                    new Point(1, 1),
+                    new Point(-1, 1),
+                    new Point(0, 2)
+            };
 
     private static int[][] startingBoard = new int[][]
             {
@@ -42,8 +53,25 @@ public class GamePanel extends JPanel
                     "D:\\Documents\\GitHub\\APComputerScience\\Chess\\images\\BlackKing.png"
             };
 
+    private static String[] imagePathMac = new String[]
+    {
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/WhitePawn.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/WhiteRook.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/WhiteKnight.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/WhiteBishop.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/WhiteQueen.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/WhiteKing.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/BlackPawn.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/BlackRook.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/BlackKnight.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/BlackBishop.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/BlackQueen.png",
+            "/Users/gutmannse/Desktop/gutmannsean/APComputerScience/Chess/images/BlackKing.png",
+    };
+
     public GamePanel()
     {
+        moves = new ArrayList<>();
         initializeBoard();
         this.setPreferredSize(new Dimension(pieceWidth * boardDimension, pieceWidth * boardDimension));
         this.setBackground(Color.WHITE);
@@ -71,11 +99,13 @@ public class GamePanel extends JPanel
         {
             for (int y = 0; y < boardDimension; ++y)
             {
+                Point point = new Point(x, y);
+
                 if ((x % 2 == 1 || y % 2 == 1) && !(x % 2 == 1 && y % 2 == 1))
                 {
                     g.setColor(Color.PINK);
 
-                    if (clickedPoint != null && (clickedPoint.getX() == x && clickedPoint.getY() == y))
+                    if (moves.contains(point))
                     {
                         g.setColor(Color.BLUE);
                     }
@@ -86,7 +116,7 @@ public class GamePanel extends JPanel
                 {
                     g.setColor(Color.WHITE);
 
-                    if (clickedPoint != null && (clickedPoint.getX() == x && clickedPoint.getY() == y))
+                    if (moves.contains(point))
                     {
                         g.setColor(Color.BLUE);
                     }
@@ -115,7 +145,7 @@ public class GamePanel extends JPanel
     {
         BufferedImage output;
         try {
-            output = ImageIO.read(new File(imagePath[piece.getIndex()]));
+            output = ImageIO.read(new File(imagePathMac[piece.getIndex()]));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -166,10 +196,39 @@ public class GamePanel extends JPanel
     }
 
     private static Point clickedPoint;
+    private static List<Point> moves;
 
     public void ClickPiece(int x, int y)
     {
-        clickedPoint = new Point(x / pieceWidth, y / pieceWidth);
+        moves = new ArrayList<>();
+        Point p = new Point(x / pieceWidth, y / pieceWidth);
+        if (board[p.getY()][p.getX()] != null)
+        {
+            clickedPoint = new Point(p.getX(), p.getY());
+            calculateMoves(p.getX(), p.getY());
+            moves.add(clickedPoint);
+        }
+        System.out.println(p.toString());
         Repaint();
+    }
+
+    public void calculateMoves(int x, int y)
+    {
+        if (board[y][x].getPieceType() == Piece.PieceType.PAWN)
+        {
+            System.out.println("adslkf");
+            for (Point p : PAWN_MOVES)
+            {
+                if (isWithinBorder(x + p.getX(), y + p.getY()))
+                {
+                    moves.add(p);
+                }
+            }
+        }
+    }
+
+    public boolean isWithinBorder(int x, int y)
+    {
+        return x >= 0 && x < boardDimension && y >= 0 && y < boardDimension;
     }
 }

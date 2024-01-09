@@ -37,4 +37,14 @@ public class Piece
     {
         return new ArrayList<>(List.of(0, 10, 20, 30));
     }
+
+    public PieceType getPieceType()
+    {
+        return pieceType;
+    }
+
+    public PieceColor getPieceColor()
+    {
+        return pieceColor;
+    }
 }
