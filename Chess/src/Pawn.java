@@ -1,7 +1,7 @@
 import java.util.List;
 public class Pawn extends Piece
 {
-
+    public boolean justMadeFirstDoubleMove;
     public Pawn(PieceColor color, int position)
     {
         super(PieceType.PAWN, color, position);
