@@ -145,7 +145,7 @@ public class GamePanel extends JPanel
     {
         BufferedImage output;
         try {
-            output = ImageIO.read(new File(imagePathMac[piece.getIndex()]));
+            output = ImageIO.read(new File(imagePath[0]));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -155,7 +155,7 @@ public class GamePanel extends JPanel
 
     public static void initializeBoard()
     {
-        board = new Piece[boardDimension][boardDimension];
+        /*board = new Piece[boardDimension][boardDimension];
         whitePieces = new Piece[6];
 
         whitePieces[0] = new Piece(Piece.PieceType.PAWN, Piece.PieceColor.WHITE);
@@ -172,7 +172,7 @@ public class GamePanel extends JPanel
         blackPieces[2] = new Piece(Piece.PieceType.KNIGHT, Piece.PieceColor.BLACK);
         blackPieces[3] = new Piece(Piece.PieceType.BISHOP, Piece.PieceColor.BLACK);
         blackPieces[4] = new Piece(Piece.PieceType.QUEEN, Piece.PieceColor.BLACK);
-        blackPieces[5] = new Piece(Piece.PieceType.KING, Piece.PieceColor.BLACK);
+        blackPieces[5] = new Piece(Piece.PieceType.KING, Piece.PieceColor.BLACK);*/
 
         for (int i = 0; i < boardDimension; ++i)
         {
@@ -183,12 +183,12 @@ public class GamePanel extends JPanel
                     if (startingBoard[i][y] <= 6) // WHITE
                     {
                         board[i][y] = whitePieces[startingBoard[i][y] - 1];
-                        board[i][y].setIndex(startingBoard[i][y] - 1);
+                        //board[i][y].setIndex(startingBoard[i][y] - 1);
                     }
                     else // BLACK
                     {
                         board[i][y] = blackPieces[(startingBoard[i][y] - 1) % 6];
-                        board[i][y].setIndex(startingBoard[i][y] - 1);
+                        //board[i][y].setIndex(startingBoard[i][y] - 1);
                     }
                 }
             }

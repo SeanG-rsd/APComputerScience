@@ -1,12 +1,30 @@
+import java.util.*;
+
 public class ChessGame
 {
-    int[] whitePieces = new int[64];
-    int[] blackPieces = new int[64];
+    static Piece[] board = new Piece[64];
 
     
 
     public static void main(String[] args)
     {
+        InitializeBoard("ad");
+    }
 
+    public static void InitializeBoard(String coded)
+    {
+        Piece newPiece = new Pawn(Piece.PieceColor.WHITE, 8);
+        board[newPiece.getPosition()] = newPiece;
+        Piece secondPiece = new Pawn(Piece.PieceColor.BLACK, 17);
+        board[secondPiece.getPosition()] = secondPiece;
+        Piece knight = new Knight(Piece.PieceColor.WHITE, 26);
+        board[knight.getPosition()] = knight;
+        List<Move> moves = new ArrayList<>();
+        newPiece.GetMoves(board, moves);
+        System.out.println(moves);
+        secondPiece.GetMoves(board, moves);
+        System.out.println(moves);
+        knight.GetMoves(board, moves);
+        System.out.println(moves);
     }
 }
