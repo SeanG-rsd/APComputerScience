@@ -12,6 +12,11 @@ public class Move
         this.isTake = isTake;
     }
 
+    public int getPosition()
+    {
+        return newPos;
+    }
+
     public String toString()
     {
         return piece.GetName() + " : " + newPos + " : " + isTake;
