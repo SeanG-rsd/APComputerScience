@@ -50,6 +50,11 @@ public class Bishop extends Piece
     }
 
     @Override
+    public void MakeMove(Move move) {
+        hasMoved = true;
+    }
+
+    @Override
     public String GetName() {
         return "Bishop";
     }

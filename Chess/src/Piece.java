@@ -8,7 +8,7 @@ public abstract class Piece
     protected PieceColor pieceColor;
     protected PieceType pieceType;
 
-    public boolean hasMoved;
+    public boolean hasMoved = false;
 
     public int position;
 
@@ -39,6 +39,8 @@ public abstract class Piece
 
     public abstract Character GetChar();
 
+    public abstract void MakeMove(Move move);
+
     public boolean IsWithinBoard(int pos)
     {
         return pos >= 0 && pos < 64;
@@ -57,5 +59,10 @@ public abstract class Piece
     public String toString()
     {
         return GetName() + ", " + position;
+    }
+
+    public Character getChar()
+    {
+        return (char) (GetChar() + (pieceColor == PieceColor.BLACK ? 32 : 0));
     }
 }

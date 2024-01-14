@@ -109,7 +109,7 @@ public class ChessBoard
             {
                 if (board[c * 8 + r] != null)
                 {
-                    System.out.print("| " + (board[c * 8 + r].GetChar()) + " ");
+                    System.out.print("| " + (board[c * 8 + r].getChar()) + " ");
                 }
                 else
                 {
@@ -123,6 +123,20 @@ public class ChessBoard
         System.out.println("     0   1   2   3   4   5   6   7  ");
     }
 
+    public List<Move> GetAllMovesForAColor(Piece.PieceColor color, ChessBoard tempBoard)
+    {
+        List<Move> moves = new ArrayList<>();
+        for (Piece p : board)
+        {
+            if (p != null && p.pieceColor == color)
+            {
+                moves.addAll(GetMoves(p.position, tempBoard, color));
+            }
+        }
+
+        return moves;
+    }
+
     public List<Move> GetMoves(int pos, ChessBoard tempBoard, Piece.PieceColor turn)
     {
         List<Move> moves = new ArrayList<>();
@@ -132,34 +146,76 @@ public class ChessBoard
 
         while (i.hasNext())
         {
-            tempBoard.MakeMove(i.next());
-            if (tempBoard.IsKingInCheck(turn))
+            Move next = i.next();
+            if (next.IsCastle())
             {
-                i.remove();
+                tempBoard.MakeMove(next.firstMoveBeforeCastle, true);
+                if (tempBoard.IsKingInCheck(turn))
+                {
+                    i.remove();
+                    tempBoard.UndoMove(next.firstMoveBeforeCastle);
+                    continue;
+                }
+                else
+                {
+                    tempBoard.UndoMove(next.firstMoveBeforeCastle);
+                    tempBoard.MakeMove(next, true);
+                    if (tempBoard.IsKingInCheck(turn))
+                    {
+                        i.remove();
+                    }
+                }
+                tempBoard.UndoMove(next);
             }
-            tempBoard.UndoMove();
+            else
+            {
+                tempBoard.MakeMove(next, true);
+                if (tempBoard.IsKingInCheck(turn)) {
+                    i.remove();
+                }
+                tempBoard.UndoMove(lastMove);
+            }
         }
 
         return moves;
     }
 
-    public void MakeMove(Move move)
+    public void MakeMove(Move move, boolean temp)
     {
         lastPieceTaken = board[move.getPosition()];
         lastMove = move;
-        move.piece.hasMoved = true;
-        System.out.println(move);
+        //System.out.println(move);
         board[move.getPosition()] = board[move.piece.position];
         board[move.startPos] = null;
+
+        if (move.IsCastle() && !temp)
+        {
+            MakeMove(move.GetCastleMove(), temp);
+        }
+        else if (move.IsEnPassant())
+        {
+            board[move.EnPassantMove()] = null;
+        }
+
+        if (!temp)
+        {
+            move.piece.MakeMove(move);
+        }
+
         move.piece.position = move.getPosition();
     }
 
-    public void UndoMove()
+    public void UndoMove(Move move)
     {
-        board[lastMove.startPos] = lastMove.piece;
-        board[lastMove.getPosition()] = lastPieceTaken;
-        lastMove.piece.position = lastMove.startPos;
-        lastMove = null;
+        board[move.startPos] = move.piece;
+        board[move.getPosition()] = lastPieceTaken;
+        move.piece.position = move.startPos;
+
+        if (move.IsCastle())
+        {
+            UndoMove(move.GetCastleMove());
+        }
+
         lastPieceTaken = null;
     }
 
@@ -167,7 +223,7 @@ public class ChessBoard
     {
         for (Piece piece : board)
         {
-            if (piece != null && piece.pieceColor != yourColor)
+            if (piece != null && piece.pieceColor != yourColor && piece.pieceType != Piece.PieceType.KING)
             {
                 piece.GetMoves(this, attackedSquares, false);
             }

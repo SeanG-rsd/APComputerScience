@@ -38,6 +38,24 @@ public class Pawn extends Piece
             Move newMove = new Move(this, position + (9 * direction), true);
             legalMoves.add(newMove);
         }
+        if (IsWithinBoard(position + direction) && position / 8 == (position + direction) / 8 && board[position + direction] != null && board[position + direction].pieceColor != pieceColor)
+        {
+            if (board[position + direction].pieceType == PieceType.PAWN && ((Pawn)board[position + direction]).justMadeFirstDoubleMove)
+            {
+                Move newMove = new Move(this, position + (9 * direction), true);
+                newMove.SetEnPassant(board[position + direction], true);
+                legalMoves.add(newMove);
+            }
+        }
+        if (IsWithinBoard(position + (direction * -1)) && position / 8 == (position + (direction * -1)) / 8 && board[position + (direction * -1)] != null && board[position + (direction * -1)].pieceColor != pieceColor)
+        {
+            if (board[position + (direction * -1)].pieceType == PieceType.PAWN && ((Pawn)board[position + (direction * -1)]).justMadeFirstDoubleMove)
+            {
+                Move newMove = new Move(this, position + (7 * direction), true);
+                newMove.SetEnPassant(board[position + (direction * -1)], true);
+                legalMoves.add(newMove);
+            }
+        }
         //System.out.println(board[position + 9].pieceType != pieceType);
     }
 
@@ -49,5 +67,23 @@ public class Pawn extends Piece
     public Character GetChar()
     {
         return 'P';
+    }
+
+    @Override
+    public void MakeMove(Move move) {
+        System.out.println(hasMoved);
+        if (!hasMoved)
+        {
+            if (Math.abs(move.startPos - move.getPosition()) == 16) {
+                justMadeFirstDoubleMove = true;
+                System.out.println("made double move");
+            }
+
+            hasMoved = true;
+        }
+        else if (justMadeFirstDoubleMove)
+        {
+            justMadeFirstDoubleMove = false;
+        }
     }
 }

@@ -53,7 +53,7 @@ public class King extends Piece
         return attacked;
     }
 
-    private boolean CheckForCastling(Piece[] board, int direction, int currentPos)
+    private Piece CheckForCastling(Piece[] board, int direction, int currentPos)
     {
         if (currentPos / 8 == position / 8)
         {
@@ -63,11 +63,11 @@ public class King extends Piece
             }
             else if (board[currentPos].pieceType == PieceType.ROOK && board[currentPos].pieceColor == pieceColor && !board[currentPos].hasMoved)
             {
-                return true;
+                return board[currentPos];
             }
         }
 
-        return false;
+        return null;
     }
 
     @Override
@@ -100,17 +100,27 @@ public class King extends Piece
             }
         }
 
-        if (!hasMoved)
+        if (!hasMoved && !IsInCheck(board, chessBoard))
         {
-            if (CheckForCastling(board, -1, position - 1))
+            if (CheckForCastling(board, -1, position - 1) != null)
             {
-                moves.add(new Move(this, position - 2, false));
+                Move castle = new Move(this, position - 2, false);
+                castle.SetCastle(CheckForCastling(board, -1, position - 1), true, position - 1, this, position - 1);
+                moves.add(castle);
+
             }
-            if (CheckForCastling(board, 1, position + 1))
+            if (CheckForCastling(board, 1, position + 1) != null)
             {
-                moves.add(new Move(this, position + 2, false));
+                Move castle = new Move(this, position + 2, false);
+                castle.SetCastle(CheckForCastling(board, 1, position + 1), true, position + 1, this, position + 1);
+                moves.add(castle);
             }
         }
+    }
+
+    @Override
+    public void MakeMove(Move move) {
+        hasMoved = true;
     }
 
     @Override

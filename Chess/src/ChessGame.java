@@ -10,23 +10,27 @@ public class ChessGame
     {
         whoseTurn = Piece.PieceColor.WHITE;
 
-        ChessBoard board = new ChessBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        ChessBoard tempBoard = new ChessBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        ChessBoard board = new ChessBoard("rnb1kbnr/pppp1ppp/4p3/8/6Pq/5P2/PPPPP2P/RNBQKBNR");
+        ChessBoard tempBoard = new ChessBoard("rnb1kbnr/pppp1ppp/4p3/8/6Pq/5P2/PPPPP2P/RNBQKBNR");
         board.PrintBoard();
+        List<Move> movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
 
-        while (true)
+        while (!movesForASide.isEmpty())
         {
             GetMove(board, tempBoard);
             System.out.println();
             board.PrintBoard();
             whoseTurn = whoseTurn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
+            movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
         }
+
+        Piece.PieceColor whoWon = whoseTurn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
+        System.out.println(whoWon + " WON");
     }
 
     public static void GetMove(ChessBoard board, ChessBoard tempBoard)
     {
         Piece[] pieces = board.GetBoard();
-        List<Integer> piecePositions = new ArrayList<>();
 
         Map<Integer, Piece> playerPieces = new HashMap<>();
 
@@ -69,8 +73,8 @@ public class ChessGame
             index = (7 - y) * 8 + x;
         } while (!possibleIndex.contains(index));
 
-        board.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)));
-        tempBoard.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)));
+        board.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)), false);
+        tempBoard.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)), true);
     }
 
     public static int getPositionInput(Scanner console, int min, int max)
@@ -79,7 +83,7 @@ public class ChessGame
         do {
             System.out.print(">> ");
             output = console.nextInt();
-        } while (!(output >= min && output < max));
+        } while (!(output >= min && output <= max));
 
         return output;
     }

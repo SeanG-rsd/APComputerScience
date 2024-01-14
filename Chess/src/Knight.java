@@ -29,6 +29,11 @@ public class Knight extends Piece {
     }
 
     @Override
+    public void MakeMove(Move move) {
+        hasMoved = true;
+    }
+
+    @Override
     public void GetMoves(ChessBoard chessBoard, List<Move> legalMoves, boolean caresAboutCheck)
     {
         Piece[] board = chessBoard.GetBoard();
