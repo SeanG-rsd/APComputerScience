@@ -11,7 +11,16 @@ public class King extends Piece
 
     public boolean IsInCheck(Piece[] board, ChessBoard chessBoard)
     {
-        return GetOpponentAttackedSpots(board, chessBoard).contains(position);
+        List<Move> attackedSqaures = new ArrayList<>();
+        chessBoard.GetOpponentAttackedSpots(pieceColor, attackedSqaures);
+        for (Move m : attackedSqaures)
+        {
+            if (m.getPosition() == position)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private int[] MOVES = new int[]
@@ -31,7 +40,7 @@ public class King extends Piece
         {
             if (piece != null && piece.pieceColor != pieceColor && piece.pieceType != PieceType.KING)
             {
-                //piece.GetMoves(chessBoard, attackedSquares, true);
+                piece.GetMoves(chessBoard, attackedSquares, false);
             }
         }
 
@@ -62,7 +71,7 @@ public class King extends Piece
     }
 
     @Override
-    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard)
+    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean caresAboutCheck)
     {
         Piece[] board = chessBoard.GetBoard();
         int[] possibleMoves = new int[MOVES.length];
@@ -75,15 +84,18 @@ public class King extends Piece
 
         for (int i = 0; i < possibleMoves.length; ++i) // normal 8 moves in a square
         {
-            if (possibleMoves[i] / 8 == position / 8 + FILE_CHANGE[i] && !notAllowed.contains(possibleMoves[i]))
+            if (IsWithinBoard(possibleMoves[i]))
             {
-                if (board[possibleMoves[i]] == null)
+                if (possibleMoves[i] / 8 == position / 8 + FILE_CHANGE[i] && !notAllowed.contains(possibleMoves[i]))
                 {
-                    moves.add(new Move(this, possibleMoves[i], false));
-                }
-                else if (board[possibleMoves[i]] != null && board[possibleMoves[i]].pieceColor != pieceColor)
-                {
-                    moves.add(new Move(this, possibleMoves[i], true));
+                    if (board[possibleMoves[i]] == null)
+                    {
+                        moves.add(new Move(this, possibleMoves[i], false));
+                    }
+                    else if (board[possibleMoves[i]] != null && board[possibleMoves[i]].pieceColor != pieceColor)
+                    {
+                        moves.add(new Move(this, possibleMoves[i], true));
+                    }
                 }
             }
         }

@@ -40,7 +40,7 @@ public class Bishop extends Piece
     }
 
     @Override
-    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard)
+    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean caresAboutCheck)
     {
         Piece[] board = chessBoard.GetBoard();
         for (int i = 0; i < DIRECTION.length; ++i)

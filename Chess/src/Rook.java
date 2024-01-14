@@ -30,7 +30,7 @@ public class Rook extends Piece
     }
 
     @Override
-    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard)
+    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean caresAboutCheck)
     {
         Piece[] board = chessBoard.GetBoard();
         GetMovesInDirection(position - 1, -1, moves, board, 0);

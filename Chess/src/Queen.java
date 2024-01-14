@@ -29,7 +29,7 @@ public class Queen extends Piece
     }
 
     @Override
-    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard)
+    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean caresAboutCheck)
     {
         Piece[] board = chessBoard.GetBoard();
         GetMovesInDirection(position - 7, -7, moves, board, -1);

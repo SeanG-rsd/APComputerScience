@@ -1,24 +1,26 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class ChessBoard
 {
     public static Piece[] board = new Piece[64];
-    public static Piece[] tempBoard = new Piece[64];
+
+    private static Move lastMove = null;
+    private static Piece lastPieceTaken = null;
 
     public ChessBoard(String code)
     {
         InitializeBoard(code);
     }
 
-    public boolean IsKingInCheck(Piece.PieceColor color, Piece[] board)
+    public boolean IsKingInCheck(Piece.PieceColor color)
     {
         for (Piece p : board)
         {
             if (p != null && p.pieceType == Piece.PieceType.KING && p.pieceColor == color)
             {
-
                 return p.IsInCheck(board, this);
             }
         }
@@ -27,16 +29,6 @@ public class ChessBoard
     public Piece[] GetBoard()
     {
         return board;
-    }
-
-    public Piece[] GetTempBoard()
-    {
-        for (int i = 0; i < board.length; ++i)
-        {
-            tempBoard[i] = board[i];
-        }
-
-        return tempBoard;
     }
     public static void InitializeBoard(String coded) // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     {
@@ -73,7 +65,7 @@ public class ChessBoard
             }
         }
 
-        System.out.println(Arrays.toString(codedBoard));
+        //System.out.println(Arrays.toString(codedBoard));
 
         for (int i = 0; i < codedBoard.length; ++i)
         {
@@ -105,13 +97,14 @@ public class ChessBoard
             }
         }
     }
-
     public void PrintBoard()
     {
         System.out.println();
+        System.out.println("     0   1   2   3   4   5   6   7  ");
         for (int c = 0; c < 8; ++c)
         {
-            System.out.println("---------------------------------");
+            System.out.println("   ---------------------------------");
+            System.out.print((7 - c) + "  ");
             for (int r = 0; r < 8; ++r)
             {
                 if (board[c * 8 + r] != null)
@@ -126,40 +119,59 @@ public class ChessBoard
             System.out.println("|");
 
         }
-        System.out.println("---------------------------------");
+        System.out.println("   ---------------------------------");
+        System.out.println("     0   1   2   3   4   5   6   7  ");
     }
 
-    public void GetMoves(int pos)
+    public List<Move> GetMoves(int pos, ChessBoard tempBoard, Piece.PieceColor turn)
     {
         List<Move> moves = new ArrayList<>();
-        board[pos].GetMoves(this, moves, false);
-        System.out.println(moves);
+        board[pos].GetMoves(this, moves, true);
+
+        Iterator<Move> i = moves.iterator();
+
+        while (i.hasNext())
+        {
+            tempBoard.MakeMove(i.next());
+            if (tempBoard.IsKingInCheck(turn))
+            {
+                i.remove();
+            }
+            tempBoard.UndoMove();
+        }
+
+        return moves;
     }
 
-    public void MakeMove(Piece[] board, Move move)
+    public void MakeMove(Move move)
     {
-        board[move.getPosition()] = move.piece;
-        board[move.piece.position] = null;
+        lastPieceTaken = board[move.getPosition()];
+        lastMove = move;
+        move.piece.hasMoved = true;
+        System.out.println(move);
+        board[move.getPosition()] = board[move.piece.position];
+        board[move.startPos] = null;
         move.piece.position = move.getPosition();
     }
 
-    public int GetOpponentAttackedSpots(Piece.PieceColor yourColor, List<Move> attackedSquares)
+    public void UndoMove()
     {
-        int yourKingPosition = 0;
+        board[lastMove.startPos] = lastMove.piece;
+        board[lastMove.getPosition()] = lastPieceTaken;
+        lastMove.piece.position = lastMove.startPos;
+        lastMove = null;
+        lastPieceTaken = null;
+    }
 
+    public void GetOpponentAttackedSpots(Piece.PieceColor yourColor, List<Move> attackedSquares)
+    {
         for (Piece piece : board)
         {
             if (piece != null && piece.pieceColor != yourColor)
             {
-                piece.GetMoves(this, attackedSquares, true);
-            }
-
-            if (piece != null && piece.pieceType == Piece.PieceType.KING && piece.pieceColor == yourColor)
-            {
-                yourKingPosition = piece.position;
+                piece.GetMoves(this, attackedSquares, false);
             }
         }
-
-        return yourKingPosition;
+        //System.out.println(attackedSquares);
     }
 }

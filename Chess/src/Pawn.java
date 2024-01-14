@@ -13,45 +13,30 @@ public class Pawn extends Piece
     }
 
     @Override
-    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard)
+    public void GetMoves(ChessBoard chessBoard, List<Move> legalMoves, boolean caresAboutCheck)
     {
         Piece[] board = chessBoard.GetBoard();
-        Piece[] tempBoard = chessBoard.GetTempBoard();
-        if (IsWithinBoard(position + 8) && board[position + 8] == null) // forward 1
+        int direction = pieceColor == PieceColor.BLACK ? 1 : -1;
+
+        if (IsWithinBoard(position + 8) && board[position + (8 * direction)] == null) // forward 1
         {
-            Move newMove = new Move(this, position + 8, false);
-            chessBoard.MakeMove(tempBoard, newMove);
-            if (isTempBoard || !chessBoard.IsKingInCheck(pieceColor, tempBoard))
-            {
-                moves.add(newMove);
-            }
+            Move newMove = new Move(this, position + (8 * direction), false);
+            legalMoves.add(newMove);
         }
-        if (IsWithinBoard(position + 16) && board[position + 16] == null && board[position + 8] == null && !hasMoved) // forward 2, only if it's the first move
+        if (IsWithinBoard(position + (16 * direction)) && board[position + (16 * direction)] == null && board[position + (16 * direction)] == null && !hasMoved) // forward 2, only if it's the first move
         {
-            Move newMove = new Move(this, position + 16, false);
-            chessBoard.MakeMove(tempBoard, newMove);
-            if (isTempBoard || !chessBoard.IsKingInCheck(pieceColor, tempBoard))
-            {
-                moves.add(newMove);
-            }
+            Move newMove = new Move(this, position + (16 * direction), false);
+            legalMoves.add(newMove);
         }
-        if (IsWithinBoard(position + 7) && position / 8 + 1 == (position + 7) / 8 && board[position + 7] != null && board[position + 7].pieceColor != pieceColor) // take diagonally to left
+        if (IsWithinBoard(position + (7 * direction)) && position / 8 + direction == (position + (7 * direction)) / 8 && board[position + (7 * direction)] != null && board[position + (7 * direction)].pieceColor != pieceColor) // take diagonally to left
         {
             Move newMove = new Move(this, position + 7, true);
-            chessBoard.MakeMove(tempBoard, newMove);
-            if (isTempBoard || !chessBoard.IsKingInCheck(pieceColor, tempBoard))
-            {
-                moves.add(newMove);
-            }
+            legalMoves.add(newMove);
         }
-        if (IsWithinBoard(position + 9) && (position / 8) + 1 == (position + 9) / 8 && board[position + 9] != null && board[position + 9].pieceColor != pieceColor) // take diagonally to right
+        if (IsWithinBoard(position + (9 * direction)) && (position / 8) + direction == (position + (9 * direction)) / 8 && board[position + (9 * direction)] != null && board[position + (9 * direction)].pieceColor != pieceColor) // take diagonally to right
         {
-            Move newMove = new Move(this, position + 9, true);
-            chessBoard.MakeMove(tempBoard, newMove);
-            if (isTempBoard || !chessBoard.IsKingInCheck(pieceColor, tempBoard))
-            {
-                moves.add(newMove);
-            }
+            Move newMove = new Move(this, position + (9 * direction), true);
+            legalMoves.add(newMove);
         }
         //System.out.println(board[position + 9].pieceType != pieceType);
     }

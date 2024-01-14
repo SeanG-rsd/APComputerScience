@@ -19,13 +19,6 @@ public abstract class Piece
         this.position = position;
     }
 
-    public Piece(Piece copy)
-    {
-        pieceColor = copy.pieceColor;
-        pieceType = copy.pieceType;
-        position = copy.position;
-    }
-
     public PieceType getPieceType()
     {
         return pieceType;
@@ -40,7 +33,7 @@ public abstract class Piece
 
     //public abstract void MakeMove(int newPos);
 
-    public abstract void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard);
+    public abstract void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean caresAboutCheck);
 
     public abstract String GetName();
 
@@ -59,5 +52,10 @@ public abstract class Piece
     private void GetRookMoves(Piece[] board)
     {
         List<Integer> legalMoves = new ArrayList<>();
+    }
+
+    public String toString()
+    {
+        return GetName() + ", " + position;
     }
 }

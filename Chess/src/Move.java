@@ -2,6 +2,7 @@ public class Move
 {
     public Piece piece;
     private int newPos;
+    public int startPos;
 
     private boolean isTake;
 
@@ -13,6 +14,7 @@ public class Move
         this.piece = piece;
         this.newPos = pos;
         this.isTake = isTake;
+        this.startPos = piece.position;
     }
 
     public int getPosition()
