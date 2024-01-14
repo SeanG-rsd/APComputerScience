@@ -19,9 +19,11 @@ public abstract class Piece
         this.position = position;
     }
 
-    public void pieceHasMoved()
+    public Piece(Piece copy)
     {
-        hasMoved = true;
+        pieceColor = copy.pieceColor;
+        pieceType = copy.pieceType;
+        position = copy.position;
     }
 
     public PieceType getPieceType()
@@ -34,9 +36,15 @@ public abstract class Piece
         return pieceColor;
     }
 
-    public abstract void GetMoves(Piece[] board, List<Move> moves);
+    public abstract boolean IsInCheck(Piece[] board, ChessBoard chessBoard);
+
+    //public abstract void MakeMove(int newPos);
+
+    public abstract void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard);
 
     public abstract String GetName();
+
+    public abstract Character GetChar();
 
     public boolean IsWithinBoard(int pos)
     {

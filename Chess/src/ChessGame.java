@@ -1,30 +1,18 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class ChessGame
 {
-    static Piece[] board = new Piece[64];
 
     
 
     public static void main(String[] args)
     {
-        InitializeBoard("ad");
+        ChessBoard board = new ChessBoard("r1bqkbnr/ppp2ppp/2n1p3/1B1p2Q1/3PP3/1P6/P1P2PPP/RNB1K1NR");
+        board.PrintBoard();
+        board.GetMoves(18);
+        board.GetMoves(13);
     }
 
-    public static void InitializeBoard(String coded)
-    {
-        Piece newPiece = new Rook(Piece.PieceColor.WHITE, 8);
-        board[newPiece.getPosition()] = newPiece;
-        Piece secondPiece = new Pawn(Piece.PieceColor.BLACK, 32);
-        board[secondPiece.getPosition()] = secondPiece;
-        Piece knight = new Knight(Piece.PieceColor.WHITE, 26);
-        board[knight.getPosition()] = knight;
-        List<Move> moves = new ArrayList<>();
-        newPiece.GetMoves(board, moves);
-        System.out.println(moves);
-        //secondPiece.GetMoves(board, moves);
-        //System.out.println(moves);
-        //knight.GetMoves(board, moves);
-        //System.out.println(moves);
-    }
+
 }

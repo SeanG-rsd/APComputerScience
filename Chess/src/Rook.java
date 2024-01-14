@@ -16,7 +16,7 @@ public class Rook extends Piece
             {
                 moves.add(new Move(this, currentPos, true));
             }
-            else
+            else if (board[currentPos] == null)
             {
                 GetMovesInDirection(currentPos + direction, direction, moves, board, expectedFileChange + (Integer.compare(expectedFileChange, 0)));
                 moves.add(new Move(this, currentPos, false));
@@ -25,8 +25,14 @@ public class Rook extends Piece
     }
 
     @Override
-    public void GetMoves(Piece[] board, List<Move> moves)
+    public boolean IsInCheck(Piece[] board, ChessBoard chessBoard) {
+        return false;
+    }
+
+    @Override
+    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard)
     {
+        Piece[] board = chessBoard.GetBoard();
         GetMovesInDirection(position - 1, -1, moves, board, 0);
         GetMovesInDirection(position + 1, 1, moves, board, 0);
         GetMovesInDirection(position - 8, -8, moves, board, -1);
@@ -37,5 +43,10 @@ public class Rook extends Piece
     public String GetName()
     {
         return "Rook";
+    }
+
+    public Character GetChar()
+    {
+        return 'R';
     }
 }

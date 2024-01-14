@@ -15,7 +15,7 @@ public class Queen extends Piece
             {
                 moves.add(new Move(this, currentPos, true));
             }
-            else
+            else if (board[currentPos] == null)
             {
                 GetMovesInDirection(currentPos + direction, direction, moves, board, expectedFileChange + (Integer.compare(expectedFileChange, 0)));
                 moves.add(new Move(this, currentPos, false));
@@ -24,8 +24,14 @@ public class Queen extends Piece
     }
 
     @Override
-    public void GetMoves(Piece[] board, List<Move> moves)
+    public boolean IsInCheck(Piece[] board, ChessBoard chessBoard) {
+        return false;
+    }
+
+    @Override
+    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard)
     {
+        Piece[] board = chessBoard.GetBoard();
         GetMovesInDirection(position - 7, -7, moves, board, -1);
         GetMovesInDirection(position + 7, 7, moves, board, 1);
         GetMovesInDirection(position - 9, -9, moves, board, -1);
@@ -39,5 +45,10 @@ public class Queen extends Piece
     @Override
     public String GetName() {
         return "Queen";
+    }
+
+    public Character GetChar()
+    {
+        return 'Q';
     }
 }

@@ -1,3 +1,4 @@
+import java.util.Dictionary;
 import java.util.List;
 
 public class Bishop extends Piece
@@ -7,6 +8,16 @@ public class Bishop extends Piece
         super(PieceType.BISHOP, color, position);
     }
 
+    public static int[] DIRECTION = new int[]
+            {
+                    -7,7,9,-9
+            };
+
+    public static int[] FILE_CHANGE = new int[]
+            {
+                    -1,1,1,-1
+            };
+
     public void GetMovesInDirection(int currentPos, int direction, List<Move> moves, Piece[] board, int expectedFileChange)
     {
         if (IsWithinBoard(currentPos) && (position / 8 + expectedFileChange == currentPos / 8))
@@ -15,7 +26,7 @@ public class Bishop extends Piece
             {
                 moves.add(new Move(this, currentPos, true));
             }
-            else
+            else if (board[currentPos] == null)
             {
                 GetMovesInDirection(currentPos + direction, direction, moves, board, expectedFileChange + (expectedFileChange > 0 ? 1 : -1));
                 moves.add(new Move(this, currentPos, false));
@@ -24,16 +35,27 @@ public class Bishop extends Piece
     }
 
     @Override
-    public void GetMoves(Piece[] board, List<Move> moves)
+    public boolean IsInCheck(Piece[] board, ChessBoard chessBoard) {
+        return false;
+    }
+
+    @Override
+    public void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean isTempBoard)
     {
-        GetMovesInDirection(position - 7, -7, moves, board, -1);
-        GetMovesInDirection(position + 7, 7, moves, board, 1);
-        GetMovesInDirection(position - 9, -9, moves, board, -1);
-        GetMovesInDirection(position + 9, 9, moves, board, 1);
+        Piece[] board = chessBoard.GetBoard();
+        for (int i = 0; i < DIRECTION.length; ++i)
+        {
+            GetMovesInDirection(position + DIRECTION[i], DIRECTION[i], moves, board, FILE_CHANGE[i]);
+        }
     }
 
     @Override
     public String GetName() {
         return "Bishop";
+    }
+
+    public Character GetChar()
+    {
+        return 'B';
     }
 }

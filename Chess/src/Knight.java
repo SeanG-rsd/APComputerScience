@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Knight extends Piece
@@ -19,18 +20,60 @@ public class Knight extends Piece
             };
 
     @Override
-    public void GetMoves(Piece[] board, List<Move> legalMoves)
+    public boolean IsInCheck(Piece[] board, ChessBoard chessBoard) {
+        return false;
+    }
+
+    @Override
+    public void GetMoves(ChessBoard chessBoard, List<Move> legalMoves, boolean isTempBoard)
     {
+        Piece[] board = chessBoard.GetBoard();
+        Piece[] tempBoard = chessBoard.GetTempBoard();
         for (int i = 0; i < KNIGHT_MOVES.length; ++i)
         {
             int move = KNIGHT_MOVES[i];
             if (IsWithinBoard(position + move) && (position + move) / 8 == position / 8 + KNIGHT_FILE_CHANGE[i])
             {
-                legalMoves.add(new Move(this, position + move, board[position + move] != null));
+
+                if (board[position + move] != null && board[position + move].pieceColor != pieceColor)
+                {
+                    Move newMove = new Move(this, position + move, true);
+                    chessBoard.MakeMove(tempBoard, newMove);
+                    if (isTempBoard || !chessBoard.IsKingInCheck(pieceColor, tempBoard))
+                    {
+                        legalMoves.add(newMove);
+                    }
+                }
+                else if (board[position + move] == null)
+                {
+                    Move newMove = new Move(this, position + move, false);
+                    chessBoard.MakeMove(tempBoard, newMove);
+                    if (isTempBoard || !chessBoard.IsKingInCheck(pieceColor, tempBoard))
+                    {
+                        legalMoves.add(newMove);
+                    }
+                }
             }
             if (IsWithinBoard(position - move) && (position - move) / 8 == position / 8  - KNIGHT_FILE_CHANGE[i])
             {
-                legalMoves.add(new Move(this, position - move, board[position - move] != null));
+                if (board[position - move] != null && board[position - move].pieceColor != pieceColor)
+                {
+                    Move newMove = new Move(this, position - move, true);
+                    chessBoard.MakeMove(tempBoard, newMove);
+                    if (!chessBoard.IsKingInCheck(pieceColor, tempBoard))
+                    {
+                        legalMoves.add(newMove);
+                    }
+                }
+                else if (board[position - move] == null)
+                {
+                    Move newMove = new Move(this, position - move, false);
+                    chessBoard.MakeMove(tempBoard, newMove);
+                    if (!chessBoard.IsKingInCheck(pieceColor, tempBoard))
+                    {
+                        legalMoves.add(newMove);
+                    }
+                }
             }
         }
     }
@@ -38,5 +81,10 @@ public class Knight extends Piece
     public String GetName()
     {
         return "Knight";
+    }
+
+    public Character GetChar()
+    {
+        return 'N';
     }
 }
