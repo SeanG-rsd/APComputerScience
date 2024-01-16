@@ -18,7 +18,7 @@ public class Pawn extends Piece
         Piece[] board = chessBoard.GetBoard();
         int direction = pieceColor == PieceColor.BLACK ? 1 : -1;
 
-        if (IsWithinBoard(position + 8) && board[position + (8 * direction)] == null) // forward 1
+        if (IsWithinBoard(position + (8 * direction)) && board[position + (8 * direction)] == null) // forward 1
         {
             Move newMove = new Move(this, position + (8 * direction), false);
             legalMoves.add(newMove);
@@ -42,6 +42,7 @@ public class Pawn extends Piece
         {
             if (board[position + direction].pieceType == PieceType.PAWN && ((Pawn)board[position + direction]).justMadeFirstDoubleMove)
             {
+                System.out.println("en passant : " + position);
                 Move newMove = new Move(this, position + (9 * direction), true);
                 newMove.SetEnPassant(board[position + direction], true);
                 legalMoves.add(newMove);
@@ -51,11 +52,13 @@ public class Pawn extends Piece
         {
             if (board[position + (direction * -1)].pieceType == PieceType.PAWN && ((Pawn)board[position + (direction * -1)]).justMadeFirstDoubleMove)
             {
+                System.out.println("en passant : " + position);
                 Move newMove = new Move(this, position + (7 * direction), true);
                 newMove.SetEnPassant(board[position + (direction * -1)], true);
                 legalMoves.add(newMove);
             }
         }
+        //System.out.println(legalMoves);
         //System.out.println(board[position + 9].pieceType != pieceType);
     }
 
@@ -88,6 +91,7 @@ public class Pawn extends Piece
         }
         else if (justMadeFirstDoubleMove)
         {
+            System.out.println("no longer double move");
             justMadeFirstDoubleMove = false;
         }
     }

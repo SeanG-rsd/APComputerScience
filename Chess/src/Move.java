@@ -11,7 +11,7 @@ public class Move
     private Move castleMove;
     public Move firstMoveBeforeCastle; // to see if a piece pins the king from castling
 
-    private Piece takenPawn;
+    public Piece takenPawn;
     private boolean isEnPassant;
 
     public Move(Piece piece, int pos, boolean isTake)
@@ -68,6 +68,6 @@ public class Move
 
     public String toString()
     {
-        return piece.GetName() + " : " + newPos;
+        return piece.GetName() + " : " + newPos + " : " + isEnPassant;
     }
 }

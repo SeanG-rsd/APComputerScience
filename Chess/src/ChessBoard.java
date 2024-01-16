@@ -177,6 +177,7 @@ public class ChessBoard
                 tempBoard.UndoMove(lastMove);
             }
         }
+        System.out.println();
 
         return moves;
     }
@@ -220,6 +221,10 @@ public class ChessBoard
         if (move.IsCastle())
         {
             UndoMove(move.GetCastleMove());
+        }
+        else if (move.IsEnPassant())
+        {
+            board[move.EnPassantMove()] = lastMove.takenPawn;
         }
 
         lastPieceTaken = null;
