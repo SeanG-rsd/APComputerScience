@@ -63,4 +63,9 @@ public class Bishop extends Piece
     {
         return 'B';
     }
+
+    public float GetValue()
+    {
+        return 3;
+    }
 }

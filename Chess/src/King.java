@@ -132,4 +132,9 @@ public class King extends Piece
     {
         return 'K';
     }
+
+    public float GetValue()
+    {
+        return 0;
+    }
 }

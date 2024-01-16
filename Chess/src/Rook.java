@@ -54,4 +54,9 @@ public class Rook extends Piece
     {
         return 'R';
     }
+
+    public float GetValue()
+    {
+        return 5;
+    }
 }

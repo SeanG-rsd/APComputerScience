@@ -78,4 +78,9 @@ public class Knight extends Piece {
     {
         return 'N';
     }
+
+    public float GetValue()
+    {
+        return 3;
+    }
 }

@@ -37,6 +37,8 @@ public abstract class Piece
 
     public abstract Character GetChar();
 
+    public abstract float GetValue();
+
     public abstract void MakeMove(Move move);
 
     public boolean IsWithinBoard(int pos)

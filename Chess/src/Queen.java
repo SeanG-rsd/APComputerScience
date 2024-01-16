@@ -56,4 +56,9 @@ public class Queen extends Piece
     {
         return 'Q';
     }
+
+    public float GetValue()
+    {
+        return 9;
+    }
 }

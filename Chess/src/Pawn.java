@@ -69,6 +69,11 @@ public class Pawn extends Piece
         return 'P';
     }
 
+    public float GetValue()
+    {
+        return 1;
+    }
+
     @Override
     public void MakeMove(Move move) {
         System.out.println(hasMoved);

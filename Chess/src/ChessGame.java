@@ -10,8 +10,8 @@ public class ChessGame
     {
         whoseTurn = Piece.PieceColor.WHITE;
 
-        ChessBoard board = new ChessBoard("rnb1kbnr/pppp1ppp/4p3/8/6Pq/5P2/PPPPP2P/RNBQKBNR");
-        ChessBoard tempBoard = new ChessBoard("rnb1kbnr/pppp1ppp/4p3/8/6Pq/5P2/PPPPP2P/RNBQKBNR");
+        ChessBoard board = new ChessBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        ChessBoard tempBoard = new ChessBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
         board.PrintBoard();
         List<Move> movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
 

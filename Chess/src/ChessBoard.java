@@ -181,6 +181,11 @@ public class ChessBoard
         return moves;
     }
 
+    public float EvaluateBoard()
+    {
+        return 0;
+    }
+
     public void MakeMove(Move move, boolean temp) // makes the given move on the board
     {
         lastPieceTaken = board[move.getPosition()];
