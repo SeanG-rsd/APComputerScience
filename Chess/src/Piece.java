@@ -31,8 +31,6 @@ public abstract class Piece
 
     public abstract boolean IsInCheck(Piece[] board, ChessBoard chessBoard);
 
-    //public abstract void MakeMove(int newPos);
-
     public abstract void GetMoves(ChessBoard chessBoard, List<Move> moves, boolean caresAboutCheck);
 
     public abstract String GetName();
@@ -49,11 +47,6 @@ public abstract class Piece
     public int getPosition()
     {
         return position;
-    }
-
-    private void GetRookMoves(Piece[] board)
-    {
-        List<Integer> legalMoves = new ArrayList<>();
     }
 
     public String toString()

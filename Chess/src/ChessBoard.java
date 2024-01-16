@@ -15,7 +15,7 @@ public class ChessBoard
         InitializeBoard(code);
     }
 
-    public boolean IsKingInCheck(Piece.PieceColor color)
+    public boolean IsKingInCheck(Piece.PieceColor color) // checks if a certain king is in check
     {
         for (Piece p : board)
         {
@@ -32,6 +32,7 @@ public class ChessBoard
     }
     public static void InitializeBoard(String coded) // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     {
+        // takes the given code and decodes it into an array of chars
         char[] codedBoard = new char[64];
         char[] codeReader = coded.toCharArray();
 
@@ -65,7 +66,7 @@ public class ChessBoard
             }
         }
 
-        //System.out.println(Arrays.toString(codedBoard));
+        // creates the piece objects out of the array of chars
 
         for (int i = 0; i < codedBoard.length; ++i)
         {
@@ -97,7 +98,7 @@ public class ChessBoard
             }
         }
     }
-    public void PrintBoard()
+    public void PrintBoard() // outputs the board to the console
     {
         System.out.println();
         System.out.println("     0   1   2   3   4   5   6   7  ");
@@ -123,7 +124,7 @@ public class ChessBoard
         System.out.println("     0   1   2   3   4   5   6   7  ");
     }
 
-    public List<Move> GetAllMovesForAColor(Piece.PieceColor color, ChessBoard tempBoard)
+    public List<Move> GetAllMovesForAColor(Piece.PieceColor color, ChessBoard tempBoard) // gets all the moves for a given color
     {
         List<Move> moves = new ArrayList<>();
         for (Piece p : board)
@@ -137,7 +138,7 @@ public class ChessBoard
         return moves;
     }
 
-    public List<Move> GetMoves(int pos, ChessBoard tempBoard, Piece.PieceColor turn)
+    public List<Move> GetMoves(int pos, ChessBoard tempBoard, Piece.PieceColor turn) // gets the moves for a piece at a certain position
     {
         List<Move> moves = new ArrayList<>();
         board[pos].GetMoves(this, moves, true);
@@ -180,7 +181,7 @@ public class ChessBoard
         return moves;
     }
 
-    public void MakeMove(Move move, boolean temp)
+    public void MakeMove(Move move, boolean temp) // makes the given move on the board
     {
         lastPieceTaken = board[move.getPosition()];
         lastMove = move;
@@ -205,7 +206,7 @@ public class ChessBoard
         move.piece.position = move.getPosition();
     }
 
-    public void UndoMove(Move move)
+    public void UndoMove(Move move) // undos the move given
     {
         board[move.startPos] = move.piece;
         board[move.getPosition()] = lastPieceTaken;
@@ -219,7 +220,7 @@ public class ChessBoard
         lastPieceTaken = null;
     }
 
-    public void GetOpponentAttackedSpots(Piece.PieceColor yourColor, List<Move> attackedSquares)
+    public void GetOpponentAttackedSpots(Piece.PieceColor yourColor, List<Move> attackedSquares) // gets the sqaures that are attacked by a pieces opponent
     {
         for (Piece piece : board)
         {
