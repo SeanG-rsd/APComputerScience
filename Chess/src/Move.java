@@ -14,6 +14,11 @@ public class Move
     public Piece takenPawn;
     private boolean isEnPassant;
 
+    public Move()
+    {
+        newPos = -1;
+    }
+
     public Move(Piece piece, int pos, boolean isTake)
     {
         this.piece = piece;
@@ -68,6 +73,6 @@ public class Move
 
     public String toString()
     {
-        return piece.GetName() + " : " + newPos + " : " + isEnPassant;
+        return piece.GetName() + " : " + newPos + " : " + isTake;
     }
 }

@@ -10,14 +10,25 @@ public class ChessGame
     {
         whoseTurn = Piece.PieceColor.WHITE;
 
-        ChessBoard board = new ChessBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        ChessBoard tempBoard = new ChessBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        ChessBoard board = new ChessBoard("rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR");
+        ChessBoard tempBoard = new ChessBoard("rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR");
+
+        ChessBot bot = new ChessBot(Piece.PieceColor.BLACK, Piece.PieceColor.WHITE);
+
         board.PrintBoard();
         List<Move> movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
 
         while (!movesForASide.isEmpty())
         {
-            GetMove(board, tempBoard);
+            if (whoseTurn == Piece.PieceColor.WHITE)
+            {
+                GetMove(board, tempBoard);
+            }
+            else
+            {
+                //GetMove(board, tempBoard);
+                bot.GetBestMove(board, tempBoard);
+            }
             System.out.println();
             board.PrintBoard();
             whoseTurn = whoseTurn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;

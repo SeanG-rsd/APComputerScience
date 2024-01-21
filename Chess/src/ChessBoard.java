@@ -177,14 +177,22 @@ public class ChessBoard
                 tempBoard.UndoMove(lastMove);
             }
         }
-        System.out.println();
+        //System.out.println();
 
         return moves;
     }
 
     public float EvaluateBoard()
     {
-        return 0;
+        float output = 0;
+        for (Piece p : board)
+        {
+            if (p != null)
+            {
+                output += (p.GetValue() * (p.pieceColor == Piece.PieceColor.BLACK ? -1 : 1));
+            }
+        }
+        return output;
     }
 
     public void MakeMove(Move move, boolean temp) // makes the given move on the board
@@ -212,10 +220,18 @@ public class ChessBoard
         move.piece.position = move.getPosition();
     }
 
-    public void UndoMove(Move move) // undos the move given
+    public void UndoMove(Move move) // undo the move given
     {
         board[move.startPos] = move.piece;
-        board[move.getPosition()] = lastPieceTaken;
+        if (lastPieceTaken != null)
+        {
+            System.out.println("set lastPieceTaken : " + lastPieceTaken.GetName());
+            board[lastPieceTaken.getPosition()] = lastPieceTaken;
+        }
+        else
+        {
+            board[move.getPosition()] = null;
+        }
         move.piece.position = move.startPos;
 
         if (move.IsCastle())
@@ -228,6 +244,7 @@ public class ChessBoard
         }
 
         lastPieceTaken = null;
+        lastMove = null;
     }
 
     public void GetOpponentAttackedSpots(Piece.PieceColor yourColor, List<Move> attackedSquares) // gets the sqaures that are attacked by a pieces opponent

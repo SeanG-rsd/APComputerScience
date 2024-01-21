@@ -42,7 +42,7 @@ public class Pawn extends Piece
         {
             if (board[position + direction].pieceType == PieceType.PAWN && ((Pawn)board[position + direction]).justMadeFirstDoubleMove)
             {
-                System.out.println("en passant : " + position);
+                //System.out.println("en passant : " + position);
                 Move newMove = new Move(this, position + (9 * direction), true);
                 newMove.SetEnPassant(board[position + direction], true);
                 legalMoves.add(newMove);
@@ -52,7 +52,7 @@ public class Pawn extends Piece
         {
             if (board[position + (direction * -1)].pieceType == PieceType.PAWN && ((Pawn)board[position + (direction * -1)]).justMadeFirstDoubleMove)
             {
-                System.out.println("en passant : " + position);
+                //System.out.println("en passant : " + position);
                 Move newMove = new Move(this, position + (7 * direction), true);
                 newMove.SetEnPassant(board[position + (direction * -1)], true);
                 legalMoves.add(newMove);
@@ -64,7 +64,7 @@ public class Pawn extends Piece
 
     public String GetName()
     {
-        return "Pawn";
+        return "Pawn : " + position;
     }
 
     public Character GetChar()
