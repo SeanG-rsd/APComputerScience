@@ -94,7 +94,9 @@ public class King extends Piece
                     }
                     else if (board[possibleMoves[i]] != null && board[possibleMoves[i]].pieceColor != pieceColor)
                     {
-                        moves.add(new Move(this, possibleMoves[i], true));
+                        Move newMove = new Move(this, possibleMoves[i], true);
+                        newMove.SetTake(board[possibleMoves[i]]);
+                        moves.add(newMove);
                     }
                 }
             }

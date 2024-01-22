@@ -223,15 +223,7 @@ public class ChessBoard
     public void UndoMove(Move move) // undo the move given
     {
         board[move.startPos] = move.piece;
-        if (lastPieceTaken != null)
-        {
-            System.out.println("set lastPieceTaken : " + lastPieceTaken.GetName());
-            board[lastPieceTaken.getPosition()] = lastPieceTaken;
-        }
-        else
-        {
-            board[move.getPosition()] = null;
-        }
+        board[move.getPosition()] = move.takenPiece;
         move.piece.position = move.startPos;
 
         if (move.IsCastle())

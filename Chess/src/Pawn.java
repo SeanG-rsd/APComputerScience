@@ -31,11 +31,13 @@ public class Pawn extends Piece
         if (IsWithinBoard(position + (7 * direction)) && position / 8 + direction == (position + (7 * direction)) / 8 && board[position + (7 * direction)] != null && board[position + (7 * direction)].pieceColor != pieceColor) // take diagonally to left
         {
             Move newMove = new Move(this, position + 7, true);
+            newMove.SetTake(board[position + (7 * direction)]);
             legalMoves.add(newMove);
         }
         if (IsWithinBoard(position + (9 * direction)) && (position / 8) + direction == (position + (9 * direction)) / 8 && board[position + (9 * direction)] != null && board[position + (9 * direction)].pieceColor != pieceColor) // take diagonally to right
         {
             Move newMove = new Move(this, position + (9 * direction), true);
+            newMove.SetTake(board[position + (9 * direction)]);
             legalMoves.add(newMove);
         }
         if (IsWithinBoard(position + direction) && position / 8 == (position + direction) / 8 && board[position + direction] != null && board[position + direction].pieceColor != pieceColor)

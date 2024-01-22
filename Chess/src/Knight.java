@@ -45,6 +45,7 @@ public class Knight extends Piece {
                 if (board[position + move] != null && board[position + move].pieceColor != pieceColor)
                 {
                     Move newMove = new Move(this, position + move, true);
+                    newMove.SetTake(board[position + move]);
                     legalMoves.add(newMove);
                 }
                 else if (board[position + move] == null)
@@ -58,6 +59,7 @@ public class Knight extends Piece {
                 if (board[position - move] != null && board[position - move].pieceColor != pieceColor)
                 {
                     Move newMove = new Move(this, position - move, true);
+                    newMove.SetTake(board[position - move]);
                     legalMoves.add(newMove);
                 }
                 else if (board[position - move] == null)

@@ -26,8 +26,8 @@ public class ChessGame
             }
             else
             {
-                //GetMove(board, tempBoard);
-                bot.GetBestMove(board, tempBoard);
+                GetMove(board, tempBoard);
+                //bot.GetBestMove(board, tempBoard);
             }
             System.out.println();
             board.PrintBoard();
@@ -86,6 +86,9 @@ public class ChessGame
 
         board.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)), false);
         tempBoard.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)), true);
+
+        //board.UndoMove(possibleMoves.get(possibleIndex.indexOf(index)));
+        //tempBoard.UndoMove(possibleMoves.get(possibleIndex.indexOf(index)));
     }
 
     public static int getPositionInput(Scanner console, int min, int max)

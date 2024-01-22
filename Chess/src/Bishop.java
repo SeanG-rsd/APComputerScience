@@ -24,7 +24,9 @@ public class Bishop extends Piece
         {
             if (board[currentPos] != null && board[currentPos].pieceColor != pieceColor)
             {
-                moves.add(new Move(this, currentPos, true));
+                Move newMove = new Move(this, currentPos, true);
+                newMove.SetTake(board[currentPos]);
+                moves.add(newMove);
             }
             else if (board[currentPos] == null)
             {

@@ -2,6 +2,8 @@ public class Move
 {
     public Piece piece;
     private int newPos;
+
+    public Piece takenPiece;
     public int startPos;
 
     private boolean isTake;
@@ -25,6 +27,7 @@ public class Move
         this.newPos = pos;
         this.isTake = isTake;
         this.startPos = piece.position;
+        takenPiece = null;
     }
 
     public int getPosition()
@@ -35,6 +38,11 @@ public class Move
     public boolean IsTake()
     {
         return isTake;
+    }
+
+    public void SetTake(Piece piece)
+    {
+        takenPiece = piece;
     }
 
     public void SetCastle(Piece piece, boolean isCastle, int newRookPos, Piece king, int inBetweenPos)
