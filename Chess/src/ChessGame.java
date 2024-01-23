@@ -26,8 +26,11 @@ public class ChessGame
             }
             else
             {
-                GetMove(board, tempBoard);
-                //bot.GetBestMove(board, tempBoard);
+                //GetMove(board, tempBoard);
+                Move bestMove = bot.GetBestMove(board, tempBoard);
+                System.out.println(bestMove);
+                board.MakeMove(bestMove, false);
+                tempBoard.MakeMove(bestMove, true);
             }
             System.out.println();
             board.PrintBoard();

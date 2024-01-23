@@ -1,4 +1,6 @@
+import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 public class ChessBot
 {
@@ -10,12 +12,15 @@ public class ChessBot
         this.playerColor = playerColor;
     }
 
-    public void GetBestMove(ChessBoard chessBoard, ChessBoard tempBoard)
+    public Move GetBestMove(ChessBoard chessBoard, ChessBoard tempBoard)
     {
-        System.out.println(Minimax(chessBoard, 1, true, tempBoard));
+        Move bestMove = new Move();
+        System.out.println(Minimax(chessBoard, 2, true, tempBoard, bestMove));
+        //System.out.println(chessBoard.EvaluateBoard());
+        return bestMove;
     }
 
-    private static float Minimax(ChessBoard position, int depth, boolean bot, ChessBoard tempBoard)
+    private static float Minimax(ChessBoard position, int depth, boolean bot, ChessBoard tempBoard, Move bestMove)
     {
         List<Move> movesForASide = position.GetAllMovesForAColor(bot ? botColor : playerColor, tempBoard);
         if (depth == 0 || movesForASide.isEmpty())
@@ -28,30 +33,33 @@ public class ChessBot
             float minEval = Float.POSITIVE_INFINITY;
             for (Move m : movesForASide)
             {
-                position.PrintBoard();
-                position.MakeMove(m, false);
-                position.PrintBoard();
-                float eval = Minimax(position, depth - 1, false, tempBoard);
+                tempBoard.MakeMove(m, true);
+                position.MakeMove(m, true);
+                float eval = Minimax(position, depth - 1, false, tempBoard, bestMove);
                 position.UndoMove(m);
-                position.PrintBoard();
+                tempBoard.UndoMove(m);
+
                 minEval = Math.min(minEval, eval);
-                System.out.println("minEval");
+                if (eval <= minEval)
+                {
+                    bestMove.Copy(m);
+                }
             }
             return minEval;
         }
         else
         {
+            movesForASide = position.GetAllMovesForAColor(playerColor, tempBoard);
+            System.out.println(movesForASide);
             float maxEval = Float.NEGATIVE_INFINITY;
             for (Move m : movesForASide)
             {
-                position.PrintBoard();
+                tempBoard.MakeMove(m, true);
                 position.MakeMove(m, true);
-                position.PrintBoard();
-                float eval = Minimax(position, depth - 1, true, tempBoard);
+                float eval = Minimax(position, depth - 1, true, tempBoard, bestMove);
                 position.UndoMove(m);
-                position.PrintBoard();
+                tempBoard.UndoMove(m);
                 maxEval = Math.max(maxEval, eval);
-                System.out.println("maxEval");
             }
             return maxEval;
         }

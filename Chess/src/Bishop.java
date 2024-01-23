@@ -54,6 +54,16 @@ public class Bishop extends Piece
     @Override
     public void MakeMove(Move move) {
         hasMoved = true;
+        timesMoved++;
+    }
+
+    @Override
+    public void UndoMove(Move move) {
+        timesMoved--;
+        if (timesMoved == 0)
+        {
+            hasMoved = false;
+        }
     }
 
     @Override

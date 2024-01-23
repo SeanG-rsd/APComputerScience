@@ -30,7 +30,7 @@ public class Pawn extends Piece
         }
         if (IsWithinBoard(position + (7 * direction)) && position / 8 + direction == (position + (7 * direction)) / 8 && board[position + (7 * direction)] != null && board[position + (7 * direction)].pieceColor != pieceColor) // take diagonally to left
         {
-            Move newMove = new Move(this, position + 7, true);
+            Move newMove = new Move(this, position + (7 * direction), true);
             newMove.SetTake(board[position + (7 * direction)]);
             legalMoves.add(newMove);
         }
@@ -66,7 +66,7 @@ public class Pawn extends Piece
 
     public String GetName()
     {
-        return "Pawn : " + position;
+        return "Pawn";
     }
 
     public Character GetChar()
@@ -81,20 +81,28 @@ public class Pawn extends Piece
 
     @Override
     public void MakeMove(Move move) {
-        System.out.println(hasMoved);
+        timesMoved++;
         if (!hasMoved)
         {
             if (Math.abs(move.startPos - move.getPosition()) == 16) {
                 justMadeFirstDoubleMove = true;
-                System.out.println("made double move");
             }
 
             hasMoved = true;
         }
         else if (justMadeFirstDoubleMove)
         {
-            System.out.println("no longer double move");
             justMadeFirstDoubleMove = false;
         }
+    }
+
+    public void UndoMove(Move move)
+    {
+        timesMoved--;
+        if (justMadeFirstDoubleMove && timesMoved == 0)
+        {
+            justMadeFirstDoubleMove = false;
+        }
+        hasMoved = false;
     }
 }

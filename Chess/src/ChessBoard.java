@@ -174,7 +174,7 @@ public class ChessBoard
                 if (tempBoard.IsKingInCheck(turn)) {
                     i.remove();
                 }
-                tempBoard.UndoMove(lastMove);
+                tempBoard.UndoMove(next);
             }
         }
         //System.out.println();
@@ -197,9 +197,6 @@ public class ChessBoard
 
     public void MakeMove(Move move, boolean temp) // makes the given move on the board
     {
-        lastPieceTaken = board[move.getPosition()];
-        lastMove = move;
-        //System.out.println(move);
         board[move.getPosition()] = board[move.piece.position];
         board[move.startPos] = null;
 
@@ -212,8 +209,7 @@ public class ChessBoard
             board[move.EnPassantMove()] = null;
         }
 
-        if (!temp)
-        {
+        if (!temp) {
             move.piece.MakeMove(move);
         }
 
@@ -232,11 +228,10 @@ public class ChessBoard
         }
         else if (move.IsEnPassant())
         {
-            board[move.EnPassantMove()] = lastMove.takenPawn;
+            board[move.EnPassantMove()] = move.takenPawn;
         }
 
-        lastPieceTaken = null;
-        lastMove = null;
+        //move.piece.UndoMove(move);
     }
 
     public void GetOpponentAttackedSpots(Piece.PieceColor yourColor, List<Move> attackedSquares) // gets the sqaures that are attacked by a pieces opponent

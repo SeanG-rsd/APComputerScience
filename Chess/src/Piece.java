@@ -12,6 +12,8 @@ public abstract class Piece
 
     public int position;
 
+    public int timesMoved;
+
     public Piece(PieceType type, PieceColor color, int position)
     {
         pieceColor = color;
@@ -40,6 +42,8 @@ public abstract class Piece
     public abstract float GetValue();
 
     public abstract void MakeMove(Move move);
+
+    public abstract void UndoMove(Move move);
 
     public boolean IsWithinBoard(int pos)
     {

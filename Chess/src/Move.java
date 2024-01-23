@@ -30,6 +30,15 @@ public class Move
         takenPiece = null;
     }
 
+    public void Copy(Move copy)
+    {
+        this.piece = copy.piece;
+        this.newPos = copy.getPosition();
+        this.isTake = copy.isTake;
+        this.startPos = copy.startPos;
+        this.takenPiece = copy.takenPiece;
+    }
+
     public int getPosition()
     {
         return newPos;
@@ -81,6 +90,6 @@ public class Move
 
     public String toString()
     {
-        return piece.GetName() + " : " + newPos + " : " + isTake;
+        return piece.GetName() + " : " + startPos +  "->" + newPos + " : " + (isTake);
     }
 }
