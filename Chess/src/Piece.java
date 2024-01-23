@@ -7,7 +7,6 @@ public abstract class Piece
 
     protected PieceColor pieceColor;
     protected PieceType pieceType;
-
     public boolean hasMoved = false;
 
     public int position;

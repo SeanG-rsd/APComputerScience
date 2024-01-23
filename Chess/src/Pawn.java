@@ -1,6 +1,28 @@
 import java.util.List;
 public class Pawn extends Piece
 {
+    public int[] pawnTable = new int[]
+    {
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0
+    };
+    public int[] rookTable = new int[]
+            {
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0
+            };
     public boolean justMadeFirstDoubleMove;
     public Pawn(PieceColor color, int position)
     {
@@ -23,7 +45,7 @@ public class Pawn extends Piece
             Move newMove = new Move(this, position + (8 * direction), false);
             legalMoves.add(newMove);
         }
-        if (IsWithinBoard(position + (16 * direction)) && board[position + (16 * direction)] == null && board[position + (16 * direction)] == null && !hasMoved) // forward 2, only if it's the first move
+        if (IsWithinBoard(position + (16 * direction)) && board[position + (16 * direction)] == null && board[position + (8 * direction)] == null && !hasMoved) // forward 2, only if it's the first move
         {
             Move newMove = new Move(this, position + (16 * direction), false);
             legalMoves.add(newMove);
@@ -102,7 +124,11 @@ public class Pawn extends Piece
         if (justMadeFirstDoubleMove && timesMoved == 0)
         {
             justMadeFirstDoubleMove = false;
+            hasMoved = false;
         }
-        hasMoved = false;
+        else if (timesMoved == 0)
+        {
+            hasMoved = false;
+        }
     }
 }

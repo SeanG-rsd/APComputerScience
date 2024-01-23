@@ -29,8 +29,8 @@ public class ChessGame
                 //GetMove(board, tempBoard);
                 Move bestMove = bot.GetBestMove(board, tempBoard);
                 System.out.println(bestMove);
-                board.MakeMove(bestMove, false);
-                tempBoard.MakeMove(bestMove, true);
+                board.MakeMove(bestMove);
+                tempBoard.MakeMove(bestMove);
             }
             System.out.println();
             board.PrintBoard();
@@ -87,8 +87,8 @@ public class ChessGame
             index = (7 - y) * 8 + x;
         } while (!possibleIndex.contains(index));
 
-        board.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)), false);
-        tempBoard.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)), true);
+        board.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)));
+        tempBoard.MakeMove(possibleMoves.get(possibleIndex.indexOf(index)));
 
         //board.UndoMove(possibleMoves.get(possibleIndex.indexOf(index)));
         //tempBoard.UndoMove(possibleMoves.get(possibleIndex.indexOf(index)));

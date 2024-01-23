@@ -19,8 +19,8 @@ public class Queen extends Piece
             }
             else if (board[currentPos] == null)
             {
-                GetMovesInDirection(currentPos + direction, direction, moves, board, expectedFileChange + (Integer.compare(expectedFileChange, 0)));
                 moves.add(new Move(this, currentPos, false));
+                GetMovesInDirection(currentPos + direction, direction, moves, board, expectedFileChange + (Integer.compare(expectedFileChange, 0)));
             }
         }
     }

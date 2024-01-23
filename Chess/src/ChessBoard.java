@@ -150,7 +150,7 @@ public class ChessBoard
             Move next = i.next();
             if (next.IsCastle())
             {
-                tempBoard.MakeMove(next.firstMoveBeforeCastle, true);
+                tempBoard.MakeMove(next.firstMoveBeforeCastle);
                 if (tempBoard.IsKingInCheck(turn))
                 {
                     i.remove();
@@ -160,7 +160,7 @@ public class ChessBoard
                 else
                 {
                     tempBoard.UndoMove(next.firstMoveBeforeCastle);
-                    tempBoard.MakeMove(next, true);
+                    tempBoard.MakeMove(next);
                     if (tempBoard.IsKingInCheck(turn))
                     {
                         i.remove();
@@ -170,7 +170,7 @@ public class ChessBoard
             }
             else
             {
-                tempBoard.MakeMove(next, true);
+                tempBoard.MakeMove(next);
                 if (tempBoard.IsKingInCheck(turn)) {
                     i.remove();
                 }
@@ -195,23 +195,21 @@ public class ChessBoard
         return output;
     }
 
-    public void MakeMove(Move move, boolean temp) // makes the given move on the board
+    public void MakeMove(Move move) // makes the given move on the board
     {
         board[move.getPosition()] = board[move.piece.position];
         board[move.startPos] = null;
 
-        if (move.IsCastle() && !temp)
+        if (move.IsCastle())
         {
-            MakeMove(move.GetCastleMove(), temp);
+            MakeMove(move.GetCastleMove());
         }
         else if (move.IsEnPassant())
         {
             board[move.EnPassantMove()] = null;
         }
 
-        if (!temp) {
-            move.piece.MakeMove(move);
-        }
+        move.piece.MakeMove(move);
 
         move.piece.position = move.getPosition();
     }
@@ -231,7 +229,7 @@ public class ChessBoard
             board[move.EnPassantMove()] = move.takenPawn;
         }
 
-        //move.piece.UndoMove(move);
+        move.piece.UndoMove(move);
     }
 
     public void GetOpponentAttackedSpots(Piece.PieceColor yourColor, List<Move> attackedSquares) // gets the sqaures that are attacked by a pieces opponent
