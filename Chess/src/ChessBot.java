@@ -15,7 +15,7 @@ public class ChessBot
     public Move GetBestMove(ChessBoard chessBoard, ChessBoard tempBoard)
     {
         Move bestMove = new Move();
-        System.out.println(Minimax(chessBoard, 4, true, tempBoard, bestMove));
+        System.out.println(Minimax(chessBoard, 2, true, tempBoard, bestMove));
         //System.out.println(chessBoard.EvaluateBoard());
         return bestMove;
     }
@@ -33,6 +33,7 @@ public class ChessBot
             float minEval = Float.POSITIVE_INFINITY;
             for (Move m : movesForASide)
             {
+                position.PrintBoard();
                 for (int i = 0; i < depth; ++i)
                 {
                     System.out.print("\t");
@@ -40,6 +41,7 @@ public class ChessBot
                 System.out.println(m);
                 tempBoard.MakeMove(m);
                 position.MakeMove(m);
+                position.PrintBoard();
                 float eval = Minimax(position, depth - 1, false, tempBoard, bestMove);
                 position.UndoMove(m);
                 tempBoard.UndoMove(m);

@@ -2,6 +2,17 @@ import java.util.List;
 
 public class Rook extends Piece
 {
+    public int[] rookTable = new int[]
+            {
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0
+            };
 
     public Rook(PieceColor color, int position)
     {
@@ -69,6 +80,16 @@ public class Rook extends Piece
 
     public float GetValue()
     {
-        return 5;
+        float value = 5;
+        if (pieceColor == PieceColor.WHITE)
+        {
+            value += ((float) rookTable[position] / 100);
+        }
+        else
+        {
+            value += ((float) rookTable[flip[position]] / 100);
+        }
+
+        return value;
     }
 }

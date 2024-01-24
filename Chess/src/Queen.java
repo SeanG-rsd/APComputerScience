@@ -2,7 +2,17 @@ import java.util.List;
 
 public class Queen extends Piece
 {
-
+    public int[] queenTable = new int[]
+            {
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0
+            };
     public Queen(PieceColor color, int position) {
         super(PieceType.QUEEN, color, position);
     }

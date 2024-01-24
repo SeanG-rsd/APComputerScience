@@ -3,6 +3,18 @@ import java.util.List;
 
 public class Knight extends Piece {
 
+    public int[] knightTable = new int[]
+            {
+                    -10, -10, -10, -10, -10, -10, -10, -10,
+                    -10,   0,   0,   0,   0,   0,   0, -10,
+                    -10,   0,   5,   5,   5,   5,   0, -10,
+                    -10,   0,   5,  10,  10,   5,   0, -10,
+                    -10,   0,   5,  10,  10,   5,   0, -10,
+                    -10,   0,   5,   5,   5,   5,   0, -10,
+                    -10,   0,   0,   0,   0,   0,   0, -10,
+                    -10, -30, -10, -10, -10, -10, -30, -10
+            };
+
     public Knight(PieceColor color, int position)
     {
         super(PieceType.KNIGHT, color, position);
@@ -93,6 +105,16 @@ public class Knight extends Piece {
 
     public float GetValue()
     {
-        return 3;
+        float value = 3;
+        if (pieceColor == PieceColor.WHITE)
+        {
+            value += ((float) knightTable[position] / 100);
+        }
+        else
+        {
+            value += ((float) knightTable[flip[position]] / 100);
+        }
+
+        return value;
     }
 }

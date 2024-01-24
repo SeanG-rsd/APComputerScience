@@ -4,6 +4,18 @@ import java.util.List;
 public class King extends Piece
 {
 
+
+    public int[] kingTable = new int[]
+            {
+                    -40, -40, -40, -40, -40, -40, -40, -40,
+                    -40, -40, -40, -40, -40, -40, -40, -40,
+                    -40, -40, -40, -40, -40, -40, -40, -40,
+                    -40, -40, -40, -40, -40, -40, -40, -40,
+                    -40, -40, -40, -40, -40, -40, -40, -40,
+                    -40, -40, -40, -40, -40, -40, -40, -40,
+                    -20, -20, -20, -20, -20, -20, -20, -20,
+                    0,  20,  40, -20,   0, -20,  40,  20
+            };
     public King(PieceColor color, int position)
     {
         super(PieceType.KING, color, position);
@@ -147,6 +159,16 @@ public class King extends Piece
 
     public float GetValue()
     {
-        return 0;
+        float value = 0;
+        if (pieceColor == PieceColor.WHITE)
+        {
+            value += ((float) kingTable[position] / 100);
+        }
+        else
+        {
+            value += ((float) kingTable[flip[position]] / 100);
+        }
+
+        return value;
     }
 }

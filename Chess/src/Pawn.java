@@ -3,26 +3,15 @@ public class Pawn extends Piece
 {
     public int[] pawnTable = new int[]
     {
-            0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0
+            0,   0,   0,   0,   0,   0,   0,   0,
+            5,  10,  15,  20,  20,  15,  10,   5,
+            4,   8,  12,  16,  16,  12,   8,   4,
+            3,   6,   9,  12,  12,   9,   6,   3,
+            2,   4,   6,   8,   8,   6,   4,   2,
+            1,   2,   3, -10, -10,   3,   2,   1,
+            0,   0,   0, -40, -40,   0,   0,   0,
+            0,   0,   0,   0,   0,   0,   0,   0
     };
-    public int[] rookTable = new int[]
-            {
-                    0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0
-            };
     public boolean justMadeFirstDoubleMove;
     public Pawn(PieceColor color, int position)
     {
@@ -98,7 +87,17 @@ public class Pawn extends Piece
 
     public float GetValue()
     {
-        return 1;
+        float value = 1;
+        if (pieceColor == PieceColor.WHITE)
+        {
+            value += ((float) pawnTable[position] / 100);
+        }
+        else
+        {
+            value += ((float) pawnTable[flip[position]] / 100);
+        }
+
+        return value;
     }
 
     @Override
