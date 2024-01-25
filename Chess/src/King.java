@@ -69,13 +69,16 @@ public class King extends Piece
     {
         if (currentPos / 8 == position / 8)
         {
-            if (board[currentPos] == null)
+            if (IsWithinBoard(currentPos))
             {
-                return CheckForCastling(board, direction, currentPos + direction);
-            }
-            else if (board[currentPos].pieceType == PieceType.ROOK && board[currentPos].pieceColor == pieceColor && !board[currentPos].hasMoved)
-            {
-                return board[currentPos];
+                if (board[currentPos] == null)
+                {
+                    return CheckForCastling(board, direction, currentPos + direction);
+                }
+                else if (board[currentPos].pieceType == PieceType.ROOK && board[currentPos].pieceColor == pieceColor && !board[currentPos].hasMoved)
+                {
+                    return board[currentPos];
+                }
             }
         }
 

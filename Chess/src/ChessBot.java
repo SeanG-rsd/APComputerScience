@@ -15,12 +15,13 @@ public class ChessBot
     public Move GetBestMove(ChessBoard chessBoard, ChessBoard tempBoard)
     {
         Move bestMove = new Move();
-        System.out.println(Minimax(chessBoard, 2, true, tempBoard, bestMove));
+        int DEPTH = 6;
+        System.out.println(Minimax(chessBoard, DEPTH, true, tempBoard, bestMove, DEPTH));
         //System.out.println(chessBoard.EvaluateBoard());
         return bestMove;
     }
 
-    private static float Minimax(ChessBoard position, int depth, boolean bot, ChessBoard tempBoard, Move bestMove)
+    private static float Minimax(ChessBoard position, int depth, boolean bot, ChessBoard tempBoard, Move bestMove, int startDepth)
     {
         List<Move> movesForASide = position.GetAllMovesForAColor(bot ? botColor : playerColor, tempBoard);
         if (depth == 0 || movesForASide.isEmpty())
@@ -33,22 +34,17 @@ public class ChessBot
             float minEval = Float.POSITIVE_INFINITY;
             for (Move m : movesForASide)
             {
-                position.PrintBoard();
-                for (int i = 0; i < depth; ++i)
-                {
-                    System.out.print("\t");
-                }
-                System.out.println(m);
                 tempBoard.MakeMove(m);
                 position.MakeMove(m);
-                position.PrintBoard();
-                float eval = Minimax(position, depth - 1, false, tempBoard, bestMove);
+
+                float eval = Minimax(position, depth - 1, false, tempBoard, bestMove, startDepth);
                 position.UndoMove(m);
                 tempBoard.UndoMove(m);
 
                 minEval = Math.min(minEval, eval);
-                if (eval <= minEval)
+                if (eval <= minEval && depth == startDepth)
                 {
+                    System.out.println("set best move : " + depth);
                     bestMove.Copy(m);
                 }
             }
@@ -61,14 +57,16 @@ public class ChessBot
             {
                 for (int i = 0; i < depth; ++i)
                 {
-                    System.out.print("\t");
+                    //System.out.print("\t");
                 }
-                System.out.println(m);
+                //System.out.println(m);
                 tempBoard.MakeMove(m);
                 position.MakeMove(m);
-                float eval = Minimax(position, depth - 1, true, tempBoard, bestMove);
+                float eval = Minimax(position, depth - 1, true, tempBoard, bestMove, startDepth);
                 position.UndoMove(m);
                 tempBoard.UndoMove(m);
+                //System.out.println("undo : " + m);
+                //position.PrintBoard();
                 maxEval = Math.max(maxEval, eval);
             }
             return maxEval;

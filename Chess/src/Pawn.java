@@ -61,13 +61,14 @@ public class Pawn extends Piece
                 legalMoves.add(newMove);
             }
         }
-        if (IsWithinBoard(position + (direction * -1)) && position / 8 == (position + (direction * -1)) / 8 && board[position + (direction * -1)] != null && board[position + (direction * -1)].pieceColor != pieceColor)
+        if (IsWithinBoard(position - direction) && position / 8 == (position - direction) / 8 && board[position - direction] != null && board[position - direction].pieceColor != pieceColor)
         {
-            if (board[position + (direction * -1)].pieceType == PieceType.PAWN && ((Pawn)board[position + (direction * -1)]).justMadeFirstDoubleMove)
+            //System.out.println("alkdsjfh");
+            if (board[position - direction].pieceType == PieceType.PAWN && ((Pawn)board[position - direction]).justMadeFirstDoubleMove)
             {
                 //System.out.println("en passant : " + position);
                 Move newMove = new Move(this, position + (7 * direction), true);
-                newMove.SetEnPassant(board[position + (direction * -1)], true);
+                newMove.SetEnPassant(board[position - direction], true);
                 legalMoves.add(newMove);
             }
         }
@@ -106,6 +107,7 @@ public class Pawn extends Piece
         if (!hasMoved)
         {
             if (Math.abs(move.startPos - move.getPosition()) == 16) {
+                //System.out.println("double");
                 justMadeFirstDoubleMove = true;
             }
 
@@ -113,6 +115,7 @@ public class Pawn extends Piece
         }
         else if (justMadeFirstDoubleMove)
         {
+            //System.out.println("not double 1");
             justMadeFirstDoubleMove = false;
         }
     }
@@ -122,6 +125,7 @@ public class Pawn extends Piece
         timesMoved--;
         if (justMadeFirstDoubleMove && timesMoved == 0)
         {
+            //System.out.println("not double");
             justMadeFirstDoubleMove = false;
             hasMoved = false;
         }
