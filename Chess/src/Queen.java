@@ -17,6 +17,12 @@ public class Queen extends Piece
         super(PieceType.QUEEN, color, position);
     }
 
+    public Queen(Piece copy)
+    {
+        super(PieceType.QUEEN, copy.pieceColor, copy.position);
+        hasMoved = copy.hasMoved;
+    }
+
     public void GetMovesInDirection(int currentPos, int direction, List<Move> moves, Piece[] board, int expectedFileChange)
     {
         if (IsWithinBoard(currentPos) && position / 8 + expectedFileChange == currentPos / 8)

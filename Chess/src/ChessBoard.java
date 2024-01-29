@@ -1,18 +1,54 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 public class ChessBoard
 {
     public static Piece[] board = new Piece[64];
-
-    private static Move lastMove = null;
-    private static Piece lastPieceTaken = null;
-
     public ChessBoard(String code)
     {
         InitializeBoard(code);
+    }
+
+    public ChessBoard(ChessBoard copy)
+    {
+        Piece[] copyBoard = copy.GetBoard();
+        System.out.println("copy");
+        for (int i = 0; i < board.length; ++i)
+        {
+            if (copyBoard[i] != null)
+            {
+                System.out.println(copyBoard[i]);
+                if (copyBoard[i].pieceType == Piece.PieceType.KNIGHT)
+                {
+                    board[i] = new Knight(copyBoard[i]);
+                }
+                else if (copyBoard[i].pieceType == Piece.PieceType.PAWN)
+                {
+                    board[i] = new Pawn(copyBoard[i]);
+                }
+                else if (copyBoard[i].pieceType == Piece.PieceType.KING)
+                {
+                    board[i] = new King(copyBoard[i]);
+                }
+                else if (copyBoard[i].pieceType == Piece.PieceType.QUEEN)
+                {
+                    board[i] = new Queen(copyBoard[i]);
+                }
+                else if (copyBoard[i].pieceType == Piece.PieceType.BISHOP)
+                {
+                    board[i] = new Bishop(copyBoard[i]);
+                }
+                else if (copyBoard[i].pieceType == Piece.PieceType.ROOK)
+                {
+                    board[i] = new Rook(copyBoard[i]);
+                }
+            }
+            else
+            {
+                board[i] = null;
+            }
+        }
     }
 
     public boolean IsKingInCheck(Piece.PieceColor color) // checks if a certain king is in check
@@ -134,7 +170,6 @@ public class ChessBoard
                 moves.addAll(GetMoves(p.position, tempBoard, color));
             }
         }
-
         return moves;
     }
 
@@ -177,7 +212,6 @@ public class ChessBoard
                 tempBoard.UndoMove(next);
             }
         }
-        //System.out.println();
 
         return moves;
     }
@@ -241,6 +275,5 @@ public class ChessBoard
                 piece.GetMoves(this, attackedSquares, false);
             }
         }
-        //System.out.println(attackedSquares);
     }
 }

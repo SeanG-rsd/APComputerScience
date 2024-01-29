@@ -20,9 +20,10 @@ public class Knight extends Piece {
         super(PieceType.KNIGHT, color, position);
     }
 
-    public Knight(Knight copy)
+    public Knight(Piece copy)
     {
-        super(copy.pieceType, copy.pieceColor, copy.position);
+        super(PieceType.BISHOP, copy.pieceColor, copy.position);
+        hasMoved = copy.hasMoved;
     }
 
     private final int[] KNIGHT_MOVES = new int[]

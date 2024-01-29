@@ -18,7 +18,7 @@ public class ChessGame
         board.PrintBoard();
         List<Move> movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
 
-        while (!movesForASide.isEmpty())
+        while (!movesForASide.isEmpty() && false)
         {
             if (whoseTurn == Piece.PieceColor.WHITE)
             {
@@ -27,7 +27,7 @@ public class ChessGame
             else
             {
                 //GetMove(board, tempBoard);
-                Move bestMove = bot.GetBestMove(board, tempBoard);
+                Move bestMove = bot.GetBestMove(tempBoard);
                 System.out.println(bestMove);
                 board.MakeMove(bestMove);
                 tempBoard.MakeMove(bestMove);
@@ -38,8 +38,11 @@ public class ChessGame
             movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
         }
 
-        Piece.PieceColor whoWon = whoseTurn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
-        System.out.println(whoWon + " WON");
+        CheeseBot newBot = new CheeseBot();
+        newBot.GetMoves();
+
+        //Piece.PieceColor whoWon = whoseTurn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
+        //System.out.println(whoWon + " WON");
     }
 
     public static void GetMove(ChessBoard board, ChessBoard tempBoard)

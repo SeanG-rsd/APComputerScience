@@ -21,6 +21,12 @@ public class King extends Piece
         super(PieceType.KING, color, position);
     }
 
+    public King(Piece copy)
+    {
+        super(PieceType.KING, copy.pieceColor, copy.position);
+        hasMoved = copy.hasMoved;
+    }
+
     public boolean IsInCheck(Piece[] board, ChessBoard chessBoard)
     {
         List<Move> attackedSqaures = new ArrayList<>();

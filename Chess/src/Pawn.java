@@ -18,6 +18,13 @@ public class Pawn extends Piece
         super(PieceType.PAWN, color, position);
     }
 
+    public Pawn(Piece copy)
+    {
+        super(PieceType.PAWN, copy.pieceColor, copy.position);
+        hasMoved = copy.hasMoved;
+        justMadeFirstDoubleMove = ((Pawn)copy).justMadeFirstDoubleMove;
+    }
+
     @Override
     public boolean IsInCheck(Piece[] board, ChessBoard chessBoard) {
         return false;

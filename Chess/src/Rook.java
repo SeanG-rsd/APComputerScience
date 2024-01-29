@@ -19,6 +19,12 @@ public class Rook extends Piece
         super(PieceType.ROOK, color, position);
     }
 
+    public Rook(Piece copy)
+    {
+        super(PieceType.ROOK, copy.pieceColor, copy.position);
+        hasMoved = copy.hasMoved;
+    }
+
     public void GetMovesInDirection(int currentPos, int direction, List<Move> moves, Piece[] board, int expectedFileChange)
     {
         if (IsWithinBoard(currentPos) && position / 8 + expectedFileChange == currentPos / 8)

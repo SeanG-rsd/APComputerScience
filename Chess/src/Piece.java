@@ -32,6 +32,14 @@ public abstract class Piece
         this.position = position;
     }
 
+    public Piece(Piece copy)
+    {
+        pieceColor = copy.pieceColor;
+        pieceType = copy.pieceType;
+        this.position = copy.position;
+        this.hasMoved = copy.hasMoved;
+    }
+
     public PieceType getPieceType()
     {
         return pieceType;

@@ -1,29 +1,80 @@
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ChessBot
 {
     private static Piece.PieceColor botColor;
     private static Piece.PieceColor playerColor;
-    public ChessBot(Piece.PieceColor color, Piece.PieceColor playerColor)
+    public ChessBot(Piece.PieceColor color, Piece.PieceColor player)
     {
         botColor = color;
-        this.playerColor = playerColor;
+        playerColor = player;
     }
 
-    public Move GetBestMove(ChessBoard chessBoard, ChessBoard tempBoard)
+    public Move GetBestMove(ChessBoard tempBoard)
     {
         Move bestMove = new Move();
         int DEPTH = 6;
-        System.out.println(Minimax(chessBoard, DEPTH, true, tempBoard, bestMove, DEPTH));
-        //System.out.println(chessBoard.EvaluateBoard());
+        float start = System.nanoTime();
+
+        List<Move> movesForASide = tempBoard.GetAllMovesForAColor(botColor, tempBoard);
+        float bestEval = Float.POSITIVE_INFINITY;
+        for (Move m : movesForASide)
+        {
+            tempBoard.MakeMove(m);
+
+            float eval = Minimax(tempBoard, DEPTH - 1, false, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
+            if (eval < bestEval)
+            {
+                bestEval = eval;
+                bestMove.Copy(m);
+            }
+
+            tempBoard.UndoMove(m);
+        }
+        //Threads(tempBoard, DEPTH, bestMove);
+
+        System.out.println((System.nanoTime() - start) / 1000000000);
         return bestMove;
     }
 
-    private static float Minimax(ChessBoard position, int depth, boolean bot, ChessBoard tempBoard, Move bestMove, int startDepth)
+    private static void Threads(ChessBoard tempBoard, int DEPTH, Move bestMove)
     {
-        List<Move> movesForASide = position.GetAllMovesForAColor(bot ? botColor : playerColor, tempBoard);
+        List<ChessThread> threads = new ArrayList<>();
+
+        List<Move> movesForASide = tempBoard.GetAllMovesForAColor(botColor, tempBoard);
+        float bestEval = Float.POSITIVE_INFINITY;
+        for (Move m : movesForASide)
+        {
+            tempBoard.MakeMove(m);
+            ChessBoard boardCopy = new ChessBoard(tempBoard);
+            ChessThread newThread = new ChessThread(boardCopy, DEPTH - 1, false, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, botColor, playerColor, m);
+            tempBoard.UndoMove(m);
+            newThread.start();
+
+            threads.add(newThread);
+        }
+
+        for (ChessThread thread : threads)
+        {
+            try {
+                thread.join();
+            }
+            catch (InterruptedException e){
+                throw new RuntimeException(e);
+            }
+
+            if (thread.GetBestEval() < bestEval)
+            {
+                bestMove.Copy(thread.GetMove());
+            }
+        }
+    }
+
+    private static float Minimax(ChessBoard position, int depth, boolean bot, float alpha, float beta)
+    {
+        List<Move> movesForASide = position.GetAllMovesForAColor(bot ? botColor : playerColor, position);
         if (depth == 0 || movesForASide.isEmpty())
         {
             return position.EvaluateBoard();
@@ -34,18 +85,16 @@ public class ChessBot
             float minEval = Float.POSITIVE_INFINITY;
             for (Move m : movesForASide)
             {
-                tempBoard.MakeMove(m);
                 position.MakeMove(m);
 
-                float eval = Minimax(position, depth - 1, false, tempBoard, bestMove, startDepth);
+                float eval = Minimax(position, depth - 1, false, alpha, beta);
                 position.UndoMove(m);
-                tempBoard.UndoMove(m);
 
                 minEval = Math.min(minEval, eval);
-                if (eval <= minEval && depth == startDepth)
+                beta = Math.min(beta, eval);
+                if (beta <= alpha)
                 {
-                    System.out.println("set best move : " + depth);
-                    bestMove.Copy(m);
+                    break;
                 }
             }
             return minEval;
@@ -55,21 +104,106 @@ public class ChessBot
             float maxEval = Float.NEGATIVE_INFINITY;
             for (Move m : movesForASide)
             {
-                for (int i = 0; i < depth; ++i)
-                {
-                    //System.out.print("\t");
-                }
-                //System.out.println(m);
-                tempBoard.MakeMove(m);
                 position.MakeMove(m);
-                float eval = Minimax(position, depth - 1, true, tempBoard, bestMove, startDepth);
+                float eval = Minimax(position, depth - 1, true, alpha, beta);
                 position.UndoMove(m);
-                tempBoard.UndoMove(m);
-                //System.out.println("undo : " + m);
-                //position.PrintBoard();
+
                 maxEval = Math.max(maxEval, eval);
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha)
+                {
+                    break;
+                }
             }
             return maxEval;
         }
+    }
+}
+
+class ChessThread extends Thread
+{
+    Piece.PieceColor botColor;
+    Piece.PieceColor playerColor;
+    ChessBoard startBoard;
+    int startDepth;
+    boolean isBotStart;
+    float startAlpha;
+    float startBeta;
+
+    Move move;
+    float bestEval;
+    public ChessThread(ChessBoard position, int depth, boolean bot, float alpha, float beta, Piece.PieceColor botColor, Piece.PieceColor playerColor, Move firstMove)
+    {
+        this.startBoard = position;
+        this.startDepth = depth;
+        this.isBotStart = bot;
+        this.startAlpha = alpha;
+        this.startBeta = beta;
+        this.botColor = botColor;
+        this.playerColor = playerColor;
+        this.move = firstMove;
+    }
+
+    public float miniMax(ChessBoard position, int depth, boolean bot, float alpha, float beta)
+    {
+        List<Move> movesForASide = position.GetAllMovesForAColor(bot ? botColor : playerColor, position);
+        if (depth == 0 || movesForASide.isEmpty())
+        {
+            return position.EvaluateBoard();
+        }
+
+        if (bot)
+        {
+            float minEval = Float.POSITIVE_INFINITY;
+            for (Move m : movesForASide)
+            {
+                position.MakeMove(m);
+
+                float eval = miniMax(position, depth - 1, false, alpha, beta);
+                position.UndoMove(m);
+
+                minEval = Math.min(minEval, eval);
+                beta = Math.min(beta, eval);
+                if (beta <= alpha)
+                {
+                    break;
+                }
+            }
+            return minEval;
+        }
+        else
+        {
+            float maxEval = Float.NEGATIVE_INFINITY;
+            for (Move m : movesForASide)
+            {
+                position.MakeMove(m);
+                float eval = miniMax(position, depth - 1, true, alpha, beta);
+                position.UndoMove(m);
+
+                maxEval = Math.max(maxEval, eval);
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha)
+                {
+                    break;
+                }
+            }
+            return maxEval;
+        }
+
+    }
+
+    public float GetBestEval()
+    {
+        return bestEval;
+    }
+
+    public Move GetMove()
+    {
+        return move;
+    }
+    @Override
+    public void run()
+    {
+        bestEval = miniMax(startBoard, startDepth, isBotStart, startAlpha, startBeta);
     }
 }

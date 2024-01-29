@@ -20,6 +20,12 @@ public class Bishop extends Piece
         super(PieceType.BISHOP, color, position);
     }
 
+    public Bishop(Piece copy)
+    {
+        super(PieceType.BISHOP, copy.pieceColor, copy.position);
+        hasMoved = copy.hasMoved;
+    }
+
     public static int[] DIRECTION = new int[]
             {
                     -7,7,9,-9
