@@ -17,7 +17,7 @@ public class CheeseBot {
     final int[] mapFromOptimized = new int[]{0, K, P, N, B, R, Q, 0, 0, k, p, n, b, r, q};
 
     final int[] pieceColorMap = new int[] {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};
-    final int[] pieceTypeMap = new int[] {0, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6};
+    final int[] pieceTypeMap = new int[] {0, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING};
 
     final int e = 0;
 
@@ -30,11 +30,11 @@ public class CheeseBot {
     int a2 = 48, b2 = 49, c2 = 50, d2 = 51, e2 = 52, f2 = 53, g2 = 54, h2 = 55;
     int a1 = 56, b1 = 57, c1 = 58, d1 = 59, e1 = 60, f1 = 61, g1 = 62, h1 = 63;
 
-    final String startFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
+    final String startBoard = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
 
     int[] board = new int[]
             {
-                    r, n, n, q, k, b, n, r,
+                    r, n, b, q, k, b, n, r,
                     p, p, p, p, p, p, p, p,
                     e, e, e, e, e, e, e, e,
                     e, e, e, e, e, e, e, e,
@@ -44,7 +44,7 @@ public class CheeseBot {
                     R, N, B, Q, K, B, N, R
             };
 
-    int side = white;
+    int side = black;
     int[] kingSquares = new int[]{e1, e8};
 
     // moves for pieces
@@ -57,22 +57,22 @@ public class CheeseBot {
     int[][] pieceMoves = new int[][]
             {
                     new int[0], // empty
-                    kingMoves,
                     new int[0], // pawn
                     knightMoves,
                     bishopMoves,
                     rookMoves,
-                    kingMoves // Queen
+                    kingMoves, // Queen
+                    kingMoves
             };
 
     int[][] pieceRankChanges = new int[][]
             {
                     new int[0],
-                    new int[] {-1,1,0,0,1,1,-1,-1},
                     new int[0],
                     new int[] {1,-1,1,-1,2,-2,2,-2},
                     new int[] {1, 1, -1, -1},
                     new int[] {1, -1, 1, -1},
+                    new int[] {-1,1,0,0,1,1,-1,-1},
                     new int[] {-1,1,0,0,1,1,-1,-1}
             };
 
@@ -86,7 +86,7 @@ public class CheeseBot {
                 int direction = 8 * (1 - 2 * color);
                 for (int lr = -1; lr <= 1; lr += 2) {
                     int targetSquare = square + direction + lr;
-                    if (!IsWithinBoard(targetSquare) || targetSquare / 8 + lr != square / 8) break;
+                    if (!IsWithinBoard(targetSquare) || targetSquare / 8 != square / 8 + direction) break;
                     if (pieceColorMap[board[targetSquare]] == color) {
                         return true;
                     }
@@ -98,7 +98,7 @@ public class CheeseBot {
                     int lastSquare = square;
                     do {
                         targetSquare += directions[d];
-                        if (!IsWithinBoard(targetSquare) || targetSquare / 8 - pieceRankChanges[pieceType][d] != lastSquare / 8) break;
+                        if (!IsWithinBoard(targetSquare) || targetSquare / 8 + pieceRankChanges[pieceType][d] != lastSquare / 8) break;
 
                         int targetPiece = board[targetSquare];
                         if (targetPiece != e) {
@@ -187,8 +187,8 @@ public class CheeseBot {
         {
             if (board[startSquare] != e)
             {
-                int pieceType = board[startSquare];
-                int pieceColor = pieceColorMap[pieceType];
+                int pieceType = pieceTypeMap[board[startSquare]];
+                int pieceColor = pieceColorMap[board[startSquare]];
 
                 if (pieceColor == side)
                 {
@@ -212,13 +212,13 @@ public class CheeseBot {
                             else
                             {
                                 // add regular single move
-                                System.out.println("move");
+                                System.out.println("pawn reg");
                                 moveCount++;
                                 int doubleMoveTarget = startSquare + (direction * 2);
 
                                 if (startSquare >= pawnStartingRank[side][0] && startSquare <= pawnStartingRank[side][1] && board[doubleMoveTarget] == e)
                                 {
-                                    System.out.println("move");
+                                    System.out.println("pawn double");
                                     moveCount++;
                                     // add double move
                                 }
@@ -228,7 +228,7 @@ public class CheeseBot {
                         for (int diagonal = -1; diagonal <= 1; diagonal += 2) // takes
                         {
                             targetSquare = startSquare + diagonal + direction;
-                            if (!IsWithinBoard(targetSquare)) continue;
+                            if (!IsWithinBoard(targetSquare) || startSquare / 8 + direction != targetSquare / 8) continue;
                             int targetPiece = board[targetSquare];
 
                             if (targetPiece != e && pieceColorMap[targetPiece] != pieceColor)
@@ -253,7 +253,7 @@ public class CheeseBot {
                             if (targetSquare == enpassant)
                             {
                                 System.out.println("move");
-                                moveCount++;
+                                //moveCount++;
                                 // enpassant move
                             }
                         }
@@ -293,7 +293,7 @@ public class CheeseBot {
                             do
                             {
                                 targetSquare += directions[d];
-                                if (!IsWithinBoard(targetSquare) || targetSquare / 8 - pieceRankChanges[pieceType][d] != lastSquare / 8)
+                                if (!IsWithinBoard(targetSquare) || targetSquare / 8 != lastSquare / 8 + pieceRankChanges[pieceType][d])
                                     break;
 
                                 int targetPiece = pieceTypeMap[board[targetSquare]];
@@ -301,14 +301,15 @@ public class CheeseBot {
                                 {
                                     if (pieceColorMap[board[targetSquare]] != side)
                                     {
-                                        System.out.println("move");
+                                        System.out.println("move : " + lastSquare + "->" + targetSquare);
                                         moveCount++;
                                         // add take
-                                        break;
                                     }
+
+                                    break;
                                 }
 
-                                System.out.println("move");
+                                System.out.println("move : " + lastSquare + "->" + targetSquare);
                                 moveCount++;
                                 // add normal move
 
