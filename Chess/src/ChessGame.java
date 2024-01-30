@@ -18,6 +18,10 @@ public class ChessGame
         board.PrintBoard();
         List<Move> movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
 
+        CheeseBot newBot = new CheeseBot();
+        newBot.GetLegalMoves();
+        newBot.PrintBoard();
+
         while (!movesForASide.isEmpty() && false)
         {
             if (whoseTurn == Piece.PieceColor.WHITE)
@@ -33,13 +37,10 @@ public class ChessGame
                 tempBoard.MakeMove(bestMove);
             }
             System.out.println();
-            board.PrintBoard();
+            //board.PrintBoard();
             whoseTurn = whoseTurn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
             movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
         }
-
-        CheeseBot newBot = new CheeseBot();
-        newBot.GetMoves();
 
         //Piece.PieceColor whoWon = whoseTurn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
         //System.out.println(whoWon + " WON");

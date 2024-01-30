@@ -137,11 +137,10 @@ public class ChessBoard
     public void PrintBoard() // outputs the board to the console
     {
         System.out.println();
-        System.out.println("     0   1   2   3   4   5   6   7  ");
         for (int c = 0; c < 8; ++c)
         {
             System.out.println("   ---------------------------------");
-            System.out.print((7 - c) + "  ");
+            System.out.print((8-c) + "  ");
             for (int r = 0; r < 8; ++r)
             {
                 if (board[c * 8 + r] != null)
@@ -157,7 +156,7 @@ public class ChessBoard
 
         }
         System.out.println("   ---------------------------------");
-        System.out.println("     0   1   2   3   4   5   6   7  ");
+        System.out.println("     A   B   C   D   E   F   G   H  ");
     }
 
     public List<Move> GetAllMovesForAColor(Piece.PieceColor color, ChessBoard tempBoard) // gets all the moves for a given color
