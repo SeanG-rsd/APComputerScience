@@ -1,52 +1,75 @@
+import com.sun.tools.jconsole.JConsoleContext;
+
 import java.lang.reflect.Array;
 import java.util.*;
 
 public class ChessGame
 {
 
-    private static Piece.PieceColor whoseTurn;
+    static int white = 0;
+    static int black = 1;
+    private static int whoseTurn;
 
     public static void main(String[] args)
     {
-        whoseTurn = Piece.PieceColor.WHITE;
-
-        ChessBoard board = new ChessBoard("rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR");
-        ChessBoard tempBoard = new ChessBoard("rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR");
-
-        ChessBot bot = new ChessBot(Piece.PieceColor.BLACK, Piece.PieceColor.WHITE);
-
-        board.PrintBoard();
-        List<Move> movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
+        whoseTurn = white;
 
         CheeseBot newBot = new CheeseBot();
-        newBot.GetLegalMoves();
-        newBot.PrintBoard();
+        List<Integer> legalMoves;
+        List<String> decodedMoves = new ArrayList<>();
+        String move = "";
 
-        while (!movesForASide.isEmpty() && false)
+        while (true)
         {
-            if (whoseTurn == Piece.PieceColor.WHITE)
+            newBot.PrintBoard();
+            legalMoves = newBot.GetLegalMoves();
+            for (int legalMove : legalMoves)
             {
-                GetMove(board, tempBoard);
+                String visual = newBot.MoveToString(legalMove);
+                System.out.print(visual + ", ");
+                decodedMoves.add(visual);
             }
-            else
-            {
-                //GetMove(board, tempBoard);
-                Move bestMove = bot.GetBestMove(tempBoard);
-                System.out.println(bestMove);
-                board.MakeMove(bestMove);
-                tempBoard.MakeMove(bestMove);
-            }
-            System.out.println();
-            //board.PrintBoard();
-            whoseTurn = whoseTurn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
-            movesForASide = board.GetAllMovesForAColor(whoseTurn, tempBoard);
-        }
 
-        //Piece.PieceColor whoWon = whoseTurn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
-        //System.out.println(whoWon + " WON");
+            move = GetMove(decodedMoves);
+            newBot.MakeMove(legalMoves.get(decodedMoves.indexOf(move)));
+            System.out.println();
+        }
     }
 
-    public static void GetMove(ChessBoard board, ChessBoard tempBoard)
+    public static String GetMove(List<String> possibleMoves)
+    {
+        System.out.println("\nWhat move would you like to make?");
+        String answer = "";
+        Scanner console = new Scanner(System.in);
+        do {
+            System.out.print(">> ");
+            answer = console.next();
+            answer = ToLegalMove(answer);
+
+        } while (!possibleMoves.contains(answer));
+
+        return answer;
+    }
+
+    public static String ToLegalMove(String choice)
+    {
+        char[] array = choice.toCharArray();
+        String output = "";
+        for (int i = 0; i < array.length; ++i)
+        {
+            if (!Character.isDigit(array[i]))
+            {
+                if (Character.isUpperCase(array[i]))
+                {
+                    array[i] = (char)(array[i] + 32);
+                }
+            }
+            output += array[i];
+        }
+        return output;
+    }
+
+    /*public static void GetMove(ChessBoard board, ChessBoard tempBoard)
     {
         Piece[] pieces = board.GetBoard();
 
@@ -107,5 +130,5 @@ public class ChessGame
         } while (!(output >= min && output <= max));
 
         return output;
-    }
+    }*/
 }

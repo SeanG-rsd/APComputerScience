@@ -18,7 +18,7 @@ public class CheeseBot {
 
     final int[] pieceColorMap = new int[] {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};
 
-    final char[] pieceCharMap = new char[] {0, 'P', 'N', 'B', 'R', 'Q', 'K', 0, 0, 'p', 'n', 'b', 'r', 'q', k};
+    final char[] pieceCharMap = new char[] {0, 'P', 'N', 'B', 'R', 'Q', 'K', 'p', 'n', 'b', 'r', 'q', 'k'};
     final int[] pieceTypeMap = new int[] {0, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING};
 
     final int e = 0;
@@ -58,7 +58,7 @@ public class CheeseBot {
                     "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1",
             };
 
-    int side = black;
+    int side = white;
     int[] kingSquares = new int[]{e1, e8};
 
     // moves for pieces
@@ -240,7 +240,7 @@ public class CheeseBot {
 
                                 if (startSquare >= pawnStartingRank[side][0] && startSquare <= pawnStartingRank[side][1] && board[doubleMoveTarget] == e)
                                 {
-                                    AddMove(moveList, encodeMove(startSquare, targetSquare, 0,0,1,0,0));
+                                    AddMove(moveList, encodeMove(startSquare, doubleMoveTarget, 0,0,1,0,0));
                                     moveCount++;
                                     // add double move
                                 }
@@ -344,7 +344,7 @@ public class CheeseBot {
         }
     }
 
-    public void GetLegalMoves()
+    public List<Integer> GetLegalMoves()
     {
         List<Integer> moveList = new ArrayList<>();
         List<Integer> legalMoves = new ArrayList<>();
@@ -357,6 +357,8 @@ public class CheeseBot {
             System.out.println(MoveToString(move));
             UndoMove();
         }
+
+        return legalMoves;
     }
 
     public String MoveToString(int move)
@@ -546,9 +548,9 @@ public class CheeseBot {
             System.out.print((8-c) + "  ");
             for (int r = 0; r < 8; ++r)
             {
-                if (true)
+                if (board[8 * c + r] != e)
                 {
-                    System.out.print("| " + 'p' + " ");
+                    System.out.print("| " + pieceCharMap[board[8 * c + r]] + " ");
                 }
                 else
                 {
