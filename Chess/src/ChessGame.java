@@ -15,12 +15,14 @@ public class ChessGame
         whoseTurn = white;
 
         CheeseBot newBot = new CheeseBot();
-        List<Integer> legalMoves;
+        List<Integer> legalMoves = new ArrayList<>();
         List<String> decodedMoves = new ArrayList<>();
         String move = "";
 
         while (true)
         {
+            legalMoves.clear();
+            decodedMoves.clear();
             newBot.PrintBoard();
             legalMoves = newBot.GetLegalMoves();
             for (int legalMove : legalMoves)

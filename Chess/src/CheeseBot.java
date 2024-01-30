@@ -250,7 +250,7 @@ public class CheeseBot {
                         for (int diagonal = -1; diagonal <= 1; diagonal += 2) // takes
                         {
                             targetSquare = startSquare + diagonal + direction;
-                            if (!IsWithinBoard(targetSquare) || startSquare / 8 + direction != targetSquare / 8) continue;
+                            if (!IsWithinBoard(targetSquare) || startSquare / 8 - (1 - (2 * side)) != targetSquare / 8) continue;
                             int targetPiece = board[targetSquare];
 
                             if (targetPiece != e && pieceColorMap[targetPiece] != pieceColor)
@@ -354,7 +354,6 @@ public class CheeseBot {
         {
             if (MakeMove(move) == 0) continue;
             legalMoves.add(move);
-            System.out.println(MoveToString(move));
             UndoMove();
         }
 
@@ -381,6 +380,23 @@ public class CheeseBot {
     public void MiniMax()
     {
 
+    }
+
+    public static int SetCastle(int can, int spot, int original)
+    {
+        int output = 0;
+        for (int i = 3; i >= 0; i--)
+        {
+            if (spot != i)
+            {
+                output += (1 << i) & original;
+            }
+            else
+            {
+                output += can >> spot;
+            }
+        }
+        return output;
     }
 
     public int MakeMove(int move)
@@ -595,5 +611,10 @@ public class CheeseBot {
         {
 
         }
+    }
+
+    public static void main(String[] args)
+    {
+        System.out.println(SetCastle(0, 3, 15));
     }
 }
