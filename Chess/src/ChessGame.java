@@ -61,7 +61,7 @@ public class ChessGame
         {
             if (!Character.isDigit(array[i]))
             {
-                if (Character.isUpperCase(array[i]))
+                if (Character.isUpperCase(array[i]) && i != 4)
                 {
                     array[i] = (char)(array[i] + 32);
                 }

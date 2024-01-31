@@ -14,7 +14,7 @@ public class CheeseBot {
     final int P = 1, N = 2, B = 3, R = 4, Q = 5, K = 6;
     final int p = 7, n = 8, b = 9, r = 10, q = 11, k = 12;
 
-    final int[] mapFromOptimized = new int[]{0, P, N, B, R, Q, K, 0, 0, p, n, b, r, q, k};
+    final int[] colorTypeToPieceMap = new int[]{0, P, N, B, R, Q, K, 0, 0, p, n, b, r, q, k};
 
     final int[] pieceColorMap = new int[] {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};
 
@@ -60,6 +60,7 @@ public class CheeseBot {
 
     int side = white;
     int[] kingSquares = new int[]{e1, e8};
+    final int[] castlableSqaures = new int[]{e1, e8};
 
     // moves for pieces
 
@@ -93,8 +94,6 @@ public class CheeseBot {
 
     public boolean isSquareAttacked(int square, int color) {
         for (int pieceType = KING; pieceType >= PAWN; pieceType--) {
-            int piece = pieceType | (color << 3);
-            //System.out.println(piece);
 
             if (pieceType == PAWN) {
                 int direction = 8 * (1 - 2 * color);
@@ -115,9 +114,8 @@ public class CheeseBot {
                         if (!IsWithinBoard(targetSquare) || targetSquare / 8 + pieceRankChanges[pieceType][d] != lastSquare / 8) break;
 
                         int targetPiece = board[targetSquare];
-                        if (targetPiece != e) {
-                            if (targetPiece == mapFromOptimized[piece]) return true;
-                            break;
+                        if (targetPiece != e && pieceColorMap[targetPiece] == color) {
+                            return true;
                         }
                         lastSquare = targetSquare;
                     } while (pieceType != KING && pieceType != KNIGHT);
@@ -204,7 +202,6 @@ public class CheeseBot {
 
     public void GetMoves(List<Integer> moveList)
     {
-        int moveCount = 0;
         for (int startSquare = 0; startSquare < board.length; ++startSquare)
         {
             if (board[startSquare] != e)
@@ -226,8 +223,7 @@ public class CheeseBot {
                             {
                                 for (int promotedPiece = QUEEN; promotedPiece >= KNIGHT; promotedPiece--)
                                 {
-                                    AddMove(moveList, encodeMove(startSquare, targetSquare, mapFromOptimized[promotedPiece | (side << 3)], 1, 0, 0, 0));
-                                    moveCount++;
+                                    AddMove(moveList, encodeMove(startSquare, targetSquare, colorTypeToPieceMap[promotedPiece | (side << 3)], 1, 0, 0, 0));
                                 }
                                 // add promotion move
                             }
@@ -235,13 +231,11 @@ public class CheeseBot {
                             {
                                 // add regular single move
                                 AddMove(moveList, encodeMove(startSquare, targetSquare, 0, 0, 0, 0, 0));
-                                moveCount++;
                                 int doubleMoveTarget = startSquare + (direction * 2);
 
                                 if (startSquare >= pawnStartingRank[side][0] && startSquare <= pawnStartingRank[side][1] && board[doubleMoveTarget] == e)
                                 {
                                     AddMove(moveList, encodeMove(startSquare, doubleMoveTarget, 0,0,1,0,0));
-                                    moveCount++;
                                     // add double move
                                 }
                             }
@@ -259,15 +253,13 @@ public class CheeseBot {
                                 {
                                     for (int promotedPiece = QUEEN; promotedPiece >= KNIGHT; promotedPiece--)
                                     {
-                                        AddMove(moveList, encodeMove(startSquare, targetSquare, mapFromOptimized[promotedPiece | side << 3], 1, 0, 0, 0));
-                                        moveCount++;
+                                        AddMove(moveList, encodeMove(startSquare, targetSquare, colorTypeToPieceMap[promotedPiece | side << 3], 1, 0, 0, 0));
                                     }
                                     // add promotion move with take
                                 }
                                 else
                                 {
                                     AddMove(moveList, encodeMove(startSquare, targetSquare, 0, 1, 0, 0, 0));
-                                    moveCount++;
                                     // add normal take move
                                 }
                             }
@@ -284,22 +276,23 @@ public class CheeseBot {
                     {
                         int ks = kingSquares[side];
 
-                        if (board[ks + 1] == e && board[ks + 2] == e) // king side
+                        if (ks == castlableSqaures[side])
                         {
-                            if (!isSquareAttacked(ks, 1 - side) && !isSquareAttacked(ks + 1, 1 - side))
+                            if (board[ks + 1] == e && board[ks + 2] == e) // king side
                             {
-                                AddMove(moveList, encodeMove(ks, ks + 2, 0, 0, 0, 0, 1));
-                                moveCount++;
-                                // add castling move king side
+                                if (pieceTypeMap[board[ks + 3]] == ROOK && !isSquareAttacked(ks, 1 - side) && !isSquareAttacked(ks + 1, 1 - side))
+                                {
+                                    AddMove(moveList, encodeMove(ks, ks + 2, 0, 0, 0, 0, 1));
+                                    // add castling move king side
+                                }
                             }
                         }
 
                         if (board[ks - 1] == e && board[ks - 2] == e && board[ks - 3] == e)
                         {
-                            if (!isSquareAttacked(ks, 1 - side) && !isSquareAttacked(ks - 1, 1 - side))
+                            if (pieceTypeMap[board[ks - 4]] == ROOK && !isSquareAttacked(ks, 1 - side) && !isSquareAttacked(ks - 1, 1 - side))
                             {
                                 AddMove(moveList, encodeMove(ks, ks - 2, 0, 0, 0, 0, 1));
-                                moveCount++;
                                 // add castling move queen side
                             }
                         }
@@ -324,7 +317,6 @@ public class CheeseBot {
                                     if (pieceColorMap[board[targetSquare]] != side)
                                     {
                                         AddMove(moveList, encodeMove(startSquare, targetSquare, 0, 1, 0, 0, 0));
-                                        moveCount++;
                                         // add take
                                     }
 
@@ -332,7 +324,6 @@ public class CheeseBot {
                                 }
 
                                 AddMove(moveList, encodeMove(startSquare, targetSquare, 0, 0, 0, 0, 0));
-                                moveCount++;
                                 // add normal move
 
                                 lastSquare = targetSquare;
@@ -364,13 +355,79 @@ public class CheeseBot {
     {
         if (getMovePromoted(move) != 0)
         {
-            return coodinates[getMoveSource(move)] + coodinates[getMoveTarget(move)] + coodinates[getMovePromoted(move)];
+            return coodinates[getMoveSource(move)] + coodinates[getMoveTarget(move)] + pieceCharMap[getMovePromoted(move)];
         }
         else
         {
             return coodinates[getMoveSource(move)] + coodinates[getMoveTarget(move)];
         }
     }
+
+    private int[] pieceValues = new int[] {0, 89, 308, 319, 488, 888, 20001, -92, -307, -323, -492, -888, -20002};
+    private int[][] pieceBitBoards = new int[][]
+            {
+                    new int[0],
+                    new int[]{
+                            0,   0,   0,   0,   0,   0,   0,   0,
+                            -4,  68,  61,  47,  47,  49,  45,  -1,
+                            6,  16,  25,  33,  24,  24,  14,  -6,
+                            0,  -1,   9,  28,  20,   8,  -1,  11,
+                            6,   4,   6,  14,  14,  -5,   6,  -6,
+                            -1,  -8,  -4,   4,   2, -12,  -1,   5,
+                            5,  16,  16, -14, -14,  13,  15,   8,
+                            0,   0,   0,   0,   0,   0,   0,   0,
+                    },
+                    new int[]{
+                            -55, -40, -30, -28, -26, -30, -40, -50,
+                            -37, -15,   0,  -6,   4,   3, -17, -40,
+                            -25,   5,  16,  12,  11,   6,   6, -29,
+                            -24,   5,  21,  14,  18,   9,  11, -26,
+                            -36,  -5,   9,  23,  24,  21,   2, -24,
+                            -32,  -1,   4,  19,  20,   4,  11, -25,
+                            -38, -22,   4,  -1,   8,  -5, -18, -34,
+                            -50, -46, -32, -24, -36, -25, -34, -50,
+                    },
+                    new int[]{
+                            -16, -15, -12,  -5, -10, -12, -10, -20,
+                            -13,   5,   6,   1,  -6,  -5,   3,  -6,
+                            -16,   6,  -1,  16,   7,  -1,  -6,  -5,
+                            -14,  -1,  11,  14,   4,  10,  11, -13,
+                            -4,   5,  12,  16,   4,   6,   2, -16,
+                            -15,   4,  14,   8,  16,   4,  16, -15,
+                            -5,   6,   6,   6,   3,   6,   9,  -7,
+                            -14,  -4, -15,  -4,  -9,  -4, -12, -14,
+                    },
+                    new int[]{
+                            5,  -2,   6,   2,  -2,  -6,   4,  -2,
+                            8,  13,  11,  15,  11,  15,  16,   4,
+                            -6,   3,   3,   6,   1,  -2,   3,  -5,
+                            -10,   5,  -4,  -4,  -1,  -6,   3,  -2,
+                            -4,   3,   5,  -2,   4,   1,  -5,   1,
+                            0,   1,   1,  -3,   5,   6,   1,  -9,
+                            -10,  -1,  -4,   0,   5,  -6,  -6,  -9,
+                            -1,  -2,  -6,   9,   9,   5,   4,  -5,
+                    },
+                    new int[]{
+                            -25,  -9, -11,  -3,  -7, -13, -10, -17,
+                            -4,  -6,   4,  -5,  -1,   6,   4,  -5,
+                            -8,  -5,   2,   0,   7,   6,  -4,  -5,
+                            0,  -4,   7,  -1,   7,  11,   0,   1,
+                            -6,   4,   7,   1,  -1,   2,  -6,  -2,
+                            -15,  11,  11,  11,   4,  11,   6, -15,
+                            -5,  -6,   1,  -6,   3,  -3,   3, -10,
+                            -15,  -4, -13,  -8,  -3, -16,  -8, -24,
+                    },
+                    new int[]{
+                            -30, -40, -40, -50, -50, -40, -40, -30,
+                            -30, -37, -43, -49, -50, -39, -40, -30,
+                            -32, -41, -40, -46, -49, -40, -46, -30,
+                            -32, -38, -39, -52, -54, -39, -39, -30,
+                            -20, -33, -29, -42, -44, -29, -30, -19,
+                            -10, -18, -17, -20, -22, -21, -20, -13,
+                            14,  18,  -1,  -1,   4,  -1,  15,  14,
+                            21,  35,  11,   6,   1,  14,  32,  22,
+                    },
+            };
 
     public void EvaluateBoard()
     {
@@ -381,6 +438,17 @@ public class CheeseBot {
     {
 
     }
+
+    /*
+
+    Castling is held from numbers 0-15
+    It is seens as 4 number 0000-1111 in binary each digit representing a different castling spot
+    First digit : white's kingside     3
+    Second digit : white's queenside   2
+    Third digit : black's kingside     1
+    Fourth digit : black's queenside   0
+
+     */
 
     public static int SetCastle(int can, int spot, int original)
     {
@@ -397,6 +465,11 @@ public class CheeseBot {
             }
         }
         return output;
+    }
+
+    public static int GetCastle(int spot, int original)
+    {
+        return (original >> spot) & 1;
     }
 
     public int MakeMove(int move)
@@ -454,11 +527,25 @@ public class CheeseBot {
         }
         else if (getMoveCastling(move) != 0)
         {
-            switch (targetSquare){
-                case g1: MovePiece(h1, f1); break;
-                case c1: MovePiece(a1, d1); break;
-                case g8: MovePiece(h8, f8); break;
-                case c8: MovePiece(a8, d8); break;
+            if (targetSquare == g1)
+            {
+                MovePiece(h1, f1);
+                castle = SetCastle(0, 3, castle);
+            }
+            else if (targetSquare == c1)
+            {
+                MovePiece(a1, d1);
+                castle = SetCastle(0, 2, castle);
+            }
+            else if (targetSquare == g8)
+            {
+                MovePiece(h8, f8);
+                castle = SetCastle(0, 1, castle);
+            }
+            else if (targetSquare == c8)
+            {
+                MovePiece(a8, d8);
+                castle = SetCastle(0, 1, castle);
             }
         }
 
@@ -468,6 +555,12 @@ public class CheeseBot {
         }
 
         if (board[targetSquare] == K || board[targetSquare] == k) kingSquares[side] = targetSquare;
+        if (kingSquares[side] != castlableSqaures[side] && pieceTypeMap[board[targetSquare]] == KING)
+        {
+            //System.out.println("set castle for : " + side);
+            castle = SetCastle(0, side == white ? 3 : 1, castle);
+            castle = SetCastle(0, side == white ? 2 : 0, castle);
+        }
 
         side = side == white ? black : white;
 
@@ -518,7 +611,7 @@ public class CheeseBot {
         }
         else if (getMovePromoted(move) != 0)
         {
-            if (side == white)
+            if (moveStack.get(moveIndex).side == white)
             {
                 board[startSquare] = P;
             }
@@ -535,6 +628,7 @@ public class CheeseBot {
         enpassant = moveStack.get(moveIndex).enpassant;
         castle = moveStack.get(moveIndex).castle;
         fiftyMoves = moveStack.get(moveIndex).fifty;
+        //g7h8System.out.println(castle);
 
         moveStack.pop();
     }
@@ -616,5 +710,6 @@ public class CheeseBot {
     public static void main(String[] args)
     {
         System.out.println(SetCastle(0, 3, 15));
+        System.out.println(GetCastle(0, 6));
     }
 }
