@@ -21,19 +21,27 @@ public class ChessGame
 
         while (true)
         {
-            legalMoves.clear();
-            decodedMoves.clear();
-            newBot.PrintBoard();
-            legalMoves = newBot.GetLegalMoves();
-            for (int legalMove : legalMoves)
+            if (whoseTurn == white)
             {
-                String visual = newBot.MoveToString(legalMove);
-                System.out.print(visual + ", ");
-                decodedMoves.add(visual);
-            }
+                legalMoves.clear();
+                decodedMoves.clear();
+                newBot.PrintBoard();
+                legalMoves = newBot.GetLegalMoves();
+                for (int legalMove : legalMoves) {
+                    String visual = newBot.MoveToString(legalMove);
+                    System.out.print(visual + ", ");
+                    decodedMoves.add(visual);
+                }
 
-            move = GetMove(decodedMoves);
-            newBot.MakeMove(legalMoves.get(decodedMoves.indexOf(move)));
+                move = GetMove(decodedMoves);
+                newBot.MakeMove(legalMoves.get(decodedMoves.indexOf(move)));
+                whoseTurn = black;
+            }
+            else
+            {
+                newBot.MakeBestMove();
+                whoseTurn = white;
+            }
             System.out.println();
         }
     }

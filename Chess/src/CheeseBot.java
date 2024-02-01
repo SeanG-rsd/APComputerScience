@@ -86,7 +86,7 @@ public class CheeseBot {
                     new int[0],
                     new int[] {1,-1,1,-1,2,-2,2,-2},
                     new int[] {1, 1, -1, -1},
-                    new int[] {1, -1, 1, -1},
+                    new int[] {1, -1, 0, 0},
                     new int[] {-1,1,0,0,1,1,-1,-1},
                     new int[] {-1,1,0,0,1,1,-1,-1}
             };
@@ -364,6 +364,17 @@ public class CheeseBot {
     }
 
     private int[] pieceValues = new int[] {0, 89, 308, 319, 488, 888, 20001, -92, -307, -323, -492, -888, -20002};
+
+    private int[] flip = new int[]{
+            56,  57,  58,  59,  60,  61,  62,  63,
+            48,  49,  50,  51,  52,  53,  54,  55,
+            40,  41,  42,  43,  44,  45,  46,  47,
+            32,  33,  34,  35,  36,  37,  38,  39,
+            24,  25,  26,  27,  28,  29,  30,  31,
+            16,  17,  18,  19,  20,  21,  22,  23,
+            8,   9,  10,  11,  12,  13,  14,  15,
+            0,   1,   2,   3,   4,   5,   6,   7
+    };
     private int[][] pieceBitBoards = new int[][]
             {
                     new int[0],
@@ -429,14 +440,74 @@ public class CheeseBot {
                     },
             };
 
-    public void EvaluateBoard()
+    public float EvaluateBoard()
     {
+        float eval = 0;
+        for (int position = 0; position < board.length; ++position)
+        {
+            int pieceType = pieceTypeMap[board[position]];
+            if (pieceType != e)
+            {
+                if (pieceColorMap[board[position]] == white)
+                {
+                    //System.out.println(pieceType + "," + position);
+                    eval += pieceValues[pieceType] + pieceBitBoards[pieceType][position];
+                }
+                else
+                {
+                    eval -= pieceValues[pieceType] + pieceBitBoards[pieceType][flip[position]];
+                }
+            }
+        }
 
+        return eval;
     }
 
-    public void MiniMax()
+    public float MiniMax(int depth, float alpha, float beta, boolean bot)
     {
+        List<Integer> movesForASide = GetLegalMoves();
+        if (depth == 0 || movesForASide.isEmpty())
+        {
+            return EvaluateBoard();
+        }
 
+        if (bot)
+        {
+            float minEval = Float.POSITIVE_INFINITY;
+            for (int m : movesForASide)
+            {
+                MakeMove(m);
+
+                float eval = MiniMax(depth - 1, alpha, beta, false);
+                UndoMove();
+
+                minEval = Math.min(minEval, eval);
+                beta = Math.min(beta, eval);
+                if (beta <= alpha)
+                {
+                    break;
+                }
+            }
+            return minEval;
+        }
+        else
+        {
+            float maxEval = Float.NEGATIVE_INFINITY;
+            for (int m : movesForASide)
+            {
+                MakeMove(m);
+                float eval = MiniMax(depth - 1, alpha, beta, true);
+                UndoMove();
+
+                maxEval = Math.max(maxEval, eval);
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha)
+                {
+                    break;
+                }
+            }
+            return maxEval;
+        }
     }
 
     /*
@@ -642,6 +713,33 @@ public class CheeseBot {
     public CheeseBot()
     {
 
+    }
+
+    public void MakeBestMove()
+    {
+        int DEPTH = 6;
+        List<Integer> possibleMoves = GetLegalMoves();
+        float start = System.nanoTime();
+        int bestMove = -1;
+        float bestEval = Float.POSITIVE_INFINITY;
+
+        for (int i : possibleMoves)
+        {
+            MakeMove(i);
+
+            float eval = MiniMax(DEPTH - 1, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, false);
+            if (eval < bestEval)
+            {
+                bestEval = eval;
+                bestMove = i;
+            }
+            System.out.println(getMoveSource(i) + "->" + getMoveTarget(i));
+
+            UndoMove();
+        }
+
+        System.out.println(getMoveSource(bestMove) + "->" + getMoveTarget(bestMove));
+        MakeMove(bestMove);
     }
 
     public CheeseBot(String startBoard)
