@@ -117,6 +117,10 @@ public class CheeseBot {
                         if (targetPiece != e && pieceColorMap[targetPiece] == color) {
                             return true;
                         }
+                        else if (targetPiece == e || pieceColorMap[targetPiece] != color)
+                        {
+                            continue;
+                        }
                         lastSquare = targetSquare;
                     } while (pieceType != KING && pieceType != KNIGHT);
                 }
@@ -288,12 +292,14 @@ public class CheeseBot {
                             }
                         }
 
-                        if (board[ks - 1] == e && board[ks - 2] == e && board[ks - 3] == e)
+                        if (ks == castlableSqaures[side])
                         {
-                            if (pieceTypeMap[board[ks - 4]] == ROOK && !isSquareAttacked(ks, 1 - side) && !isSquareAttacked(ks - 1, 1 - side))
+                            if (board[ks - 1] == e && board[ks - 2] == e && board[ks - 3] == e)
                             {
-                                AddMove(moveList, encodeMove(ks, ks - 2, 0, 0, 0, 0, 1));
-                                // add castling move queen side
+                                if (pieceTypeMap[board[ks - 4]] == ROOK && !isSquareAttacked(ks, 1 - side) && !isSquareAttacked(ks - 1, 1 - side)) {
+                                    AddMove(moveList, encodeMove(ks, ks - 2, 0, 0, 0, 0, 1));
+                                    // add castling move queen side
+                                }
                             }
                         }
                     }
@@ -717,7 +723,7 @@ public class CheeseBot {
 
     public void MakeBestMove()
     {
-        int DEPTH = 6;
+        int DEPTH = 4;
         List<Integer> possibleMoves = GetLegalMoves();
         float start = System.nanoTime();
         int bestMove = -1;
