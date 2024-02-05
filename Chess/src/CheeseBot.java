@@ -241,7 +241,6 @@ public class CheeseBot {
 
                 if (pieceColor == side)
                 {
-
                     if (pieceType == PAWN) // pawn
                     {
                         int direction = -8 * (1 - (2 * side));
@@ -306,7 +305,7 @@ public class CheeseBot {
                     {
                         int ks = kingSquares[side];
 
-                        if (ks == castlableSqaures[side])
+                        if (ks == castlableSqaures[side] && GetCastle(side == white ? 3 : 1, castle) == 1)
                         {
                             if (board[ks + 1] == e && board[ks + 2] == e) // king side
                             {
@@ -318,7 +317,7 @@ public class CheeseBot {
                             }
                         }
 
-                        if (ks == castlableSqaures[side])
+                        if (ks == castlableSqaures[side] && GetCastle(side == white ? 2 : 0, castle) == 1)
                         {
                             if (board[ks - 1] == e && board[ks - 2] == e && board[ks - 3] == e)
                             {
@@ -365,11 +364,13 @@ public class CheeseBot {
                 }
             }
         }
+
+        //System.out.println(Arrays.toString(piecePlaces));
     }
 
     public List<Integer> GetLegalMoves()
     {
-        float start = System.nanoTime();
+        //float start = System.nanoTime();
         List<Integer> moveList = new ArrayList<>();
         List<Integer> legalMoves = new ArrayList<>();
         GetMoves(moveList);
@@ -384,7 +385,7 @@ public class CheeseBot {
         Collections.sort(legalMoves);
         Collections.reverse(legalMoves);
 
-        System.out.println(System.nanoTime() - start);
+        //System.out.println(System.nanoTime() - start);
         return legalMoves;
     }
 
@@ -792,6 +793,16 @@ public class CheeseBot {
 
         pieceCount[piece]--;
         piecePlaces[piece * 10 + capturedIndex] = 0;
+
+        for (int pieceIndex = capturedIndex + 1; pieceIndex <= pieceCount[piece]; pieceIndex++)
+        {
+            if (piecePlaces[piece * 10 + pieceIndex] != 0)
+            {
+                piecePlaces[piece * 10 + pieceIndex - 1] = piecePlaces[piece * 10 + pieceIndex];
+                piecePlaces[piece * 10 + pieceIndex] = 0;
+            }
+            else break;
+        }
     }
 
     public void AddPiece(int piece, int square)
