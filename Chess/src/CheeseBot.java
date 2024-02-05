@@ -32,7 +32,11 @@ public class CheeseBot {
     final int a2 = 48, b2 = 49, c2 = 50, d2 = 51, e2 = 52, f2 = 53, g2 = 54, h2 = 55;
     final int a1 = 56, b1 = 57, c1 = 58, d1 = 59, e1 = 60, f1 = 61, g1 = 62, h1 = 63;
 
+
     final String startBoard = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
+
+    int[] pieceCount = new int[13];
+    int[] piecePlaces = new int[14 * 10];
 
     int[] board = new int[]
             {
@@ -43,7 +47,7 @@ public class CheeseBot {
                     e, e, e, e, e, e, e, e,
                     e, e, e, e, e, e, e, e,
                     P, P, P, P, P, P, P, P,
-                    R, N, B, Q, K, B, N, R
+                    R, N, B, Q, K, B, N, R,
             };
 
     String[] coodinates = new String[]
@@ -59,7 +63,7 @@ public class CheeseBot {
             };
 
     int side = white;
-    int[] kingSquares = new int[]{e1, e8};
+    int[] kingSquares = new int[]{d1, e8};
     final int[] castlableSqaures = new int[]{e1, e8};
 
     // moves for pieces
@@ -91,8 +95,28 @@ public class CheeseBot {
                     new int[] {-1,1,0,0,1,1,-1,-1}
             };
 
+    public void InitializePieceLists()
+    {
+        for (int piece = P; piece <= k; ++piece)
+        {
+            pieceCount[piece] = 0;
+        }
 
-    public boolean isSquareAttacked(int square, int color) {
+        Arrays.fill(piecePlaces, 0);
+
+        for (int square = 0; square < board.length; square++)
+        {
+            int piece = board[square];
+            if (piece != e)
+            {
+                piecePlaces[piece * 10 + pieceCount[piece]] = square;
+                pieceCount[piece]++;
+            }
+        }
+    }
+
+
+    public boolean isSquareAttacked(int square, int color) { // is the king at "square" attack by "color"
         for (int pieceType = KING; pieceType >= PAWN; pieceType--) {
 
             if (pieceType == PAWN) {
@@ -111,15 +135,19 @@ public class CheeseBot {
                     int lastSquare = square;
                     do {
                         targetSquare += directions[d];
-                        if (!IsWithinBoard(targetSquare) || targetSquare / 8 + pieceRankChanges[pieceType][d] != lastSquare / 8) break;
+                        if (!IsWithinBoard(targetSquare) || targetSquare / 8 != lastSquare / 8 + pieceRankChanges[pieceType][d])
+                            break;
 
                         int targetPiece = board[targetSquare];
-                        if (targetPiece != e && pieceColorMap[targetPiece] == color) {
-                            return true;
-                        }
-                        else if (targetPiece == e || pieceColorMap[targetPiece] != color)
-                        {
-                            continue;
+                        if (targetPiece != e) {
+
+                            if (pieceColorMap[targetPiece] == color && pieceType == pieceTypeMap[targetPiece]){
+                                return true;
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                         lastSquare = targetSquare;
                     } while (pieceType != KING && pieceType != KNIGHT);
@@ -175,14 +203,9 @@ public class CheeseBot {
     int castle = 15;
     int fiftyMoves = 0;
 
+    private final int mateValue = 49000;
+
     private final int noEnpassant = 64;
-
-    int[][] castlingSide = new int[][]
-            {
-              new int[] {1, 2},
-              new int[] {4, 8}
-            };
-
     int[][] pawnStartingRank = new int[][]
             {
                     new int[] {48, 55},
@@ -206,10 +229,13 @@ public class CheeseBot {
 
     public void GetMoves(List<Integer> moveList)
     {
-        for (int startSquare = 0; startSquare < board.length; ++startSquare)
+        for (int startSquare = 0; startSquare < board.length; startSquare++)
+        //for (int piece = P; piece <= k; piece++)
         {
             if (board[startSquare] != e)
+            //for (int pieceIndex = 0; pieceIndex < pieceCount[piece]; pieceIndex++)
             {
+                //int startSquare = piecePlaces[piece * 10 + pieceIndex];
                 int pieceType = pieceTypeMap[board[startSquare]];
                 int pieceColor = pieceColorMap[board[startSquare]];
 
@@ -343,6 +369,7 @@ public class CheeseBot {
 
     public List<Integer> GetLegalMoves()
     {
+        float start = System.nanoTime();
         List<Integer> moveList = new ArrayList<>();
         List<Integer> legalMoves = new ArrayList<>();
         GetMoves(moveList);
@@ -354,6 +381,10 @@ public class CheeseBot {
             UndoMove();
         }
 
+        Collections.sort(legalMoves);
+        Collections.reverse(legalMoves);
+
+        System.out.println(System.nanoTime() - start);
         return legalMoves;
     }
 
@@ -369,9 +400,9 @@ public class CheeseBot {
         }
     }
 
-    private int[] pieceValues = new int[] {0, 89, 308, 319, 488, 888, 20001, -92, -307, -323, -492, -888, -20002};
+    private final int[] pieceValues = new int[] {0, 89, 308, 319, 488, 888, 20001, -92, -307, -323, -492, -888, -20002};
 
-    private int[] flip = new int[]{
+    private final int[] flip = new int[]{
             56,  57,  58,  59,  60,  61,  62,  63,
             48,  49,  50,  51,  52,  53,  54,  55,
             40,  41,  42,  43,  44,  45,  46,  47,
@@ -381,7 +412,7 @@ public class CheeseBot {
             8,   9,  10,  11,  12,  13,  14,  15,
             0,   1,   2,   3,   4,   5,   6,   7
     };
-    private int[][] pieceBitBoards = new int[][]
+    private final int[][] openingSquareTables = new int[][]
             {
                     new int[0],
                     new int[]{
@@ -449,19 +480,18 @@ public class CheeseBot {
     public float EvaluateBoard()
     {
         float eval = 0;
-        for (int position = 0; position < board.length; ++position)
+        for (int piece = P; piece <= k; piece++)
         {
-            int pieceType = pieceTypeMap[board[position]];
-            if (pieceType != e)
+            int pieceType = pieceTypeMap[piece];
+            for (int pieceIndex = 0; pieceIndex < pieceCount[piece]; pieceIndex++)
             {
-                if (pieceColorMap[board[position]] == white)
+                if (pieceColorMap[piece] == white)
                 {
-                    //System.out.println(pieceType + "," + position);
-                    eval += pieceValues[pieceType] + pieceBitBoards[pieceType][position];
+                    eval += pieceValues[piece] + openingSquareTables[pieceType][piecePlaces[piece * 10 + pieceIndex]];
                 }
                 else
                 {
-                    eval -= pieceValues[pieceType] + pieceBitBoards[pieceType][flip[position]];
+                    eval += pieceValues[piece] - openingSquareTables[pieceType][flip[piecePlaces[piece * 10 + pieceIndex]]];
                 }
             }
         }
@@ -472,13 +502,22 @@ public class CheeseBot {
     public float MiniMax(int depth, float alpha, float beta, boolean bot)
     {
         List<Integer> movesForASide = GetLegalMoves();
-        if (depth == 0 || movesForASide.isEmpty())
+        boolean isInCheck = isSquareAttacked(kingSquares[side], side ^ 1);
+        if (depth == 0)
         {
             return EvaluateBoard();
+        }
+        else if (movesForASide.isEmpty())
+        {
+            if (isInCheck) {
+                return (mateValue + depth) * (side == white ? -1 : 1);
+            }
+            else return 0;
         }
 
         if (bot)
         {
+            //System.out.println("move");
             float minEval = Float.POSITIVE_INFINITY;
             for (int m : movesForASide)
             {
@@ -558,7 +597,7 @@ public class CheeseBot {
 
         moveStack.add(new BoardState(move, 0, side, enpassant, castle, fiftyMoves));
 
-        MovePiece(startSquare, targetSquare);
+        MovePiece(board[startSquare], startSquare, targetSquare);
 
         fiftyMoves++;
 
@@ -567,6 +606,7 @@ public class CheeseBot {
             if (capturedPiece != e)
             {
                 moveStack.get(moveStack.size() - 1).capturedPiece = capturedPiece;
+                RemovePiece(capturedPiece, targetSquare);
             }
             fiftyMoves = 0;
         }
@@ -596,39 +636,50 @@ public class CheeseBot {
             if (side == white)
             {
                 board[targetSquare + 8] = e;
+                RemovePiece(p, targetSquare + 8);
             }
             else
             {
                 board[targetSquare - 8] = e;
+                RemovePiece(P, targetSquare - 8);
             }
         }
         else if (getMoveCastling(move) != 0)
         {
             if (targetSquare == g1)
             {
-                MovePiece(h1, f1);
+                MovePiece(R, h1, f1);
                 castle = SetCastle(0, 3, castle);
             }
             else if (targetSquare == c1)
             {
-                MovePiece(a1, d1);
+                MovePiece(R, a1, d1);
                 castle = SetCastle(0, 2, castle);
             }
             else if (targetSquare == g8)
             {
-                MovePiece(h8, f8);
+                MovePiece(r, h8, f8);
                 castle = SetCastle(0, 1, castle);
             }
             else if (targetSquare == c8)
             {
-                MovePiece(a8, d8);
+                MovePiece(r, a8, d8);
                 castle = SetCastle(0, 1, castle);
             }
         }
 
         if (promotedPiece != 0)
         {
-            board[targetSquare] = promotedPiece;
+            if (side == white)
+            {
+                RemovePiece(P, targetSquare + 8);
+            }
+            else
+            {
+                RemovePiece(p, targetSquare - 8);
+            }
+
+            AddPiece(promotedPiece, targetSquare);
         }
 
         if (board[targetSquare] == K || board[targetSquare] == k) kingSquares[side] = targetSquare;
@@ -639,9 +690,9 @@ public class CheeseBot {
             castle = SetCastle(0, side == white ? 2 : 0, castle);
         }
 
-        side = side == white ? black : white;
+        side = side ^ 1;
 
-        if (isSquareAttacked(kingSquares[side == white ? black : white], side))
+        if (isSquareAttacked(kingSquares[side ^ 1], side))
         {
             UndoMove();
             return 0;
@@ -659,43 +710,45 @@ public class CheeseBot {
         int startSquare = getMoveSource(move);
         int targetSquare = getMoveTarget(move);
 
-        MovePiece(targetSquare, startSquare);
+        MovePiece(board[targetSquare], targetSquare, startSquare);
 
-        if (getMoveCapture(move) != 0)
+        if (getMoveCapture(move) != 0 && moveStack.get(moveIndex).capturedPiece != e)
         {
-            board[targetSquare] = moveStack.get(moveIndex).capturedPiece;
+            AddPiece(moveStack.get(moveIndex).capturedPiece, targetSquare);
         }
 
         if (getMoveEnpassant(move) != 0)
         {
             if (side == white)
             {
-                board[targetSquare - 8] = P;
+                AddPiece(P, targetSquare - 8);
             }
             else
             {
-                board[targetSquare + 8] = p;
+                AddPiece(p, targetSquare + 8);
             }
         }
         else if (getMoveCastling(move) != 0)
         {
             switch (targetSquare) {
-            case g1: MovePiece(f1, h1); break;
-            case c1: MovePiece(d1, a1); break;
-            case g8: MovePiece(f8, h8); break;
-            case c8: MovePiece(d8, a8); break;
+            case g1: MovePiece(R, f1, h1); break;
+            case c1: MovePiece(R, d1, a1); break;
+            case g8: MovePiece(r, f8, h8); break;
+            case c8: MovePiece(r, d8, a8); break;
             }
         }
         else if (getMovePromoted(move) != 0)
         {
             if (moveStack.get(moveIndex).side == white)
             {
-                board[startSquare] = P;
+                AddPiece(P, startSquare);
             }
             else
             {
-                board[startSquare] = p;
+                AddPiece(p, startSquare);
             }
+
+            RemovePiece(getMovePromoted(move), startSquare);
         }
 
         if (board[startSquare] == K || board[startSquare] == k) kingSquares[side == white ? black : white] = startSquare;
@@ -710,20 +763,52 @@ public class CheeseBot {
         moveStack.pop();
     }
 
-    public void MovePiece(int startSquare, int targetSquare)
+    public void MovePiece(int piece, int startSquare, int targetSquare)
     {
         board[targetSquare] = board[startSquare];
         board[startSquare] = e;
+
+        for (int pieceIndex = 0; pieceIndex < pieceCount[piece]; pieceIndex++)
+        {
+            if (piecePlaces[piece * 10 + pieceIndex] == startSquare)
+            {
+                piecePlaces[piece * 10 + pieceIndex] = targetSquare;
+                break;
+            }
+        }
+    }
+
+    public void RemovePiece(int piece, int square)
+    {
+        int capturedIndex = -1;
+        for (int pieceIndex = 0; pieceIndex < pieceCount[piece]; pieceIndex++)
+        {
+            if (piecePlaces[piece * 10 + pieceIndex] == square)
+            {
+                capturedIndex = pieceIndex;
+                break;
+            }
+        }
+
+        pieceCount[piece]--;
+        piecePlaces[piece * 10 + capturedIndex] = 0;
+    }
+
+    public void AddPiece(int piece, int square)
+    {
+        board[square] = piece;
+        piecePlaces[piece * 10 + pieceCount[piece]] = square;
+        pieceCount[piece]++;
     }
 
     public CheeseBot()
     {
-
+        InitializePieceLists();
     }
 
     public void MakeBestMove()
     {
-        int DEPTH = 4;
+        int DEPTH = 6;
         List<Integer> possibleMoves = GetLegalMoves();
         float start = System.nanoTime();
         int bestMove = -1;
@@ -733,7 +818,8 @@ public class CheeseBot {
         {
             MakeMove(i);
 
-            float eval = MiniMax(DEPTH - 1, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, false);
+            float eval = MiniMax(DEPTH - 1, Float.NEGATIVE_INFINITY, bestEval, false);
+            System.out.println(eval);
             if (eval < bestEval)
             {
                 bestEval = eval;
@@ -745,17 +831,22 @@ public class CheeseBot {
         }
 
         System.out.println(getMoveSource(bestMove) + "->" + getMoveTarget(bestMove));
+        System.out.println((System.nanoTime() - start) / 1000000000);
         MakeMove(bestMove);
+
+        System.out.println(Arrays.toString(pieceCount));
     }
 
     public CheeseBot(String startBoard)
     {
-        InitializeBoard(startBoard);
+        //InitializeBoard(startBoard);
+        InitializePieceLists();
     }
 
     public void PrintBoard() // outputs the board to the console
     {
         System.out.println();
+        System.out.println(EvaluateBoard());
         for (int c = 0; c < 8; ++c)
         {
             System.out.println("   ---------------------------------");
