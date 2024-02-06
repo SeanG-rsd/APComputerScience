@@ -5,18 +5,8 @@ public class GSElevenProjects
 {
     public static void main(String[] args)
     {
-        //writeNums(5);
-        //System.out.println();
-        for (int i = 1; i <= 12; ++i)
-        {
-            //writeSequence(i);
-            //System.out.println();
-        }
+        fibonnacci(10);
 
-        //System.out.println(sumTo(4));
-        List<Integer> sequence = new LinkedList<>();
-        fibonnacci(10, sequence);
-        System.out.println(sequence);
     }
 
     public static void starString(int n)
@@ -92,7 +82,7 @@ public class GSElevenProjects
         }
     }
 
-    public static void fibonnacci(int n, List<Integer> sequence)
+    public static int fibonnacci(int n)
     {
         if (n < 1)
         {
@@ -100,17 +90,19 @@ public class GSElevenProjects
         }
         else if (n == 1)
         {
-            sequence.add(1);
+            //System.out.print("1 ");
+            return 1;
         }
         else if (n == 2)
         {
-            sequence.add(1);
-            sequence.add(1);
+            //System.out.print("1 ");
+            return 1;
         }
         else
         {
-            fibonnacci(n - 1, sequence);
-            sequence.add(sequence.get(sequence.size() - 1) + sequence.get(sequence.size() - 2));
+            int next = fibonnacci(n - 1);
+            System.out.print(next + " ");
+            return next;
         }
     }
 
