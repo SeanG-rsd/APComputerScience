@@ -5,7 +5,7 @@ public class GSElevenProjects
 {
     public static void main(String[] args)
     {
-        fibonnacci(10);
+        System.out.println(fibonacci(3));
 
     }
 
@@ -82,29 +82,32 @@ public class GSElevenProjects
         }
     }
 
-    public static int fibonnacci(int n)
+    public static int fibonacci(int n)
     {
         if (n < 1)
         {
             throw new IllegalArgumentException("n is less than 1");
         }
-        else if (n == 1)
+
+        if (n <= 2)
         {
-            //System.out.print("1 ");
-            return 1;
-        }
-        else if (n == 2)
-        {
-            //System.out.print("1 ");
             return 1;
         }
         else
         {
-            int next = fibonnacci(n - 1);
-            System.out.print(next + " ");
-            return next;
+            return fibonacci(n - 3, 1, 1);
         }
     }
 
-
+    public static int fibonacci(int n, int current, int prev)
+    {
+        if (n == 0)
+        {
+            return prev + current;
+        }
+        else
+        {
+            return fibonacci(n - 1, current + prev, current);
+        }
+    }
 }
