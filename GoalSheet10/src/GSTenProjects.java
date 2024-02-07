@@ -4,55 +4,27 @@ public class GSTenProjects
     public static void main(String[] args)
     {
         String[] input = new String[]{"first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth"};
-        System.out.println(input.length);
-        mergeSort(input);
-        System.out.println(Arrays.toString(input));
+        //System.out.println(input.length);
+        //mergeSort(input);
+        writeSquares(5);
+        //System.out.println(Arrays.toString(input));
     }
 
-    public static List<Integer> fibbonacci(int n)
+    public static void writeSquares(int n)
     {
-        List<Integer> output = new LinkedList<>();
-
-        if (n == 2)
-        {
-            output.add(1);
-            output.add(1);
-            return output;
-        }
-        else if (n > 2)
-        {
-            output.addAll(fibbonacci(n - 1));
-            output.add(output.get(output.size() - 1) + output.get(output.size() - 2));
-            return output;
-        }
-        else if (n > 0)
-        {
-            output.add(1);
-
-        }
-
-        return output;
-    }
-
-    public static List<Integer> writeSquares(int n)
-    {
-        List<Integer> output = new LinkedList<>();
         if (n < 2)
         {
-            output.add(1);
-            return output;
+            System.out.print("1 ");
         }
-        else if (n % 2 == 1)
+        else if (n % 2 == 0)
         {
-            output.add(n * n);
-            output.addAll(writeSquares(n - 1));
-            return output;
+            writeSquares(n - 1);
+            System.out.print((int)Math.pow(n, 2) + " ");
         }
         else
         {
-            output.addAll(writeSquares(n - 1));
-            output.add(n * n);
-            return output;
+            System.out.print((int)Math.pow(n, 2) + " ");
+            writeSquares(n - 1);
         }
     }
 
