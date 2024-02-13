@@ -33,9 +33,11 @@ public class MazeCell
 
     public int DoorPositionForNeighbor(int neighbor)
     {
+        if (!IsWithinGrid(neighbor)) {return -1;}
+
         for (int i = 0; i < doorOffsets.length; ++i)
         {
-            if (position + doorOffsets[i] == neighbor)
+            if (position + doorOffsets[i] == neighbor && position / GRID_SIZE + yOffsets[i] == neighbor / GRID_SIZE)
             {
                 return i;
             }
@@ -43,9 +45,19 @@ public class MazeCell
 
         return -1;
     }
+
+    public boolean GetDoor(int position)
+    {
+        return doors[position];
+    }
     public void SetDoor(int neighbor)
     {
         doors[DoorPositionForNeighbor(neighbor)] = true;
+    }
+
+    public void SetDoor(int position, boolean set)
+    {
+        doors[position] = set;
     }
 
     private boolean IsWithinGrid(int position)
