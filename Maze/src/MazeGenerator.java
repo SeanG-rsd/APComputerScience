@@ -5,6 +5,7 @@ public class MazeGenerator
 {
     private final static int GRID_SIZE = 10;
     private static MazeCell[] grid;
+    private static int[] wilsonGrid;
 
     private final static String topWall = "--------";
     private final static String topDoor = "---   --";
@@ -19,12 +20,15 @@ public class MazeGenerator
         CreateMaze();
 
         PrintMaze();
+
+        SolveMaze();
     }
 
     private static void InitializeGrid()
     {
         int totalCount = GRID_SIZE * GRID_SIZE;
         grid = new MazeCell[totalCount];
+        wilsonGrid = new int[totalCount];
 
         for (int position = 0; position < totalCount; position++)
         {
@@ -70,6 +74,55 @@ public class MazeGenerator
         startCell = 0;
 
         DFSMaze(new ArrayList<>(List.of(startCell)), startCell);
+    }
+
+    private static void CreateWilsonMaze()
+    {
+
+    }
+
+    private static void SolveMaze()
+    {
+        int startCell = 0;
+        List<Integer> currentPath = new ArrayList<>(List.of(startCell));
+        int endCell = 99;
+
+        DFSSolveMaze(new ArrayList<>(List.of(startCell)), startCell, currentPath, endCell);
+
+        System.out.print(currentPath);
+    }
+
+    private static void WilsonAlgorithm()
+    {
+        
+    }
+
+    private static void DFSSolveMaze(List<Integer> visited, int currentPos, List<Integer> currentPath, int endCell)
+    {
+        List<Integer> neighbors = grid[currentPos].GetNeighborPositions();
+
+        if (currentPos == endCell)
+        {
+            return;
+        }
+
+        if (!neighbors.isEmpty())
+        {
+            for (int n : neighbors)
+            {
+                if (!visited.contains(n) && grid[currentPos].GetDoor(grid[currentPos].DoorPositionForNeighbor(n)) && !visited.contains(endCell))
+                {
+                    currentPath.add(n);
+                    visited.add(n);
+
+                    DFSSolveMaze(visited, n, currentPath, endCell);
+                }
+            }
+        }
+        else
+        {
+            currentPath.remove(currentPath.size() - 1);
+        }
     }
 
     private static void DFSMaze(List<Integer> visited, int currentPos)
