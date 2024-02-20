@@ -35,10 +35,10 @@ public class CheeseBot {
 
     final String startBoard = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
 
-    int[] pieceCount = new int[13];
-    int[] piecePlaces = new int[14 * 10];
+    int[] pieceCount = new int[13]; // keeps track of the count of each piece type
+    int[] piecePlaces = new int[14 * 10]; // keeps track of the pieces and their place
 
-    int[] board = new int[]
+    int[] board = new int[] // what keeps track of the board
             {
                     r, n, b, q, k, b, n, r,
                     p, p, p, p, p, p, p, p,
@@ -50,7 +50,7 @@ public class CheeseBot {
                     R, N, B, Q, K, B, N, R,
             };
 
-    String[] coodinates = new String[]
+    String[] coodinates = new String[] // puts a position to a coordinate
             {
                     "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
                     "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7",
@@ -73,7 +73,7 @@ public class CheeseBot {
     int[] rookMoves = new int[]{8, -8, 1, -1};
     int[] kingMoves = new int[]{-8, 8, 1, -1, 7, 9, -7, -9};
 
-    int[][] pieceMoves = new int[][]
+    int[][] pieceMoves = new int[][] // all the possible moves for each piece
             {
                     new int[0], // empty
                     new int[0], // pawn
@@ -84,7 +84,7 @@ public class CheeseBot {
                     kingMoves
             };
 
-    int[][] pieceRankChanges = new int[][]
+    int[][] pieceRankChanges = new int[][] // how the piece's rank is expected to change for each move
             {
                     new int[0],
                     new int[0],
@@ -95,7 +95,7 @@ public class CheeseBot {
                     new int[] {-1,1,0,0,1,1,-1,-1}
             };
 
-    public void InitializePieceLists()
+    public void InitializePieceLists() // starts the piece list
     {
         for (int piece = P; piece <= k; ++piece)
         {
@@ -158,7 +158,7 @@ public class CheeseBot {
         return false;
     }
 
-    private int encodeMove(int source, int target, int piece, int capture, int pawn, int enpassant, int castling) {
+    private int encodeMove(int source, int target, int piece, int capture, int pawn, int enpassant, int castling) { // encodes a move using binary
         return (source) |
                 (target << 7) |
                 (piece << 14) |
@@ -168,7 +168,7 @@ public class CheeseBot {
                 (castling << 21);
     }
 
-    // decode move
+    // decodes moves
     private int getMoveSource(int move) {
         return move & 0x7f;
     }
@@ -198,7 +198,7 @@ public class CheeseBot {
     }
 
     // move generator
-    Stack<BoardState> moveStack = new Stack<>();
+    Stack<BoardState> moveStack = new Stack<>(); // a stack to keep track of moves
     int enpassant = 64;
     int castle = 15;
     int fiftyMoves = 0;
@@ -206,7 +206,7 @@ public class CheeseBot {
     private final int mateValue = 49000;
 
     private final int noEnpassant = 64;
-    int[][] pawnStartingRank = new int[][]
+    int[][] pawnStartingRank = new int[][] // keeps track of special pawn stuff like double moves and promotions
             {
                     new int[] {48, 55},
                     new int[] {8, 15}
@@ -220,14 +220,14 @@ public class CheeseBot {
     public boolean IsWithinBoard(int square)
     {
         return square >= 0 && square < 64;
-    }
+    } // simple boolean to see if peice is within the board
 
     public void AddMove(List<Integer> moveList, int move)
     {
         moveList.add(move);
-    }
+    } // will do more with this in the future to keep track of a move's estimated value
 
-    public void GetMoves(List<Integer> moveList)
+    public void GetMoves(List<Integer> moveList) // gets every move from the board for the color, legal or not
     {
         for (int startSquare = 0; startSquare < board.length; startSquare++)
         //for (int piece = P; piece <= k; piece++)
@@ -368,7 +368,7 @@ public class CheeseBot {
         //System.out.println(Arrays.toString(piecePlaces));
     }
 
-    public List<Integer> GetLegalMoves()
+    public List<Integer> GetLegalMoves() // gets the legal moves by seeing if the king is attacked after the move is made
     {
         //float start = System.nanoTime();
         List<Integer> moveList = new ArrayList<>();
@@ -389,7 +389,7 @@ public class CheeseBot {
         return legalMoves;
     }
 
-    public String MoveToString(int move)
+    public String MoveToString(int move) // puts the move to a string the user can read
     {
         if (getMovePromoted(move) != 0)
         {
@@ -403,7 +403,7 @@ public class CheeseBot {
 
     private final int[] pieceValues = new int[] {0, 89, 308, 319, 488, 888, 20001, -92, -307, -323, -492, -888, -20002};
 
-    private final int[] flip = new int[]{
+    private final int[] flip = new int[]{ // flips the PST from white to black
             56,  57,  58,  59,  60,  61,  62,  63,
             48,  49,  50,  51,  52,  53,  54,  55,
             40,  41,  42,  43,  44,  45,  46,  47,
@@ -413,6 +413,8 @@ public class CheeseBot {
             8,   9,  10,  11,  12,  13,  14,  15,
             0,   1,   2,   3,   4,   5,   6,   7
     };
+
+    // PST for all pieces, will add endgame tables later
     private final int[][] openingSquareTables = new int[][]
             {
                     new int[0],
@@ -478,7 +480,7 @@ public class CheeseBot {
                     },
             };
 
-    public float EvaluateBoard()
+    public float EvaluateBoard() // evaulates the current state of the board
     {
         float eval = 0;
         for (int piece = P; piece <= k; piece++)
@@ -500,7 +502,7 @@ public class CheeseBot {
         return eval;
     }
 
-    public float MiniMax(int depth, float alpha, float beta, boolean bot)
+    public float MiniMax(int depth, float alpha, float beta, boolean bot) // chess bot minimax algorithm
     {
         List<Integer> movesForASide = GetLegalMoves();
         boolean isInCheck = isSquareAttacked(kingSquares[side], side ^ 1);
@@ -567,7 +569,7 @@ public class CheeseBot {
 
      */
 
-    public static int SetCastle(int can, int spot, int original)
+    public static int SetCastle(int can, int spot, int original) // sets the castle value in the intended spot
     {
         int output = 0;
         for (int i = 3; i >= 0; i--)
@@ -587,9 +589,9 @@ public class CheeseBot {
     public static int GetCastle(int spot, int original)
     {
         return (original >> spot) & 1;
-    }
+    } // gets the castle value for a specific caslte
 
-    public int MakeMove(int move)
+    public int MakeMove(int move) // makes a move
     {
         int startSquare = getMoveSource(move);
         int targetSquare = getMoveTarget(move);
@@ -704,7 +706,7 @@ public class CheeseBot {
         }
     }
 
-    public void UndoMove()
+    public void UndoMove() // undos the last move made
     {
         int moveIndex = moveStack.size() - 1;
         int move = moveStack.get(moveIndex).move;
@@ -764,7 +766,7 @@ public class CheeseBot {
         moveStack.pop();
     }
 
-    public void MovePiece(int piece, int startSquare, int targetSquare)
+    public void MovePiece(int piece, int startSquare, int targetSquare) // moves a piece
     {
         board[targetSquare] = board[startSquare];
         board[startSquare] = e;
@@ -779,7 +781,7 @@ public class CheeseBot {
         }
     }
 
-    public void RemovePiece(int piece, int square)
+    public void RemovePiece(int piece, int square) // removes a piece
     {
         int capturedIndex = -1;
         for (int pieceIndex = 0; pieceIndex < pieceCount[piece]; pieceIndex++)
@@ -805,7 +807,7 @@ public class CheeseBot {
         }
     }
 
-    public void AddPiece(int piece, int square)
+    public void AddPiece(int piece, int square) // adds a piece
     {
         board[square] = piece;
         piecePlaces[piece * 10 + pieceCount[piece]] = square;
@@ -817,7 +819,7 @@ public class CheeseBot {
         InitializePieceLists();
     }
 
-    public void MakeBestMove()
+    public void MakeBestMove() // chess bot algorithm to find the best move for the bot
     {
         int DEPTH = 6;
         List<Integer> possibleMoves = GetLegalMoves();
@@ -882,7 +884,7 @@ public class CheeseBot {
 
     public static void InitializeBoard(String coded) // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     {
-        // takes the given code and decodes it into an array of chars
+        // takes the given code and decodes it into an array of chars for the board to start in any position
         char[] codedBoard = new char[64];
         char[] codeReader = coded.toCharArray();
 
@@ -911,11 +913,5 @@ public class CheeseBot {
         {
 
         }
-    }
-
-    public static void main(String[] args)
-    {
-        System.out.println(SetCastle(0, 3, 15));
-        System.out.println(GetCastle(0, 6));
     }
 }
