@@ -13,11 +13,14 @@ public class MazeGenerator
     private final static String sideWall = "|       ";
     private final static String sideDoor = "        ";
 
+
+    private static int[] wilsonMaze;
+
     public static void main(String[] args)
     {
         InitializeGrid();
 
-        CreateMaze();
+        CreateWilsonMaze();
 
         PrintMaze();
 
@@ -76,9 +79,30 @@ public class MazeGenerator
         DFSMaze(new ArrayList<>(List.of(startCell)), startCell);
     }
 
+    private static int[] neighborChange;
+    private static int[] neighborRowChange;
+
     private static void CreateWilsonMaze()
     {
+        neighborChange = new int[] {GRID_SIZE, -GRID_SIZE, 1, -1};
+        neighborRowChange = new int[] {1, -1, 0, 0};
 
+        wilsonMaze = new int[GRID_SIZE * GRID_SIZE];
+
+        int startCell = (int)(Math.random() * GRID_SIZE * GRID_SIZE);
+        int targetCell;
+
+        do
+        {
+            targetCell = (int)(Math.random() * GRID_SIZE * GRID_SIZE);
+        }
+        while (targetCell == startCell);
+
+        System.out.println(startCell + " : " + targetCell);
+
+        wilsonMaze[targetCell] = 2;
+
+        WilsonAlgorithm(startCell, new ArrayList<>());
     }
 
     private static void SolveMaze()
@@ -92,9 +116,73 @@ public class MazeGenerator
         System.out.print(currentPath);
     }
 
-    private static void WilsonAlgorithm()
+    private static List<Integer> GetNeighbors(int cell)
     {
-        
+        List<Integer> output = new ArrayList<>();
+
+        for (int i = 0; i < neighborChange.length; i++)
+        {
+            int newCell = cell + neighborChange[i];
+            if (newCell / GRID_SIZE == cell / GRID_SIZE + neighborRowChange[i] && newCell >= 0 && newCell < wilsonMaze.length)
+            {
+                output.add(newCell);
+            }
+        }
+
+        return output;
+    }
+
+    private static boolean WilsonAlgorithm(int currentCell, List<Integer> currentPath)
+    {
+        if (wilsonMaze[currentCell] == 2) // found maze piece
+        {
+            currentPath.add(currentCell);
+            for (int i : currentPath)
+            {
+                wilsonMaze[i] = 2;
+            }
+            System.out.println(currentPath);
+            currentPath.clear();
+
+            return true;
+        }
+        else if (wilsonMaze[currentCell] == 1) // created
+        {
+            return false;
+        }
+        else
+        {
+            List<Integer> neighbors = GetNeighbors(currentCell);
+            Collections.shuffle(neighbors);
+            wilsonMaze[currentCell] = 1;
+            currentPath.add(currentCell);
+
+            for (int neighbor : neighbors)
+            {
+                if (WilsonAlgorithm(neighbor, currentPath))
+                {
+                    List<Integer> possibleNewCells = new ArrayList<>();
+                    for (int i = 0; i < wilsonMaze.length; i++)
+                    {
+                        if (wilsonMaze[i] == 0)
+                        {
+                            possibleNewCells.add(i);
+                        }
+                    }
+
+                    if (!possibleNewCells.isEmpty())
+                    {
+                        int newCell = possibleNewCells.get((int) (Math.random() * possibleNewCells.size()));
+
+                        WilsonAlgorithm(newCell, currentPath);
+                    }
+                }
+            }
+
+            wilsonMaze[currentCell] = 0;
+            currentPath.removeLast();
+            return false;
+        }
     }
 
     private static void DFSSolveMaze(List<Integer> visited, int currentPos, List<Integer> currentPath, int endCell)
