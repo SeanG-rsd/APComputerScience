@@ -176,11 +176,18 @@ public class MazeGenerator
 
                         WilsonAlgorithm(newCell, currentPath);
                     }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
 
-            wilsonMaze[currentCell] = 0;
-            currentPath.removeLast();
+            if (!currentPath.isEmpty())
+            {
+                wilsonMaze[currentCell] = 0;
+                currentPath.removeLast();
+            }
             return false;
         }
     }
@@ -209,7 +216,7 @@ public class MazeGenerator
         }
         else
         {
-            currentPath.remove(currentPath.size() - 1);
+            currentPath.removeLast();
         }
     }
 
