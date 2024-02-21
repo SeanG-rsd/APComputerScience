@@ -20,7 +20,7 @@ public class MazeGenerator
     {
         InitializeGrid();
 
-        CreateWilsonMaze();
+        CreateMaze();
 
         PrintMaze();
 

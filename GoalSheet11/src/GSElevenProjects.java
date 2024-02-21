@@ -5,26 +5,19 @@ public class GSElevenProjects
 {
     public static void main(String[] args)
     {
-        System.out.println(fibonacci(3));
-
+        //System.out.println(fibonacci(3));
+        starString(4);
     }
 
     public static void starString(int n)
     {
         if (n == 0)
         {
-            System.out.println("*");
-        }
-        else if (n == 1)
-        {
-            System.out.println("**");
+            System.out.print("*");
         }
         else
         {
-            for (int i = 0; i < Math.pow(2, n - 1); ++i)
-            {
-                System.out.print("*");
-            }
+            starString(n - 1);
             starString(n - 1);
         }
     }
