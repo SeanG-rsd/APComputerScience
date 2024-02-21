@@ -43,7 +43,9 @@ public class MazeCell
             }
         }
 
-        return -1;
+        System.out.println(position);
+        throw new IllegalArgumentException(Integer.toString(neighbor));
+        //return -1;
     }
 
     public boolean GetDoor(int position)

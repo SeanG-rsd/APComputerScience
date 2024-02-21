@@ -5,7 +5,7 @@ public class MazeGenerator
 {
     private final static int GRID_SIZE = 10;
     private static MazeCell[] grid;
-    private static int[] wilsonGrid;
+    //private static int[] wilsonGrid;
 
     private final static String topWall = "--------";
     private final static String topDoor = "---   --";
@@ -31,7 +31,7 @@ public class MazeGenerator
     {
         int totalCount = GRID_SIZE * GRID_SIZE;
         grid = new MazeCell[totalCount];
-        wilsonGrid = new int[totalCount];
+        //wilsonGrid = new int[totalCount];
 
         for (int position = 0; position < totalCount; position++)
         {
@@ -137,11 +137,17 @@ public class MazeGenerator
         if (wilsonMaze[currentCell] == 2) // found maze piece
         {
             currentPath.add(currentCell);
-            for (int i : currentPath)
+            for (int i = 0; i < currentPath.size(); i++)
             {
-                wilsonMaze[i] = 2;
+                int cell = currentPath.get(i);
+                wilsonMaze[cell] = 2;
+                if (i + 1 < currentPath.size())
+                {
+                    grid[cell].SetDoor(currentPath.get(i + 1));
+                    grid[currentPath.get(i + 1)].SetDoor(cell);
+                }
             }
-            System.out.println(currentPath);
+
             currentPath.clear();
 
             return true;
@@ -174,7 +180,7 @@ public class MazeGenerator
                     {
                         int newCell = possibleNewCells.get((int) (Math.random() * possibleNewCells.size()));
 
-                        WilsonAlgorithm(newCell, currentPath);
+                        return WilsonAlgorithm(newCell, currentPath);
                     }
                     else
                     {
@@ -186,7 +192,7 @@ public class MazeGenerator
             if (!currentPath.isEmpty())
             {
                 wilsonMaze[currentCell] = 0;
-                currentPath.removeLast();
+                currentPath.remove(currentPath.size() - 1);
             }
             return false;
         }
@@ -213,10 +219,14 @@ public class MazeGenerator
                     DFSSolveMaze(visited, n, currentPath, endCell);
                 }
             }
+            if (!currentPath.contains(endCell))
+            {
+                currentPath.remove(currentPath.size() - 1);
+            }
         }
         else
         {
-            currentPath.removeLast();
+            currentPath.remove(currentPath.size() - 1);
         }
     }
 
