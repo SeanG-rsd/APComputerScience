@@ -20,7 +20,7 @@ public class MazeGenerator
     {
         InitializeGrid();
 
-        CreateMaze();
+        CreateWilsonMaze();
 
         PrintMaze();
 
@@ -102,7 +102,83 @@ public class MazeGenerator
 
         wilsonMaze[targetCell] = 2;
 
-        WilsonAlgorithm(startCell, new ArrayList<>());
+        //WilsonAlgorithm(startCell, new ArrayList<>());
+
+        int currentCell = startCell;
+        int lastVisited;
+        List<Integer> currentPath = new ArrayList<>();
+        boolean finished = false;
+        while (!finished)
+        {
+            List<Integer> neighbors = GetNeighbors(currentCell);
+            Collections.shuffle(neighbors);
+            wilsonMaze[currentCell] = 1;
+            currentPath.add(currentCell);
+            lastVisited = currentCell;
+
+            for (int neighbor : neighbors)
+            {
+                if (neighbor != lastVisited) {
+                    if (wilsonMaze[neighbor] == 2) {
+                        for (int i = 0; i < currentPath.size(); i++) {
+                            int cell = currentPath.get(i);
+                            wilsonMaze[cell] = 2;
+                            System.out.print(cell + ", ");
+                            if (i + 1 < currentPath.size()) {
+                                grid[cell].SetDoor(currentPath.get(i + 1));
+                                grid[currentPath.get(i + 1)].SetDoor(cell);
+                            }
+                        }
+
+                        currentCell = GetNewStartCell();
+
+                        System.out.println(currentCell + " : " + targetCell);
+                        if (currentCell == -1) {
+                            finished = true;
+                        }
+
+                        currentPath.clear();
+                        break;
+                    }
+                    else if (wilsonMaze[neighbor] == 1)
+                    {
+                        //System.out.print("loop");
+                        int index = currentPath.indexOf(neighbor);
+
+                        for (int i = currentPath.size() - 1; i >= index; i--)
+                        {
+                            //currentPath.remove(i);
+                        }
+                        currentPath.remove(currentPath.size() - 1);
+                        wilsonMaze[currentCell] = 0;
+                    }
+                    else
+                    {
+                        System.out.print(neighbor + ", ");
+                        currentCell = neighbor;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static int GetNewStartCell()
+    {
+        List<Integer> possibleNewCells = new ArrayList<>();
+        for (int i = 0; i < wilsonMaze.length; i++)
+        {
+            if (wilsonMaze[i] == 0)
+            {
+                possibleNewCells.add(i);
+            }
+        }
+
+        if (!possibleNewCells.isEmpty())
+        {
+            return possibleNewCells.get((int) (Math.random() * possibleNewCells.size()));
+        }
+        return -1;
     }
 
     private static void SolveMaze()

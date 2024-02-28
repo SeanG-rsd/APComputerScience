@@ -6,7 +6,8 @@ public class GSElevenProjects
     public static void main(String[] args)
     {
         //System.out.println(fibonacci(3));
-        starString(4);
+        //starString(4);
+        writeNums(4);
     }
 
     public static void starString(int n)
