@@ -105,7 +105,7 @@ public class MazeGenerator
         //WilsonAlgorithm(startCell, new ArrayList<>());
 
         int currentCell = startCell;
-        int lastVisited;
+        int lastVisited = currentCell;
         List<Integer> currentPath = new ArrayList<>();
         boolean finished = false;
         while (!finished)
@@ -114,7 +114,6 @@ public class MazeGenerator
             Collections.shuffle(neighbors);
             wilsonMaze[currentCell] = 1;
             currentPath.add(currentCell);
-            lastVisited = currentCell;
 
             for (int neighbor : neighbors)
             {
@@ -142,24 +141,43 @@ public class MazeGenerator
                     }
                     else if (wilsonMaze[neighbor] == 1)
                     {
-                        //System.out.print("loop");
                         int index = currentPath.indexOf(neighbor);
+                        System.out.println("\n" + index + " : " + (currentPath.size() - 1));
+                        System.out.println(neighbor);
+                        System.out.println(currentPath);
 
-                        for (int i = currentPath.size() - 1; i >= index; i--)
+                        for (int i = currentPath.size() - 1; i >= index; --i)
                         {
-                            //currentPath.remove(i);
+                            wilsonMaze[currentPath.get(i)] = 0;
+                            currentPath.remove(i);
                         }
+
+                        currentCell = currentPath.get(currentPath.size() - 1);
                         currentPath.remove(currentPath.size() - 1);
-                        wilsonMaze[currentCell] = 0;
+                        lastVisited = currentPath.get(currentPath.size() - 1);
+                        System.out.println(currentCell);
+                        System.out.println(currentPath);
+
+                        break;
                     }
                     else
                     {
                         System.out.print(neighbor + ", ");
+                        lastVisited = currentCell;
                         currentCell = neighbor;
                         break;
                     }
                 }
             }
+
+            /*if (currentCell == lastVisited)
+            {
+                System.out.println(currentPath);
+                currentPath.remove(currentPath.size() - 1);
+                wilsonMaze[currentCell] = 0;
+                currentCell = currentPath.get(currentPath.size() - 1);
+                System.out.println(currentPath);
+            }*/
         }
     }
 
