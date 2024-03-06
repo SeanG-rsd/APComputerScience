@@ -107,8 +107,8 @@ public class MazeGenerator
         int currentCell = startCell;
         int lastVisited = currentCell;
         List<Integer> currentPath = new ArrayList<>();
-        boolean finished = false;
-        while (!finished)
+        
+        while (GetNewStartCell() != -1)
         {
             List<Integer> neighbors = GetNeighbors(currentCell);
             Collections.shuffle(neighbors);
@@ -119,10 +119,11 @@ public class MazeGenerator
             {
                 if (neighbor != lastVisited) {
                     if (wilsonMaze[neighbor] == 2) {
+                        currentPath.add(neighbor);
+                        System.out.println(currentPath);
                         for (int i = 0; i < currentPath.size(); i++) {
                             int cell = currentPath.get(i);
                             wilsonMaze[cell] = 2;
-                            System.out.print(cell + ", ");
                             if (i + 1 < currentPath.size()) {
                                 grid[cell].SetDoor(currentPath.get(i + 1));
                                 grid[currentPath.get(i + 1)].SetDoor(cell);
@@ -132,9 +133,6 @@ public class MazeGenerator
                         currentCell = GetNewStartCell();
 
                         System.out.println(currentCell + " : " + targetCell);
-                        if (currentCell == -1) {
-                            finished = true;
-                        }
 
                         currentPath.clear();
                         break;
@@ -142,11 +140,8 @@ public class MazeGenerator
                     else if (wilsonMaze[neighbor] == 1)
                     {
                         int index = currentPath.indexOf(neighbor);
-                        System.out.println("\n" + index + " : " + (currentPath.size() - 1));
-                        System.out.println(neighbor);
-                        System.out.println(currentPath);
 
-                        for (int i = currentPath.size() - 1; i >= index; --i)
+                        for (int i = currentPath.size() - 1; i > index; --i)
                         {
                             wilsonMaze[currentPath.get(i)] = 0;
                             currentPath.remove(i);
@@ -154,30 +149,23 @@ public class MazeGenerator
 
                         currentCell = currentPath.get(currentPath.size() - 1);
                         currentPath.remove(currentPath.size() - 1);
-                        lastVisited = currentPath.get(currentPath.size() - 1);
-                        System.out.println(currentCell);
-                        System.out.println(currentPath);
+                        if (currentPath.size() <= 1)
+                        {
+                            lastVisited = currentCell;
+                        }
+                        else {
+                        lastVisited = currentPath.get(currentPath.size() - 1); }
 
                         break;
                     }
                     else
                     {
-                        System.out.print(neighbor + ", ");
                         lastVisited = currentCell;
                         currentCell = neighbor;
                         break;
                     }
                 }
             }
-
-            /*if (currentCell == lastVisited)
-            {
-                System.out.println(currentPath);
-                currentPath.remove(currentPath.size() - 1);
-                wilsonMaze[currentCell] = 0;
-                currentCell = currentPath.get(currentPath.size() - 1);
-                System.out.println(currentPath);
-            }*/
         }
     }
 
