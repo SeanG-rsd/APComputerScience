@@ -708,16 +708,16 @@ public class CheeseBot {
 
     public void UndoMove() // undos the last move made
     {
-        int moveIndex = moveStack.size() - 1;
-        int move = moveStack.get(moveIndex).move;
+        BoardState current = moveStack.get(moveStack.size() - 1);
+        int move = current.move;
         int startSquare = getMoveSource(move);
         int targetSquare = getMoveTarget(move);
 
         MovePiece(board[targetSquare], targetSquare, startSquare);
 
-        if (getMoveCapture(move) != 0 && moveStack.get(moveIndex).capturedPiece != e)
+        if (getMoveCapture(move) != 0 && current.capturedPiece != e)
         {
-            AddPiece(moveStack.get(moveIndex).capturedPiece, targetSquare);
+            AddPiece(current.capturedPiece, targetSquare);
         }
 
         if (getMoveEnpassant(move) != 0)
@@ -742,7 +742,7 @@ public class CheeseBot {
         }
         else if (getMovePromoted(move) != 0)
         {
-            if (moveStack.get(moveIndex).side == white)
+            if (current.side == white)
             {
                 AddPiece(P, startSquare);
             }
@@ -756,11 +756,11 @@ public class CheeseBot {
 
         if (board[startSquare] == K || board[startSquare] == k) kingSquares[side == white ? black : white] = startSquare;
 
-        side = moveStack.get(moveIndex).side;
+        side = current.side;
 
-        enpassant = moveStack.get(moveIndex).enpassant;
-        castle = moveStack.get(moveIndex).castle;
-        fiftyMoves = moveStack.get(moveIndex).fifty;
+        enpassant = current.enpassant;
+        castle = current.castle;
+        fiftyMoves = current.fifty;
         //g7h8System.out.println(castle);
 
         moveStack.pop();
