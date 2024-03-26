@@ -40,14 +40,14 @@ public class CheeseBot {
 
     int[] board = new int[] // what keeps track of the board
             {
-                    r, n, b, q, k, b, n, r,
-                    p, p, p, p, p, p, p, p,
-                    e, e, e, e, e, e, e, e,
-                    e, e, e, e, e, e, e, e,
-                    e, e, e, e, e, e, e, e,
-                    e, e, e, e, e, e, e, e,
-                    P, P, P, P, P, P, P, P,
-                    R, N, B, Q, K, B, N, R,
+                    r, n, b, q, k, b, n, r,    e,e,e,e,e,e,e,e,
+                    p, p, p, p, p, p, p, p,    e,e,e,e,e,e,e,e,
+                    e, e, e, e, e, e, e, e,    e,e,e,e,e,e,e,e,
+                    e, e, e, e, e, e, e, e,    e,e,e,e,e,e,e,e,
+                    e, e, e, e, e, e, e, e,    e,e,e,e,e,e,e,e,
+                    e, e, e, e, e, e, e, e,    e,e,e,e,e,e,e,e,
+                    P, P, P, P, P, P, P, P,    e,e,e,e,e,e,e,e,
+                    R, N, B, Q, K, B, N, R,    e,e,e,e,e,e,e,e,
             };
 
     String[] coodinates = new String[] // puts a position to a coordinate
@@ -229,15 +229,15 @@ public class CheeseBot {
 
     public void GetMoves(List<Integer> moveList) // gets every move from the board for the color, legal or not
     {
-        for (int startSquare = 0; startSquare < board.length; startSquare++)
-        //for (int piece = P; piece <= k; piece++)
+        //for (int startSquare = 0; startSquare < board.length; startSquare++)
+        for (int piece = P; piece <= k; piece++)
         {
-            if (board[startSquare] != e)
-            //for (int pieceIndex = 0; pieceIndex < pieceCount[piece]; pieceIndex++)
+            //if (board[startSquare] != e)
+            for (int pieceIndex = 0; pieceIndex < pieceCount[piece]; pieceIndex++)
             {
-                //int startSquare = piecePlaces[piece * 10 + pieceIndex];
-                int pieceType = pieceTypeMap[board[startSquare]];
-                int pieceColor = pieceColorMap[board[startSquare]];
+                int startSquare = piecePlaces[piece * 10 + pieceIndex];
+                int pieceType = pieceTypeMap[piece];
+                int pieceColor = pieceColorMap[piece];
 
                 if (pieceColor == side)
                 {
@@ -381,9 +381,6 @@ public class CheeseBot {
             legalMoves.add(move);
             UndoMove();
         }
-
-        Collections.sort(legalMoves);
-        Collections.reverse(legalMoves);
 
         //System.out.println(System.nanoTime() - start);
         return legalMoves;
@@ -860,6 +857,7 @@ public class CheeseBot {
     {
         System.out.println();
         System.out.println(EvaluateBoard());
+        System.out.println(Arrays.toString(piecePlaces));
         for (int c = 0; c < 8; ++c)
         {
             System.out.println("   ---------------------------------");
