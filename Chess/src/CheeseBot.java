@@ -24,19 +24,19 @@ public class CheeseBot {
     final int e = 0;
 
     final int a8 = 0, b8 = 1, c8 = 2, d8 = 3, e8 = 4, f8 = 5, g8 = 6, h8 = 7;
-    final int a7 = 8, b7 = 9, c7 = 10, d7 = 11, e7 = 12, f7 = 13, g7 = 14, h7 = 15;
-    final int a6 = 16, b6 = 17, c6 = 18, d6 = 19, e6 = 20, f6 = 21, g6 = 22, h6 = 23;
-    final int a5 = 24, b5 = 25, c5 = 26, d5 = 27, e5 = 28, f5 = 29, g5 = 30, h5 = 31;
-    final int a4 = 32, b4 = 33, c4 = 34, d4 = 35, e4 = 36, f4 = 37, g4 = 38, h4 = 39;
-    final int a3 = 40, b3 = 41, c3 = 42, d3 = 43, e3 = 44, f3 = 45, g3 = 46, h3 = 47;
-    final int a2 = 48, b2 = 49, c2 = 50, d2 = 51, e2 = 52, f2 = 53, g2 = 54, h2 = 55;
-    final int a1 = 56, b1 = 57, c1 = 58, d1 = 59, e1 = 60, f1 = 61, g1 = 62, h1 = 63;
+    final int a7 = 16, b7 = 17, c7 = 18, d7 = 19, e7 = 20, f7 = 21, g7 = 22, h7 = 23;
+    final int a6 = 32, b6 = 33, c6 = 34, d6 = 35, e6 = 36, f6 = 37, g6 = 38, h6 = 39;
+    final int a5 = 48, b5 = 49, c5 = 50, d5 = 51, e5 = 52, f5 = 53, g5 = 54, h5 = 55;
+    final int a4 = 64, b4 = 65, c4 = 66, d4 = 67, e4 = 68, f4 = 69, g4 = 70, h4 = 71;
+    final int a3 = 80, b3 = 81, c3 = 82, d3 = 83, e3 = 84, f3 = 85, g3 = 86, h3 = 87;
+    final int a2 = 96, b2 = 97, c2 = 98, d2 = 99, e2 = 100, f2 = 101, g2 = 102, h2 = 103;
+    final int a1 = 112, b1 = 113, c1 = 114, d1 = 115, e1 = 116, f1 = 117, g1 = 118, h1 = 119;
 
 
     final String startBoard = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
 
     int[] pieceCount = new int[13]; // keeps track of the count of each piece type
-    int[] piecePlaces = new int[14 * 10]; // keeps track of the pieces and their place
+    int[] piecePlaces = new int[13 * 10]; // keeps track of the pieces and their place
 
     int[] board = new int[] // what keeps track of the board
             {
@@ -68,10 +68,10 @@ public class CheeseBot {
 
     // moves for pieces
 
-    int[] knightMoves = new int[]{6, -6, 10, -10, 15, -15, 17, -17};
-    int[] bishopMoves = new int[]{7, 9, -7, -9};
-    int[] rookMoves = new int[]{8, -8, 1, -1};
-    int[] kingMoves = new int[]{-8, 8, 1, -1, 7, 9, -7, -9};
+    int[] knightMoves = new int[]{31, -31, 33, -33, 18, -18, 14, -14};
+    int[] bishopMoves = new int[]{15, 17, -17, -15};
+    int[] rookMoves = new int[]{16, -16, 1, -1};
+    int[] kingMoves = new int[]{-16, 16, 1, -1, 17, 15, -17, -15};
 
     int[][] pieceMoves = new int[][] // all the possible moves for each piece
             {
@@ -82,17 +82,6 @@ public class CheeseBot {
                     rookMoves,
                     kingMoves, // Queen
                     kingMoves
-            };
-
-    int[][] pieceRankChanges = new int[][] // how the piece's rank is expected to change for each move
-            {
-                    new int[0],
-                    new int[0],
-                    new int[] {1,-1,1,-1,2,-2,2,-2},
-                    new int[] {1, 1, -1, -1},
-                    new int[] {1, -1, 0, 0},
-                    new int[] {-1,1,0,0,1,1,-1,-1},
-                    new int[] {-1,1,0,0,1,1,-1,-1}
             };
 
     public void InitializePieceLists() // starts the piece list
@@ -123,7 +112,7 @@ public class CheeseBot {
                 int direction = 8 * (1 - 2 * color);
                 for (int lr = -1; lr <= 1; lr += 2) {
                     int targetSquare = square + direction + lr;
-                    if (!IsWithinBoard(targetSquare) || targetSquare / 8 != square / 8 + direction) break;
+                    if ((targetSquare & 0x88) != 0) break;
                     if (pieceColorMap[board[targetSquare]] == color) {
                         return true;
                     }
@@ -132,10 +121,9 @@ public class CheeseBot {
                 int[] directions = pieceMoves[pieceType];
                 for (int d = 0; d < directions.length; ++d) {
                     int targetSquare = square;
-                    int lastSquare = square;
                     do {
                         targetSquare += directions[d];
-                        if (!IsWithinBoard(targetSquare) || targetSquare / 8 != lastSquare / 8 + pieceRankChanges[pieceType][d])
+                        if ((targetSquare & 0x88) != 0)
                             break;
 
                         int targetPiece = board[targetSquare];
@@ -149,13 +137,17 @@ public class CheeseBot {
                                 break;
                             }
                         }
-                        lastSquare = targetSquare;
                     } while (pieceType != KING && pieceType != KNIGHT);
                 }
             }
         }
 
         return false;
+    }
+
+    private int convertToEightByEight(int hex)
+    {
+        return (hex + (hex & 7)) >> 1;
     }
 
     private int encodeMove(int source, int target, int piece, int capture, int pawn, int enpassant, int castling) { // encodes a move using binary
@@ -208,19 +200,14 @@ public class CheeseBot {
     private final int noEnpassant = 64;
     int[][] pawnStartingRank = new int[][] // keeps track of special pawn stuff like double moves and promotions
             {
-                    new int[] {48, 55},
-                    new int[] {8, 15}
+                    new int[] {a2, h2},
+                    new int[] {a7, h7}
             };
     int[][] pawnPromotingRank = new int[][]
             {
-                    new int[] {0, 7},
-                    new int[] {56, 63}
+                    new int[] {a8, h8},
+                    new int[] {a1, h1}
             };
-
-    public boolean IsWithinBoard(int square)
-    {
-        return square >= 0 && square < 64;
-    } // simple boolean to see if peice is within the board
 
     public void AddMove(List<Integer> moveList, int move)
     {
@@ -243,10 +230,10 @@ public class CheeseBot {
                 {
                     if (pieceType == PAWN) // pawn
                     {
-                        int direction = -8 * (1 - (2 * side));
+                        int direction = -16 * (1 - (2 * side));
                         int targetSquare = startSquare + direction;
 
-                        if (IsWithinBoard(targetSquare) && board[targetSquare] == e) // regular moves
+                        if ((targetSquare & 0x88) == 0 && board[targetSquare] == e) // regular moves
                         {
                             if (targetSquare >= pawnPromotingRank[side][0] && targetSquare <= pawnPromotingRank[side][1]) // promotion
                             {
@@ -273,7 +260,7 @@ public class CheeseBot {
                         for (int diagonal = -1; diagonal <= 1; diagonal += 2) // takes
                         {
                             targetSquare = startSquare + diagonal + direction;
-                            if (!IsWithinBoard(targetSquare) || startSquare / 8 - (1 - (2 * side)) != targetSquare / 8) continue;
+                            if ((targetSquare & 0x88) != 0) continue;
                             int targetPiece = board[targetSquare];
 
                             if (targetPiece != e && pieceColorMap[targetPiece] != pieceColor)
@@ -335,11 +322,10 @@ public class CheeseBot {
                         for (int d = 0; d < directions.length; ++d)
                         {
                             int targetSquare = startSquare;
-                            int lastSquare = startSquare;
                             do
                             {
                                 targetSquare += directions[d];
-                                if (!IsWithinBoard(targetSquare) || targetSquare / 8 != lastSquare / 8 + pieceRankChanges[pieceType][d])
+                                if ((targetSquare & 0x88) != 0)
                                     break;
 
                                 int targetPiece = pieceTypeMap[board[targetSquare]];
@@ -357,7 +343,6 @@ public class CheeseBot {
                                 AddMove(moveList, encodeMove(startSquare, targetSquare, 0, 0, 0, 0, 0));
                                 // add normal move
 
-                                lastSquare = targetSquare;
                             } while (pieceType != KING && pieceType != KNIGHT);
                         }
                     }
@@ -390,11 +375,11 @@ public class CheeseBot {
     {
         if (getMovePromoted(move) != 0)
         {
-            return coodinates[getMoveSource(move)] + coodinates[getMoveTarget(move)] + pieceCharMap[getMovePromoted(move)];
+            return coodinates[convertToEightByEight(getMoveSource(move))] + coodinates[convertToEightByEight(getMoveTarget(move))] + pieceCharMap[getMovePromoted(move)];
         }
         else
         {
-            return coodinates[getMoveSource(move)] + coodinates[getMoveTarget(move)];
+            return coodinates[convertToEightByEight(getMoveSource(move))] + coodinates[convertToEightByEight(getMoveTarget(move))];
         }
     }
 
@@ -487,11 +472,11 @@ public class CheeseBot {
             {
                 if (pieceColorMap[piece] == white)
                 {
-                    eval += pieceValues[piece] + openingSquareTables[pieceType][piecePlaces[piece * 10 + pieceIndex]];
+                    eval += pieceValues[piece] + openingSquareTables[pieceType][convertToEightByEight(piecePlaces[piece * 10 + pieceIndex])];
                 }
                 else
                 {
-                    eval += pieceValues[piece] - openingSquareTables[pieceType][flip[piecePlaces[piece * 10 + pieceIndex]]];
+                    eval += pieceValues[piece] - openingSquareTables[pieceType][flip[convertToEightByEight(piecePlaces[piece * 10 + pieceIndex])]];
                 }
             }
         }
@@ -864,9 +849,9 @@ public class CheeseBot {
             System.out.print((8-c) + "  ");
             for (int r = 0; r < 8; ++r)
             {
-                if (board[8 * c + r] != e)
+                if (board[16 * c + r] != e)
                 {
-                    System.out.print("| " + pieceCharMap[board[8 * c + r]] + " ");
+                    System.out.print("| " + pieceCharMap[board[16 * c + r]] + " ");
                 }
                 else
                 {
@@ -911,5 +896,10 @@ public class CheeseBot {
         {
 
         }
+    }
+
+    public static void main(String[] args)
+    {
+        System.out.println((16 + (16 & 7)) >> 1);
     }
 }
