@@ -112,30 +112,22 @@ public class CheeseBot {
                 int direction = 8 * (1 - 2 * color);
                 for (int lr = -1; lr <= 1; lr += 2) {
                     int targetSquare = square + direction + lr;
-                    if ((targetSquare & 0x88) != 0) break;
-                    if (pieceColorMap[board[targetSquare]] == color) {
-                        return true;
-                    }
+                    if ((targetSquare & 0x88) == 0 && pieceColorMap[board[targetSquare]] == color) return true;
                 }
             } else {
                 int[] directions = pieceMoves[pieceType];
-                for (int d = 0; d < directions.length; ++d) {
+                for (int direction : directions) {
                     int targetSquare = square;
                     do {
-                        targetSquare += directions[d];
-                        if ((targetSquare & 0x88) != 0)
-                            break;
+                        targetSquare += direction;
+                        if ((targetSquare & 0x88) != 0) break;
 
                         int targetPiece = board[targetSquare];
                         if (targetPiece != e) {
 
-                            if (pieceColorMap[targetPiece] == color && pieceType == pieceTypeMap[targetPiece]){
+                            if (pieceColorMap[targetPiece] == color && pieceType == pieceTypeMap[targetPiece])
                                 return true;
-                            }
-                            else
-                            {
-                                break;
-                            }
+                            break;
                         }
                     } while (pieceType != KING && pieceType != KNIGHT);
                 }
@@ -356,8 +348,8 @@ public class CheeseBot {
     public List<Integer> GetLegalMoves() // gets the legal moves by seeing if the king is attacked after the move is made
     {
         //float start = System.nanoTime();
-        List<Integer> moveList = new ArrayList<>();
-        List<Integer> legalMoves = new ArrayList<>();
+        List<Integer> moveList = new LinkedList<>();
+        List<Integer> legalMoves = new LinkedList<>();
         GetMoves(moveList);
 
         for (int move : moveList)
@@ -690,7 +682,7 @@ public class CheeseBot {
 
     public void UndoMove() // undos the last move made
     {
-        BoardState current = moveStack.get(moveStack.size() - 1);
+        BoardState current = moveStack.getLast();
         int move = current.move;
         int startSquare = getMoveSource(move);
         int targetSquare = getMoveTarget(move);

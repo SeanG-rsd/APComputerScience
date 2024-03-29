@@ -1,6 +1,3 @@
-import com.sun.tools.jconsole.JConsoleContext;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class ChessGame
