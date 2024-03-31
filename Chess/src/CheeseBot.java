@@ -476,6 +476,93 @@ public class CheeseBot {
         return eval;
     }
 
+    // Transposition Table
+
+    // 16Mb default hash table size
+    int hashEntries = 838860;
+
+    int noHashEntry = 100000;
+    int hashKey = 0;
+
+    int searchPly = 0;
+    int gamePly = 0;
+
+    private final int HASH_EXACT = 0;
+    private final int HASH_ALPHA = 1;
+    private final int HASH_BETA = 2;
+
+    Dictionary<Integer, HashEntry> hashTable;
+
+    private void SetHashSize(int Mb)
+    {
+        hashTable = new Hashtable<>();
+
+        if (Mb < 4) Mb = 4;
+        if (Mb > 128) Mb = 128;
+
+        hashEntries = (Mb * 0x100000 / 20);
+
+    }
+
+    private void InitializeHashTable()
+    {
+        for (int index = 0; index < hashEntries; index++)
+        {
+            hashTable.put(index, new HashEntry());
+        }
+    }
+
+    private float ReadHashEntry(float alpha, float beta, float bestMove, int depth)
+    {
+        HashEntry hashEntry = hashTable.get((hashKey & 0x7fffffff) % hashEntries);
+
+        if (hashEntry.hashKey == hashKey)
+        {
+            if (hashEntry.depth >= depth)
+            {
+                float score = hashEntry.score;
+
+                if (score < -mateValue) score += searchPly;
+                if (score > mateValue) score -= searchPly;
+
+                if (hashEntry.flag == HASH_EXACT) return score;
+                if ((hashEntry.flag == HASH_ALPHA) && (score <= alpha)) return alpha;
+                if (hashEntry.flag == HASH_BETA && score >= beta) return beta;
+            }
+
+            bestMove = hashEntry.bestMove; // fix
+        }
+
+        return noHashEntry;
+    }
+
+    private void WriteHashEntry(float score, int bestMove, int depth, int hashFlag)
+    {
+        HashEntry hashEntry = hashTable.get((hashKey & 0x7fffffff) % hashEntries);
+
+        if (score < -mateValue) score -= searchPly;
+        if (score > mateValue) score += searchPly;
+
+        hashEntry.hashKey = hashKey;
+        hashEntry.score = score;
+        hashEntry.flag = hashFlag;
+        hashEntry.depth = depth;
+        hashEntry.bestMove = bestMove;
+    }
+
+    final int maxPly = 64;
+    int followPv;
+    int nodes;
+
+    int[] pvTable = new int[maxPly * maxPly];
+    int[] pvLength = new int[maxPly];
+
+    int[] killerMoves = new int[2 * maxPly];
+
+    int[] historyMoves = new int[13 * 128];
+
+    int[] repetitionTable = new int[1000];
+
     public float MiniMax(int depth, float alpha, float beta, boolean bot) // chess bot minimax algorithm
     {
         List<Integer> movesForASide = GetLegalMoves();
