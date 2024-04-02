@@ -63,7 +63,7 @@ public class CheeseBot {
             };
 
     int side = white;
-    int[] kingSquares = new int[]{d1, e8};
+    int[] kingSquares = new int[]{e1, e8};
     final int[] castlableSqaures = new int[]{e1, e8};
 
     // moves for pieces
@@ -109,7 +109,7 @@ public class CheeseBot {
         for (int pieceType = KING; pieceType >= PAWN; pieceType--) {
 
             if (pieceType == PAWN) {
-                int direction = 8 * (1 - 2 * color);
+                int direction = -16 * (1 - 2 * color);
                 for (int lr = -1; lr <= 1; lr += 2) {
                     int targetSquare = square + direction + lr;
                     if ((targetSquare & 0x88) == 0 && pieceColorMap[board[targetSquare]] == color) return true;
@@ -183,13 +183,13 @@ public class CheeseBot {
 
     // move generator
     Stack<BoardState> moveStack = new Stack<>(); // a stack to keep track of moves
-    int enpassant = 64;
+    int enpassant = 128;
     int castle = 15;
     int fiftyMoves = 0;
 
     private final int mateValue = 49000;
 
-    private final int noEnpassant = 64;
+    private final int noEnpassant = 128;
     int[][] pawnStartingRank = new int[][] // keeps track of special pawn stuff like double moves and promotions
             {
                     new int[] {a2, h2},
@@ -581,7 +581,6 @@ public class CheeseBot {
 
         if (bot)
         {
-            //System.out.println("move");
             float minEval = Float.POSITIVE_INFINITY;
             for (int m : movesForASide)
             {
@@ -601,6 +600,7 @@ public class CheeseBot {
         }
         else
         {
+
             float maxEval = Float.NEGATIVE_INFINITY;
             for (int m : movesForASide)
             {
@@ -688,24 +688,24 @@ public class CheeseBot {
         {
             if (side == white)
             {
-                enpassant = targetSquare + 8;
+                enpassant = targetSquare + 16;
             }
             else
             {
-                enpassant = targetSquare - 8;
+                enpassant = targetSquare - 16;
             }
         }
         else if (getMoveEnpassant(move) != 0)
         {
             if (side == white)
             {
-                board[targetSquare + 8] = e;
-                RemovePiece(p, targetSquare + 8);
+                board[targetSquare + 16] = e;
+                RemovePiece(p, targetSquare + 16);
             }
             else
             {
-                board[targetSquare - 8] = e;
-                RemovePiece(P, targetSquare - 8);
+                board[targetSquare - 16] = e;
+                RemovePiece(P, targetSquare - 16);
             }
         }
         else if (getMoveCastling(move) != 0)
@@ -736,11 +736,11 @@ public class CheeseBot {
         {
             if (side == white)
             {
-                RemovePiece(P, targetSquare + 8);
+                RemovePiece(P, targetSquare + 16);
             }
             else
             {
-                RemovePiece(p, targetSquare - 8);
+                RemovePiece(p, targetSquare - 16);
             }
 
             AddPiece(promotedPiece, targetSquare);
@@ -769,7 +769,7 @@ public class CheeseBot {
 
     public void UndoMove() // undos the last move made
     {
-        BoardState current = moveStack.getLast();
+        BoardState current = moveStack.get(moveStack.size() - 1);
         int move = current.move;
         int startSquare = getMoveSource(move);
         int targetSquare = getMoveTarget(move);
@@ -785,11 +785,11 @@ public class CheeseBot {
         {
             if (side == white)
             {
-                AddPiece(P, targetSquare - 8);
+                AddPiece(P, targetSquare - 16);
             }
             else
             {
-                AddPiece(p, targetSquare + 8);
+                AddPiece(p, targetSquare + 16);
             }
         }
         else if (getMoveCastling(move) != 0)
@@ -822,7 +822,6 @@ public class CheeseBot {
         enpassant = current.enpassant;
         castle = current.castle;
         fiftyMoves = current.fifty;
-        //g7h8System.out.println(castle);
 
         moveStack.pop();
     }

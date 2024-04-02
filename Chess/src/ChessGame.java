@@ -24,14 +24,22 @@ public class ChessGame
                 decodedMoves.clear();
                 newBot.PrintBoard();
                 legalMoves = newBot.GetLegalMoves();
+                System.out.println(legalMoves.size());
                 for (int legalMove : legalMoves) {
                     String visual = newBot.MoveToString(legalMove);
+
                     System.out.print(visual + ", ");
                     decodedMoves.add(visual);
                 }
 
                 move = GetMove(decodedMoves);
-                newBot.MakeMove(legalMoves.get(decodedMoves.indexOf(move)));
+                if (!move.equals("u")) {
+                    newBot.MakeMove(legalMoves.get(decodedMoves.indexOf(move)));
+                }
+                else
+                {
+                    newBot.UndoMove();
+                }
                 whoseTurn = black;
             }
             else
@@ -51,6 +59,7 @@ public class ChessGame
         do {
             System.out.print(">> ");
             answer = console.next();
+            if (answer.equals(("u"))) break;
             answer = ToLegalMove(answer);
 
         } while (!possibleMoves.contains(answer));
@@ -76,3 +85,4 @@ public class ChessGame
         return output;
     }
 }
+
