@@ -7,7 +7,9 @@ public class GSElevenProjects
     {
         //System.out.println(fibonacci(3));
         //starString(4);
-        writeNums(4);
+        //writeNums(4);
+        Sign sign1 = new Sign("ABC222DE", 3);
+        System.out.println(sign1.numberOfLines() + " " + sign1.getLines());
     }
 
     public static void starString(int n)
