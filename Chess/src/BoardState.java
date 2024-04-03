@@ -7,7 +7,8 @@ public class BoardState
     public int move;
     public int fifty;
 
-    public BoardState(int move, int capturedPiece, int side, int enpassant, int castle, int fifty)
+    public int hashKey;
+    public BoardState(int move, int capturedPiece, int side, int enpassant, int castle, int fifty, int hashKey)
     {
         this.move = move;
         this.capturedPiece = capturedPiece;
@@ -15,6 +16,7 @@ public class BoardState
         this.enpassant = enpassant;
         this.castle = castle;
         this.fifty = fifty;
+        this.hashKey = hashKey;
     }
 
 }
