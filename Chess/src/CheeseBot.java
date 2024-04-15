@@ -623,13 +623,13 @@ public class CheeseBot {
 
     public float MiniMax(int depth, float alpha, float beta, boolean bot) // chess bot minimax algorithm
     {
-        System.out.println("asdklfj");
+        nodes++;
         int bestMove;
 
         if (ReadHashEntry(alpha, beta, depth) != noHashEntry)
         {
             bestMove = ReadHashEntry(alpha, beta, depth);
-            return bestMove;
+            //return bestMove;
         }
 
         List<Integer> movesForASide = GetLegalMoves();
@@ -656,7 +656,7 @@ public class CheeseBot {
                 MakeMove(m);
 
                 float eval = MiniMax(depth - 1, alpha, beta, false);
-                WriteHashEntry((int)eval, m, depth, HASH_BETA);
+                //WriteHashEntry((int)eval, m, depth, HASH_BETA);
                 UndoMove();
 
                 minEval = Math.min(minEval, eval);
@@ -676,7 +676,7 @@ public class CheeseBot {
             {
                 MakeMove(m);
                 float eval = MiniMax(depth - 1, alpha, beta, true);
-                WriteHashEntry((int)eval, m, depth, HASH_ALPHA);
+                //WriteHashEntry((int)eval, m, depth, HASH_ALPHA);
                 UndoMove();
 
                 maxEval = Math.max(maxEval, eval);
@@ -1006,11 +1006,13 @@ public class CheeseBot {
             UndoMove();
         }
 
-        System.out.println(getMoveSource(bestMove) + "->" + getMoveTarget(bestMove));
         System.out.println((System.nanoTime() - start) / 1000000000);
+        System.out.println(getMoveSource(bestMove) + "->" + getMoveTarget(bestMove));
+
         MakeMove(bestMove);
 
         System.out.println(Arrays.toString(pieceCount));
+        System.out.println(nodes);
     }
 
     public CheeseBot(String startBoard)
